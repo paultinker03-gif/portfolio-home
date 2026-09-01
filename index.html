@@ -23,7 +23,7 @@ a:hover { color: inherit; }
 <div style="position:fixed;inset:0;overflow:hidden;background:{{ bg }};color:{{ ink }};transition:background-color 1.2s ease;font-family:'Fraunces',Georgia,serif;font-weight:400;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,4.2vh,56px) clamp(20px,5vw,72px);box-sizing:border-box;cursor:crosshair;">
 
   <header ref="{{ headerRef }}" style="display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.4vh,18px);flex:0 0 auto;position:relative;z-index:2;">
-    <nav style="display:flex;flex-wrap:wrap;justify-content:center;column-gap:clamp(18px,3.2vw,52px);row-gap:clamp(10px,1.6vh,14px);line-height:1.15;">
+    <nav style="display:flex;flex-wrap:wrap;justify-content:center;column-gap:clamp(18px,3.2vw,52px);row-gap:clamp(16px,2.4vh,22px);line-height:1.15;">
       <sc-for list="{{ studies }}" as="s" hint-placeholder-count="5">
         <a href="{{ s.url }}" style="font-size:clamp(13px,1.15vw,17px);letter-spacing:0.14em;text-transform:uppercase;font-weight:500;font-variation-settings:'opsz' 144,'SOFT' 80,'WONK' 0;padding-bottom:3px;border-bottom:1px solid transparent;color:{{ strong }};transition:border-color .25s ease,color .25s ease;" style-hover="border-bottom-color:currentColor;">{{ s.title }}</a>
       </sc-for>
@@ -95,11 +95,13 @@ class Component extends DCLogic {
     const lobes = [[232, 144, 122], [232, 150, 180], [107, 197, 164], [152, 148, 205]];
     const day = {
       bg: '#F8C777', ink: '#0E3B34',
-      strong: 'rgba(14,59,52,0.94)', soft: 'rgba(14,59,52,0.74)', lobes: lobes
+      strong: 'rgba(14,59,52,0.94)', soft: 'rgba(14,59,52,0.74)', lobes: lobes,
+      shadow: '40,8,0', shadowA: 0.11
     };
     const night = {
       bg: '#0E3B34', ink: '#F8C777',
-      strong: 'rgba(248,199,119,0.92)', soft: 'rgba(248,199,119,0.66)', lobes: lobes
+      strong: 'rgba(248,199,119,0.92)', soft: 'rgba(248,199,119,0.66)', lobes: lobes,
+      shadow: '2,14,11', shadowA: 0.18
     };
     return t === 'Day' ? day : night;
   }
@@ -178,14 +180,15 @@ class Component extends DCLogic {
     ctx.clearRect(0, 0, W, H);
 
     const sy = this.cy + CR * 1.35;
-    const g = ctx.createRadialGradient(this.cx, sy, 0, this.cx, sy, CR * 1.15);
-    g.addColorStop(0, 'rgba(40,8,0,0.11)');
-    g.addColorStop(0.55, 'rgba(40,8,0,0.035)');
-    g.addColorStop(1, 'rgba(40,8,0,0)');
+    const SR = CR * 1.4;
+    const g = ctx.createRadialGradient(this.cx, sy, 0, this.cx, sy, SR);
+    const sh = pal.shadow, A = pal.shadowA;
+    const stop = function (p, k) { g.addColorStop(p, 'rgba(' + sh + ',' + (A * k).toFixed(4) + ')'); };
+    stop(0, 1); stop(0.25, 0.62); stop(0.5, 0.3); stop(0.72, 0.11); stop(0.88, 0.03); stop(1, 0);
     ctx.save();
     ctx.translate(this.cx, sy); ctx.scale(1, 0.16); ctx.translate(-this.cx, -sy);
     ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(this.cx, sy, CR * 1.15, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(this.cx, sy, SR, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
 
     this.strokeField(ctx, lobes, this.cx, this.cy, CR, ink, pal.lobes);
