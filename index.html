@@ -94,12 +94,12 @@ class Component extends DCLogic {
     const lobes = [[232, 144, 122], [232, 150, 180], [107, 197, 164], [152, 148, 205]];
     const day = {
       bg: '#F8C777', ink: '#0E3B34',
-      strong: 'rgba(14,59,52,0.94)', soft: 'rgba(14,59,52,0.74)', lobes: lobes,
+      strong: 'rgba(14,59,52,0.94)', soft: 'rgba(14,59,52,0.8)', lobes: lobes,
       shadow: '40,8,0', shadowA: 0.11
     };
     const night = {
       bg: '#0E3B34', ink: '#F8C777',
-      strong: 'rgba(248,199,119,0.92)', soft: 'rgba(248,199,119,0.66)', lobes: lobes,
+      strong: 'rgba(248,199,119,0.92)', soft: 'rgba(248,199,119,0.8)', lobes: lobes,
       shadow: '2,14,11', shadowA: 0.21
     };
     return t === 'Day' ? day : night;
