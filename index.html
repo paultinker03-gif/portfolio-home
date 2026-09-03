@@ -19,15 +19,15 @@ a:hover { color: inherit; }
 </style>
 </helmet>
 
-<div style="position:fixed;inset:0;overflow:hidden;background:{{ bg }};color:{{ ink }};transition:background-color 1.2s ease;font-family:'Fraunces',Georgia,serif;font-weight:400;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,4.2vh,56px) clamp(20px,5vw,72px);box-sizing:border-box;cursor:crosshair;">
+<div style="position:fixed;inset:0;overflow:hidden;background:{{ bg }};color:{{ ink }};transition:background-color 1.2s ease;font-family:'Fraunces',Georgia,serif;font-weight:400;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,4.2vh,56px) clamp(20px,5vw,72px);box-sizing:border-box;">
 
-  <header ref="{{ headerRef }}" style="display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.4vh,18px);flex:0 0 auto;position:relative;z-index:2;">
+  <header ref="{{ headerRef }}" style="display:flex;flex-direction:column;align-items:center;gap:clamp(10px,1.8vh,22px);flex:0 0 auto;position:relative;z-index:2;">
+    <p style="margin:0;font-size:clamp(11px,0.85vw,13px);letter-spacing:0.22em;text-transform:uppercase;font-weight:400;color:{{ soft }};">Selected case studies</p>
     <nav style="display:flex;flex-wrap:wrap;justify-content:center;column-gap:clamp(18px,3.2vw,52px);row-gap:clamp(10px,1.6vh,14px);line-height:1.15;">
       <sc-for list="{{ studies }}" as="s" hint-placeholder-count="5">
         <a href="{{ s.url }}" style="font-size:clamp(13px,1.15vw,17px);letter-spacing:0.14em;text-transform:uppercase;font-weight:500;font-variation-settings:'opsz' 144,'SOFT' 80,'WONK' 0;padding-bottom:3px;border-bottom:1px solid transparent;color:{{ strong }};transition:border-color .25s ease,color .25s ease;" style-hover="border-bottom-color:currentColor;">{{ s.title }}</a>
       </sc-for>
     </nav>
-    <p style="margin:0;font-size:clamp(11px,0.85vw,13px);letter-spacing:0.22em;text-transform:uppercase;font-weight:400;color:{{ soft }};">Selected case studies</p>
   </header>
 
   <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;"></canvas>
