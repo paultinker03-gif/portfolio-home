@@ -47,11 +47,11 @@ a:hover { color: inherit; }
   </footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Night&quot;,&quot;Day&quot;],&quot;default&quot;:&quot;Night&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Night&quot;,&quot;Day&quot;],&quot;default&quot;:&quot;Day&quot;}}">
 class Component extends DCLogic {
   state = { theme: null, narrow: typeof window !== 'undefined' && window.innerWidth < 700 };
 
-  theme() { return this.state.theme || this.props.theme || 'Night'; }
+  theme() { return this.state.theme || this.props.theme || 'Day'; }
   componentDidMount() {
     const self = this;
     this.t = 0;
