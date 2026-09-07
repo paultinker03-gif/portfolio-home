@@ -529,14 +529,14 @@ const THEME = {
 };
 
 class Component extends DCLogic {
-  state = { i: 0, info: true };
+  state = { i: (() => {
+    const slug = (typeof window !== "undefined" ? (window.location.hash || "").slice(1) : "");
+    if (!slug) return 0;
+    const idx = DATA.findIndex(d => d.short.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === slug);
+    return idx >= 0 ? idx : 0;
+  })(), info: true };
 
   componentDidMount() {
-    const slug = (window.location.hash || "").slice(1);
-    if (slug) {
-      const idx = DATA.findIndex(d => this._slug(d.short) === slug);
-      if (idx >= 0) this.state.i = idx;
-    }
     this._syncFromHash = () => {
       const s = (window.location.hash || "").slice(1);
       const idx = s ? DATA.findIndex(d => this._slug(d.short) === s) : 0;
