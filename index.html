@@ -537,6 +537,14 @@ class Component extends DCLogic {
       const idx = DATA.findIndex(d => this._slug(d.short) === slug);
       if (idx >= 0) this.state.i = idx;
     }
+    this._syncFromHash = () => {
+      const s = (window.location.hash || "").slice(1);
+      const idx = s ? DATA.findIndex(d => this._slug(d.short) === s) : 0;
+      if (idx >= 0 && idx !== this.state.i) this.setState({ i: idx });
+    };
+    window.addEventListener("popstate", this._syncFromHash);
+    window.addEventListener("hashchange", this._syncFromHash);
+    window.addEventListener("pageshow", this._syncFromHash);
     this._touchStart = null;
     this._onTouchStart = (ev) => {
       if (ev.touches && ev.touches.length === 1) {
@@ -836,6 +844,9 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    window.removeEventListener("popstate", this._syncFromHash);
+    window.removeEventListener("hashchange", this._syncFromHash);
+    window.removeEventListener("pageshow", this._syncFromHash);
     window.removeEventListener("mousemove", this._mouse);
     window.removeEventListener("touchmove", this._touchMove);
     window.removeEventListener("touchstart", this._onTouchStart);
@@ -919,7 +930,7 @@ class Component extends DCLogic {
         showLink: !!d.link,
         active: on ? "true" : undefined,
         navAriaLabel: d.company + ", " + d.year,
-        onLinkClick: () => { history.replaceState(null, "", "#" + this._slug(d.short)); },
+        onLinkClick: () => { history.pushState(null, "", "#" + this._slug(d.short)); },
         slotId: "cv-" + i,
         slotHint: d.slot,
         images: Array.from({ length: d.imageCount != null ? d.imageCount : 5 }, (_, n) => {
