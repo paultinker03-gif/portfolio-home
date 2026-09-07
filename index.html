@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
 <script src="./image-slot.js"></script>
 <style>
-  html, body { margin:0; padding:0; background:oklch(0.934 0.02 6); overflow-x:hidden; }
+  html, body { margin:0; padding:0; background:oklch(0.934 0.02 6); overflow-x:hidden; height:100%; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   button, a { touch-action:manipulation; }
   a { color:oklch(0.42 0.09 17); text-decoration:none; }
@@ -138,7 +138,7 @@
   }
 </style>
 </helmet>
-<div style="position:relative; width:100%; min-height:100vh; height:100vh; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
+<div style="position:relative; width:100%; min-height:100vh; height:100vh; height:100dvh; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
 
   <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
     <div style="position:absolute; inset:0; overflow:hidden; z-index:0">
