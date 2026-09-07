@@ -544,7 +544,7 @@ class Component extends DCLogic {
     };
     window.addEventListener("popstate", this._syncFromHash);
     window.addEventListener("hashchange", this._syncFromHash);
-    window.addEventListener("pageshow", this._syncFromHash);
+    window.addEventListener("pageshow", (ev) => { if (ev.persisted) location.reload(); });
     this._touchStart = null;
     this._onTouchStart = (ev) => {
       if (ev.touches && ev.touches.length === 1) {
@@ -846,7 +846,6 @@ class Component extends DCLogic {
   componentWillUnmount() {
     window.removeEventListener("popstate", this._syncFromHash);
     window.removeEventListener("hashchange", this._syncFromHash);
-    window.removeEventListener("pageshow", this._syncFromHash);
     window.removeEventListener("mousemove", this._mouse);
     window.removeEventListener("touchmove", this._touchMove);
     window.removeEventListener("touchstart", this._onTouchStart);
