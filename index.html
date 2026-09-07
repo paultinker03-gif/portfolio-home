@@ -138,7 +138,7 @@
   }
 </style>
 </helmet>
-<div style="position:fixed; inset:0; width:100%; height:100%; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
+<div ref="{{ rootRef }}" style="position:fixed; inset:0; width:100%; height:{{ vh }}; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
 
   <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
     <div style="position:absolute; inset:0; overflow:hidden; z-index:0">
@@ -529,7 +529,7 @@ const THEME = {
 };
 
 class Component extends DCLogic {
-  state = { i: (() => {
+  state = { vh: (typeof window !== "undefined" ? window.innerHeight : 800) + "px", i: (() => {
     const slug = (typeof window !== "undefined" ? (window.location.hash || "").slice(1) : "");
     if (!slug) return 0;
     const idx = DATA.findIndex(d => d.short.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === slug);
@@ -582,9 +582,14 @@ class Component extends DCLogic {
     window.addEventListener("touchmove", this._onIntroTouch, { passive: true });
     window.addEventListener("touchstart", this._onIntroTouch, { passive: true });
     window.addEventListener("pointerleave", this._onIntroLeave);
-    this._onIntroResize = () => { this._resizeIntro(); this._resizeNespresso(); this._syncIndicator(); };
+    this._onIntroResize = () => {
+      this._resizeIntro(); this._resizeNespresso(); this._syncIndicator();
+      const h = (window.visualViewport ? window.visualViewport.height : window.innerHeight) + "px";
+      if (h !== this.state.vh) this.setState({ vh: h });
+    };
     window.addEventListener("resize", this._onIntroResize);
     window.addEventListener("orientationchange", this._onIntroResize);
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", this._onIntroResize);
     const introLoop = () => { this._drawIntro(); this._drawNespresso(); this._introRaf = requestAnimationFrame(introLoop); };
     this._introRaf = requestAnimationFrame(introLoop);
   }
@@ -856,6 +861,7 @@ class Component extends DCLogic {
     window.removeEventListener("touchstart", this._onIntroTouch);
     window.removeEventListener("resize", this._onIntroResize);
     window.removeEventListener("orientationchange", this._onIntroResize);
+    if (window.visualViewport) window.visualViewport.removeEventListener("resize", this._onIntroResize);
     cancelAnimationFrame(this._introRaf);
   }
 
@@ -1020,6 +1026,8 @@ class Component extends DCLogic {
       next: () => this.go(1),
       toggleInfo: () => this.setState((s) => ({ info: !s.info })),
       navRef: (el) => { this._navEl = el; },
+      rootRef: (el) => { this._rootEl = el; },
+      vh: this.state.vh,
       indicatorLeft: (this.state.indicatorLeft || 0) + "px",
       indicatorWidth: (this.state.indicatorWidth || 0) + "px",
       indicatorBg: activeIsDayNight ? (introPalette.ink + "22") : (DATA[active].navBg || activeTheme.pillBg),
