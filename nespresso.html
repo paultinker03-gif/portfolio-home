@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./boot.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"}}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/environments/RoomEnvironment.js" crossorigin>
+<link rel="preload" as="image" fetchpriority="high" href="./assets/bt-2.webp">
+<link rel="preload" as="image" href="./assets/bt-1.webp">
+<link rel="preload" as="image" href="./assets/bt-3.webp">
+<style>
+  html,body{margin:0;padding:0;background:transparent;overflow:hidden;height:100%}
+  a{color:#F4C5CD}a:hover{color:#fff}
+</style>
+</helmet>
+<div style="position:fixed;inset:0;background:transparent;perspective:1600px;overflow:hidden">
+  <div ref="{{ stageRef }}" style="position:absolute;left:50%;top:50%;width:1592px;height:852px;transform:translate(-50%,-50%);transform-style:preserve-3d;will-change:transform">
+    <div ref="{{ tiltRef }}" style="position:absolute;inset:0;transform-style:preserve-3d;will-change:transform">
+      <svg width="608.25" height="160" viewBox="0 -160 608.25 160" style="position:absolute;left:222px;top:288.8px;display:block;overflow:visible" aria-label="BUILT" role="img"><path d="M9.55 -145.39L106.98 -145.39Q126.73 -145.39 137.90 -135.30Q149.08 -125.21 149.08 -108.07Q149.08 -82.46 121.95 -76.17L121.95 -73.13Q135.84 -70.74 143.76 -61.95Q151.68 -53.16 151.68 -39.71Q151.68 -21.27 140.18 -10.63Q128.68 0.00 106.98 0.00L9.55 0.00L9.55 -145.39ZM115.44 -44.48Q115.44 -52.51 111.10 -55.88Q106.76 -59.24 97.22 -59.24L45.14 -59.24L45.14 -29.95L97.22 -29.95Q106.76 -29.95 111.10 -33.20Q115.44 -36.46 115.44 -44.48ZM112.84 -102.21Q112.84 -109.37 108.93 -112.41Q105.03 -115.44 96.56 -115.44L45.14 -115.44L45.14 -89.19L96.56 -89.19Q105.03 -89.19 108.93 -92.12Q112.84 -95.05 112.84 -102.21ZM162.10 -145.39L197.69 -145.39L197.69 -59.46Q197.69 -42.10 206.04 -34.29Q214.40 -26.47 233.06 -26.47Q251.72 -26.47 260.07 -34.29Q268.43 -42.10 268.43 -59.46L268.43 -145.39L304.02 -145.39L304.02 -59.46Q304.02 -28.43 285.79 -12.04Q267.56 4.34 233.06 4.34Q198.56 4.34 180.33 -12.04Q162.10 -28.43 162.10 -59.46L162.10 -145.39ZM319.21 -145.39L354.80 -145.39L354.80 0.00L319.21 0.00L319.21 -145.39ZM371.29 -145.39L406.88 -145.39L406.88 -30.38L477.18 -30.38L477.18 0.00L371.29 0.00L371.29 -145.39ZM478.05 -145.39L606.51 -145.39L606.51 -115.01L560.08 -115.01L560.08 0.00L524.49 0.00L524.49 -115.01L478.05 -115.01L478.05 -145.39Z" fill="#F4C5CD"></path></svg>
+      <div style="position:absolute;left:847.3px;top:303.4px;display:flex;gap:7px;padding:7px;background:#fff">
+        <img src="./assets/bt-2.webp" alt="" fetchpriority="high" decoding="async" style="width:175.5px;height:131.5px;object-fit:cover;display:block"></img>
+        <img src="./assets/bt-1.webp" alt="" fetchpriority="high" decoding="async" style="width:175.5px;height:131.5px;object-fit:cover;display:block"></img>
+        <img src="./assets/bt-3.webp" alt="" fetchpriority="high" decoding="async" style="width:175.5px;height:131.5px;object-fit:cover;display:block"></img>
+      </div>
+      <svg width="1190.03" height="160" viewBox="0 -160 1190.03 160" style="position:absolute;left:222px;top:452.8px;display:block;overflow:visible" aria-label="TOGETHER" role="img"><path d="M1.74 -145.39L130.20 -145.39L130.20 -115.01L83.76 -115.01L83.76 0.00L48.17 0.00L48.17 -115.01L1.74 -115.01L1.74 -145.39ZM134.11 -72.69Q134.11 -95.05 144.63 -112.51Q155.16 -129.98 173.82 -139.86Q192.48 -149.73 216.13 -149.73Q239.78 -149.73 258.56 -139.86Q277.33 -129.98 287.85 -112.51Q298.38 -95.05 298.38 -72.69Q298.38 -50.34 287.85 -32.88Q277.33 -15.41 258.56 -5.53Q239.78 4.34 216.13 4.34Q192.48 4.34 173.82 -5.53Q155.16 -15.41 144.63 -32.88Q134.11 -50.34 134.11 -72.69ZM261.92 -72.69Q261.92 -93.74 249.55 -106.11Q237.18 -118.48 216.13 -118.48Q195.30 -118.48 182.93 -106.00Q170.56 -93.53 170.56 -72.69Q170.56 -51.86 182.93 -39.39Q195.30 -26.91 216.13 -26.91Q237.18 -26.91 249.55 -39.28Q261.92 -51.65 261.92 -72.69ZM305.32 -72.48Q305.32 -94.83 315.84 -112.41Q326.37 -129.98 345.14 -139.86Q363.91 -149.73 388.21 -149.73Q407.74 -149.73 423.58 -143.33Q439.43 -136.93 450.06 -125.21Q460.69 -113.49 464.38 -98.08L426.84 -98.08Q422.28 -107.85 412.30 -113.17Q402.32 -118.48 388.21 -118.48Q366.73 -118.48 354.25 -106.22Q341.77 -93.96 341.77 -72.69Q341.77 -51.43 354.36 -39.17Q366.95 -26.91 388.86 -26.91Q403.40 -26.91 413.82 -32.33Q424.24 -37.76 428.79 -48.39L391.03 -48.39L391.03 -78.55L468.50 -78.55Q468.72 -76.38 468.72 -72.04Q468.72 -48.83 458.74 -31.57Q448.76 -14.32 430.75 -4.99Q412.73 4.34 388.86 4.34Q364.56 4.34 345.57 -5.32Q326.58 -14.97 315.95 -32.44Q305.32 -49.91 305.32 -72.48ZM479.35 -145.39L601.96 -145.39L601.96 -115.01L514.94 -115.01L514.94 -90.05L599.79 -90.05L599.79 -59.67L514.94 -59.67L514.94 -30.38L602.83 -30.38L602.83 0.00L479.35 0.00L479.35 -145.39ZM609.34 -145.39L737.80 -145.39L737.80 -115.01L691.36 -115.01L691.36 0.00L655.77 0.00L655.77 -115.01L609.34 -115.01L609.34 -145.39ZM746.48 -145.39L782.07 -145.39L782.07 -89.40L851.73 -89.40L851.73 -145.39L887.31 -145.39L887.31 0.00L851.73 0.00L851.73 -59.02L782.07 -59.02L782.07 0.00L746.48 0.00L746.48 -145.39ZM903.80 -145.39L1026.41 -145.39L1026.41 -115.01L939.39 -115.01L939.39 -90.05L1024.24 -90.05L1024.24 -59.67L939.39 -59.67L939.39 -30.38L1027.28 -30.38L1027.28 0.00L903.80 0.00L903.80 -145.39ZM1041.60 -145.39L1134.26 -145.39Q1157.26 -145.39 1170.28 -135.73Q1183.30 -126.08 1183.30 -106.76Q1183.30 -93.09 1176.03 -85.28Q1168.76 -77.47 1158.78 -74.86L1158.78 -71.83Q1165.29 -69.87 1168.55 -67.38Q1171.80 -64.88 1173.43 -60.76Q1175.06 -56.64 1176.57 -48.39L1185.47 0.00L1149.45 0.00L1143.16 -40.36Q1142.07 -47.96 1139.58 -51.97Q1137.08 -55.99 1132.20 -57.72Q1127.32 -59.46 1118.42 -59.46L1077.19 -59.46L1077.19 0.00L1041.60 0.00L1041.60 -145.39ZM1131.00 -89.40Q1139.47 -89.40 1143.26 -92.22Q1147.06 -95.05 1147.06 -102.21Q1147.06 -109.15 1143.26 -112.08Q1139.47 -115.01 1131.00 -115.01L1077.19 -115.01L1077.19 -89.40L1131.00 -89.40Z" fill="#F4C5CD"></path></svg>
+    </div>
+    <div ref="{{ glRef }}" style="position:absolute;inset:0;pointer-events:none"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;spinSensitivity&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:3,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;tiltAmount&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:3,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;idleSpin&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.stageRef = React.createRef();
+    this.tiltRef = React.createRef();
+    this.glRef = React.createRef();
+    this.ptr = {x:0,y:0,tx:0,ty:0};
+    this.spin = 0; this.swipe = 0; this.drift = 0;
+    this.last = null;
+  }
+  renderVals(){
+    return {stageRef:this.stageRef, tiltRef:this.tiltRef, glRef:this.glRef};
+  }
+  componentDidMount(){
+    this.fit(); this.bind(); this.initGL(); this.watchdog();
+  }
+  watchdog(){
+    clearInterval(this._watch);
+    this._watch = setInterval(() => {
+      const gone = !this.renderer || !this.renderer.domElement.isConnected;
+      const stalled = this.lastFrame && (performance.now() - this.lastFrame > 900) && document.visibilityState === 'visible';
+      if(gone){
+        this.dead = false; this.renderer = null; this._booting = false;
+        if(this.glRef.current) this.glRef.current.innerHTML = '';
+        this.initGL();
+      } else if(stalled && this.resume){
+        this.dead = false; this.resume();
+      }
+    }, 1000);
+  }
+  componentDidUpdate(){
+    if(!this.renderer && !this._booting && this.glRef.current){
+      this._booting = true; this.dead = false;
+      this.glRef.current.innerHTML = '';
+      this.initGL();
+    }
+  }
+  componentWillUnmount(){
+    this.dead = true;
+    clearInterval(this._watch);
+    window.removeEventListener('resize', this._fit);
+    window.removeEventListener('pointermove', this._move);
+    window.removeEventListener('touchmove', this._touch);
+    window.removeEventListener('message', this._msg);
+    window.removeEventListener('wheel', this._wheel);
+    if(this.renderer) this.renderer.dispose();
+  }
+  fit(){
+    const el = this.stageRef.current; if(!el) return;
+    const s = Math.min(window.innerWidth/1620, window.innerHeight/760);
+    el.style.transform = 'translate(-50%,-50%) scale(' + s + ') translate(-15.5px,-32px)';
+    this.stageScale = s;
+    if(this.renderer) this.renderer.setPixelRatio(Math.min(devicePixelRatio * Math.max(s, 0.5), 3));
+  }
+  bind(){
+    this._fit = () => this.fit();
+    this._move = (e) => {
+      const w = window.innerWidth, h = window.innerHeight;
+      this.ptr.tx = (e.clientX/w - 0.5)*2;
+      this.ptr.ty = (e.clientY/h - 0.5)*2;
+    };
+    this._touch = (e) => {
+      const t = e.touches[0]; if(!t) return;
+      const w = window.innerWidth, h = window.innerHeight;
+      this.ptr.tx = (t.clientX/w - 0.5)*2;
+      this.ptr.ty = (t.clientY/h - 0.5)*2;
+      if(this.last !== null) this.swipe += (t.clientX - this.last) * 0.012 * this.sens();
+      this.last = t.clientX;
+    };
+    this._wheel = (e) => { this.swipe += e.deltaY * 0.004 * this.sens(); };
+    this._msg = (ev) => {
+      const d = ev && ev.data;
+      if (!d || d.type !== 'btPointer') return;
+      this.ptr.tx = (d.nx - 0.5) * 2;
+      this.ptr.ty = (d.ny - 0.5) * 2;
+      this.lastInput = performance.now();
+      if (d.dx) this.swipe += d.dx * 0.012 * this.sens();
+    };
+    window.addEventListener('message', this._msg);
+    window.addEventListener('resize', this._fit);
+    window.addEventListener('pointermove', this._move);
+    window.addEventListener('touchmove', this._touch, {passive:true});
+    window.addEventListener('wheel', this._wheel, {passive:true});
+  }
+  sens(){ return this.props.spinSensitivity ?? 1; }
+  async initGL(){
+    const THREE = await import('three');
+    const {RoomEnvironment} = await import('three/addons/environments/RoomEnvironment.js');
+    if(this.dead || !this.glRef.current) return;
+    const W = 1592, H = 852;
+    const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, premultipliedAlpha:false, preserveDrawingBuffer:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio * Math.max(this.stageScale || 1, 0.5), 3));
+    renderer.setSize(W, H, false);
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.45;
+    if(this.renderer && this.renderer !== renderer){ try{ this.renderer.dispose(); }catch(e){} }
+    this.glRef.current.innerHTML = '';
+    this.glRef.current.appendChild(renderer.domElement);
+    this.renderer = renderer;
+    this._booting = false;
+
+    const scene = new THREE.Scene();
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+    const dist = (H/2)/Math.tan(THREE.MathUtils.degToRad(15));
+    const camera = new THREE.PerspectiveCamera(30, W/H, 10, 6000);
+    camera.position.set(0,0,dist);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(-1,1.4,2); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xffd9e6, 0.75); rim.position.set(2,-0.6,1); scene.add(rim);
+    const fill = new THREE.DirectionalLight(0xffffff, 1.6); fill.position.set(-2.2,0.4,1.6); scene.add(fill);
+
+    // capsule profile: closed narrow base -> flared open rim
+    const pts = [
+      [0.00,-0.045],[0.11,-0.038],[0.21,-0.014],[0.29,0.028],[0.335,0.088],
+      [0.40,0.42],[0.462,0.80],[0.492,0.865],[0.50,0.90]
+    ].map(p => new THREE.Vector2(p[0], p[1]));
+    const innerPts = [
+      [0.497,0.899],[0.487,0.886],[0.468,0.874]
+    ].map(p => new THREE.Vector2(p[0], p[1]));
+    const lid = new THREE.SphereGeometry(1.322, 96, 24, 0, Math.PI*2, 0, THREE.MathUtils.degToRad(20.8));
+    lid.translate(0, -0.360, 0);
+    const shCv = document.createElement('canvas');
+    shCv.width = shCv.height = 256;
+    const shx = shCv.getContext('2d');
+    const grd = shx.createRadialGradient(128, 128, 6, 128, 128, 126);
+    grd.addColorStop(0, 'rgba(8,2,14,0.46)');
+    grd.addColorStop(0.45, 'rgba(8,2,14,0.32)');
+    grd.addColorStop(1, 'rgba(8,2,14,0)');
+    shx.fillStyle = grd; shx.fillRect(0, 0, 256, 256);
+    const shadowTex = new THREE.CanvasTexture(shCv);
+    const shadowGeo = new THREE.PlaneGeometry(1, 1);
+
+    const shell = new THREE.LatheGeometry(pts, 96);
+    const inner = new THREE.LatheGeometry(innerPts, 96);
+    shell.computeVertexNormals(); inner.computeVertexNormals();
+
+    const makePod = (color, size, pos, tilt, envI) => {
+      const g = new THREE.Group();
+      const spinner = new THREE.Group();
+      const metal = new THREE.MeshPhysicalMaterial({color:color, metalness:0.92, roughness:envI > 5 ? 0.11 : 0.2, envMapIntensity:envI || 2.4, clearcoat:1, clearcoatRoughness:0.08});
+      const lining = new THREE.MeshPhysicalMaterial({color:0xc9ced2, metalness:1, roughness:0.2, envMapIntensity:(envI || 2.4)*1.1, side:THREE.DoubleSide});
+      const foil = new THREE.MeshPhysicalMaterial({color:0xd3d8dc, metalness:1, roughness:0.24, envMapIntensity:(envI || 2.4)*1.05, side:THREE.DoubleSide});
+      spinner.add(new THREE.Mesh(shell, metal));
+      spinner.add(new THREE.Mesh(inner, lining));
+      spinner.add(new THREE.Mesh(lid, foil));
+      spinner.position.y = -0.45;
+      const holder = new THREE.Group();
+      holder.add(spinner);
+      holder.scale.set(size, size*0.93, size);
+      holder.rotation.set(tilt[0], 0, tilt[2]);
+      g.add(holder);
+      g.position.set(pos[0], pos[1], pos[2]||0);
+      const shadow = new THREE.Mesh(shadowGeo, new THREE.MeshBasicMaterial({
+        map:shadowTex, transparent:true, depthWrite:false, depthTest:false, opacity:0.95
+      }));
+      shadow.scale.set(size*1.75, size*1.3, 1);
+      shadow.position.set(pos[0] + size*0.34, pos[1] - size*0.34, (pos[2]||0) - 1);
+      shadow.renderOrder = -1;
+      scene.add(shadow);
+      scene.add(g);
+      return {group:g, spinner:spinner, holder:holder, base:tilt, shadow:shadow, size:size, home:[pos[0], pos[1]]};
+    };
+
+    const d = Math.PI/180;
+    this.pods = [
+      makePod(0xdc424f, 96, [-596, 66, 40], [ 22*d, 0, -22*d], 7.0),
+      makePod(0xcf6a09, 94, [ 604, -30, 70], [-10*d, 0, 112*d]),
+      makePod(0x137f30, 94, [-272,-174, 55], [ 26*d, 0, -118*d])
+    ];
+
+    const myToken = (this.loopToken = (this.loopToken || 0) + 1);
+    const tick = () => {
+      if(this.dead || this.loopToken !== myToken) return;
+      this.lastFrame = performance.now();
+      this.drift += (this.props.idleSpin ?? true) ? 0.005 : 0;
+      if (this.lastInput && performance.now() - this.lastInput > 900) { this.ptr.tx *= 0.94; this.ptr.ty *= 0.94; }
+      const target = this.ptr.x * 5.2 * this.sens() + this.swipe;
+      this.spin += (target - this.spin) * 0.09;
+      this.ptr.x += (this.ptr.tx - this.ptr.x)*0.07;
+      this.ptr.y += (this.ptr.ty - this.ptr.y)*0.07;
+      const t = (this.props.tiltAmount ?? 1);
+      const ry = this.ptr.x * 5.5 * t, rx = -this.ptr.y * 3.5 * t;
+      if(this.tiltRef.current){
+        this.tiltRef.current.style.transform =
+          'translateZ(-220px) scale(1.1375) rotateY(' + ry + 'deg) rotateX(' + rx + 'deg) translate3d(' + (-this.ptr.x*14*t) + 'px,' + (-this.ptr.y*10*t) + 'px,0)';
+      }
+      this.pods.forEach((p, i) => {
+        p.spinner.rotation.y = (this.spin + this.drift) * (1 + i*0.22);
+        const ph = this.drift * (1 + i*0.17) + i*2.1;
+        const sway = (this.props.idleSpin ?? true) ? 1 : 0;
+        p.holder.rotation.x = p.base[0] + Math.sin(ph) * 0.20 * sway;
+        p.holder.rotation.z = p.base[2] + Math.cos(ph*0.78 + 1.3) * 0.26 * sway;
+        p.holder.rotation.y = Math.sin(ph*0.61 + 0.7) * 0.34 * sway;
+        p.group.position.y = p.home[1] + Math.sin(ph*0.85 + i) * p.size*0.05 * sway;
+        p.group.rotation.y = this.ptr.x * 0.8 * t;
+        p.group.rotation.x = -this.ptr.y * 0.6 * t;
+        p.shadow.position.x = p.home[0] + p.size*0.34 + this.ptr.x * p.size*0.22;
+        p.shadow.position.y = p.home[1] - p.size*0.34 - this.ptr.y * p.size*0.18 + Math.sin(ph*0.85 + i) * p.size*0.03 * sway;
+      });
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    };
+    this.resume = tick;
+    tick();
+  }
+}
+</script>
+</body>
+</html>

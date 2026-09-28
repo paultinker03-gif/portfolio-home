@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+// When this document is inlined and mounted as a blob: URL, it has no
+// directory to resolve relative asset paths against. Re-base on the parent.
+try {
+  if (location.href.indexOf('blob:') === 0 && parent !== window) {
+    var b = document.createElement('base');
+    b.href = new URL('.', parent.location.href).href;
+    document.head.appendChild(b);
+  }
+} catch (e) {}
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+  }
+}
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/environments/RoomEnvironment.js" crossorigin>
+<link rel="preload" as="script" href="smart-scene.js?v=2">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/smart-dashboard-2026.webp">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/zurich-balance-2026.webp">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/smart-343d.webp">
+<style>
+  html, body { margin:0; padding:0; height:100%; background:transparent; color-scheme:normal; }
+  smart-scene { display:block; width:100%; height:100%; min-height:0; overflow:hidden; touch-action:none; }
+</style>
+<script>
+window.CVRES = function (p) {
+  try {
+    var r = (window.__resources && Object.keys(window.__resources).length ? window.__resources : null)
+         || (window.parent && window.parent !== window ? window.parent.__resources : null) || {};
+    var k = decodeURIComponent(String(p).split("/").pop());
+    return r[k] || p;
+  } catch (e) { return p; }
+};
+</script>
+</head>
+<body>
+<smart-scene background="transparent" parallax="1" float-speed="1"></smart-scene>
+<script src="smart-scene.js?v=2"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const s = document.querySelector('smart-scene');
+  if (q.has('embed')) {
+    s.style.height = '100%';
+    s.style.minHeight = '0';
+  }
+  if (q.has('bg')) {
+    const bg = q.get('bg');
+    s.setAttribute('background', bg);
+    document.documentElement.style.background = bg === 'transparent' ? 'transparent' : bg;
+    document.body.style.background = bg === 'transparent' ? 'transparent' : bg;
+  }
+</script>
+</body>
+</html>

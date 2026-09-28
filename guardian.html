@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+// When this document is inlined and mounted as a blob: URL, it has no
+// directory to resolve relative asset paths against. Re-base on the parent.
+try {
+  if (location.href.indexOf('blob:') === 0 && parent !== window) {
+    var b = document.createElement('base');
+    b.href = new URL('.', parent.location.href).href;
+    document.head.appendChild(b);
+  }
+} catch (e) {}
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+  }
+}
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardian Phones</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/loaders/SVGLoader.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/environments/RoomEnvironment.js" crossorigin>
+<link rel="preload" as="script" href="guardian-scene.js">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/spotify-1.webp">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/spotify-2.webp">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/spotify-3.webp">
+<style>
+  html, body { margin:0; padding:0; height:100%; background:rgba(0,0,0,0) !important; color-scheme:normal; }
+  guardian-scene, guardian-scene canvas { background:rgba(0,0,0,0) !important; }
+  guardian-scene { display:block; width:100%; height:100vh; min-height:520px; overflow:hidden; touch-action:none; }
+</style>
+<script>
+window.CVRES = function (p) {
+  try {
+    var r = (window.__resources && Object.keys(window.__resources).length ? window.__resources : null)
+         || (window.parent && window.parent !== window ? window.parent.__resources : null) || {};
+    var k = decodeURIComponent(String(p).split("/").pop());
+    return r[k] || p;
+  } catch (e) { return p; }
+};
+</script>
+</head>
+<body>
+<guardian-scene-copy background="transparent" parallax="1" float-speed="1"></guardian-scene-copy>
+<script src="guardian-scene.js"></script>
+<script>
+  if (new URLSearchParams(location.search).has('embed') || parent !== window) {
+    const s = document.querySelector('guardian-scene-copy');
+    s.style.height = '100%';
+    s.style.minHeight = '0';
+  }
+</script>
+</body>
+</html>
