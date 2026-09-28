@@ -375,7 +375,9 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
             <div data-role="cv-imggroup" data-nesp="1" data-imgcount="{{ e.imgCount }}" style="position:fixed; inset:var(--nesp-inset, 24px 4% 84px) !important; width:auto !important; height:auto !important; transform:var(--nesp-scale, none) !important; z-index:1; pointer-events:none; opacity:{{ e.bgOp }}; transition:opacity 500ms ease">
               <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
                 <div style="width:100%; height:100%; animation:cvFloat 6.5s ease-in-out infinite">
-                  <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                  <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
+                    <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                  </sc-if>
                 </div>
               </div>
             </div>
@@ -1008,7 +1010,12 @@ class Component extends DCLogic {
     const active = this.state.i;
     const allow3d = this._mounted3d === true && Number.isInteger(active);
     // once the page is fully settled, also mount the neighbouring scene so it is warm on arrival
-    const near3d = (i) => allow3d && (i === active || (this._warm3d === true && Math.abs(i - active) <= 2));
+    // Each 3D scene is its own iframe with its own three.js + WebGL context. Phones run out of
+    // memory with five alive and kill the frames, so on touch / low-memory devices keep only the
+    // active scene and its direct neighbours mounted.
+    const lowMem = typeof window !== "undefined" && ((window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.deviceMemory && navigator.deviceMemory <= 4));
+    const radius = lowMem ? 1 : 2;
+    const near3d = (i) => allow3d && (i === active || (this._warm3d === true && Math.abs(i - active) <= radius));
     const info = this.state.info;
     const isNarrowPortrait = typeof window !== "undefined" && window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
     const introPalette = this.introPalette();
@@ -1098,6 +1105,7 @@ class Component extends DCLogic {
         introCanvasRef: (el) => { this._introCanvas = el; if (el) this._resizeIntro(); },
         nespressoCanvasRef: (el) => { this._nespCanvas = el; if (el) this._resizeNespresso(); },
         abstractComp: !!d.abstractComp,
+        bt3dNear: !lowMem || near3d(i),
         textColor: d.dayNight ? THEME.dark.text : (d.textColor || theme.text),
         descColor: d.dayNight ? THEME.dark.desc : (d.descColor || theme.desc),
         linkColor: d.dayNight ? THEME.dark.link : theme.desc,
