@@ -301,7 +301,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.vf3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=2" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/vodafone.webp" alt="Vodafone app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/vodafone-land.webp"><img class="cv-still" src="./assets/mobile/vodafone.webp" alt="Vodafone app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide4Even }}" hint-placeholder-val="{{ false }}">
@@ -309,7 +309,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.akqa3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe src="./akqa.html?embed=1&v=20260910b" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/akqa.webp" alt="AKQA cardiovascular iPad app" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/akqa-land.webp"><img class="cv-still" src="./assets/mobile/akqa.webp" alt="AKQA cardiovascular iPad app" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
@@ -317,7 +317,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=1" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/guardian.webp" alt="The Guardian x Spotify app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/guardian-land.webp"><img class="cv-still" src="./assets/mobile/guardian.webp" alt="The Guardian x Spotify app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide1 }}" hint-placeholder-val="{{ false }}">
@@ -381,7 +381,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
                     <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
-                  <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/nespresso.webp" alt="Nespresso Built Together" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
+                  <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/nespresso-land.webp"><img class="cv-still" src="./assets/mobile/nespresso.webp" alt="Nespresso Built Together" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
                 </div>
               </div>
             </div>
@@ -391,7 +391,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=2" title="Smart Pension and DEWS app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/smart.webp" alt="Smart Pension and DEWS app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/smart-land.webp"><img class="cv-still" src="./assets/mobile/smart.webp" alt="Smart Pension and DEWS app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide6 }}" hint-placeholder-val="{{ false }}">
@@ -1021,9 +1021,9 @@ class Component extends DCLogic {
     // devices a scene is mounted when it first comes near and then KEPT (it pauses itself when
     // off-screen), so each context is created exactly once.
     const lowMem = typeof window !== "undefined" && ((window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.deviceMemory && navigator.deviceMemory <= 4));
-    // Phones held upright show pre-rendered transparent WebP stills (assets/mobile/) instead of
+    // Phones (upright or sideways) show pre-rendered transparent WebP stills (assets/mobile/) instead of
     // live 3D: no WebGL at all, so nothing can be wiped, and far less battery/memory.
-    const stills = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse) and (max-width: 700px) and (orientation: portrait)").matches;
+    const stills = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse) and (max-width: 700px) and (orientation: portrait), (pointer: coarse) and (max-height: 500px) and (orientation: landscape)").matches;
     const near3d = (i) => {
       if (!allow3d || stills) return false;
       const hit = i === active || (this._warm3d === true && Math.abs(i - active) <= (lowMem ? 1 : 2));
