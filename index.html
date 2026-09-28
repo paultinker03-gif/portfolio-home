@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://paultinker.uk/">
-<style>html,body{background:#04122a;margin:0;padding:0}</style>
+<style>html,body{background:#04122a;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
 </head>
@@ -100,23 +100,23 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"], [data-role="cv-gu3d"], [data-role="cv-vf3d"], [data-role="cv-smart3d"] { pointer-events: none !important; }
   }
   @media (max-width: 700px) and (orientation: portrait) {
-    [data-role="cv-akqa3d"] iframe { transform: translateY(-6%) scale(0.78); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: translateY(-6%) scale(0.78); transform-origin:50% 50%; }
   }
   @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
-    [data-role="cv-akqa3d"] iframe { transform: scale(1.45); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(1.45); transform-origin:50% 50%; }
   }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
-    [data-role="cv-akqa3d"] iframe { transform: scale(0.88); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(0.88); transform-origin:50% 50%; }
   }
   /* laptops & mid-size monitors: 3D scenes read smaller than on a large display */
   @media (min-width: 1025px) and (max-width: 1899px) {
-    [data-role="cv-akqa3d"] iframe { transform: scale(1.08); transform-origin:50% 50%; }
-    [data-role="cv-gu3d"] iframe { transform: scale(1.65); transform-origin:50% 50%; }
-    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.12); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(1.08); transform-origin:50% 50%; }
+    [data-role="cv-gu3d"] :is(iframe, img.cv-still) { transform: scale(1.65); transform-origin:50% 50%; }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.12); transform-origin:50% 50%; }
   }
   /* 13"/14" MacBook viewports: the Guardian scene overflows at 1.65 */
   @media (min-width: 1025px) and (max-width: 1560px) {
-    [data-role="cv-gu3d"] iframe { transform: scale(1.18); transform-origin:50% 50%; }
+    [data-role="cv-gu3d"] :is(iframe, img.cv-still) { transform: scale(1.18); transform-origin:50% 50%; }
   }
   @media (max-width: 700px) {
     [data-role="cv-akqa-0"] { width:min(552px, 48.9vw) !important; height:min(620px, 54.9vw) !important; }
@@ -162,7 +162,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa-2"] { width:min(193px, 14vw) !important; height:min(179px, 13vw) !important; }
     [data-role="cv-akqa-3"] { width:min(145px, 10.5vw) !important; height:min(120px, 8.7vw) !important; }
     [data-role="cv-imggroup"][data-imgcount="4"] { top:4% !important; bottom:4% !important; }
-    [data-role="cv-akqa3d"] iframe { transform: none; }
+    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: none; }
     [data-role="cv-desc"] { width:min(360px, 34vw) !important; }
     [data-role="cv-title"] { width:min(320px, 34vw) !important; }
   }
@@ -203,7 +203,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   }
 
   [data-role="cv-imggroup"][data-imgcount="4"]:has([data-role="cv-vf3d"]) { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
-  [data-role="cv-vf3d"] iframe, [data-role="cv-gu3d"] iframe, [data-role="cv-smart3d"] iframe, [data-role="cv-akqa3d"] iframe { pointer-events:auto; }
+  [data-role="cv-vf3d"] :is(iframe, img.cv-still), [data-role="cv-gu3d"] :is(iframe, img.cv-still), [data-role="cv-smart3d"] :is(iframe, img.cv-still), [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { pointer-events:auto; }
   @media (min-width: 1441px) { [data-role="cv-vf3d"] { left:32% !important; right:1% !important; top:5% !important; bottom:11% !important; } }
   @media (min-width: 1024px) and (max-width: 1440px) { [data-role="cv-vf3d"] { left:38% !important; right:0% !important; top:7% !important; bottom:13% !important; } }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) { [data-role="cv-vf3d"] { left:-8% !important; right:-8% !important; top:14% !important; bottom:24% !important; } }
@@ -235,28 +235,28 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-imggroup"][data-imgcount="0"][data-nesp="1"] { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
     [data-role="cv-imggroup"][data-imgcount="105"] { left:44vw !important; right:auto !important; width:52vw !important; }
   }
-  [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); transform-origin:50% 50%; }
+  [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.02); transform-origin:50% 50%; }
   @media (min-width: 1900px) {
-    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1); }
   }
   @media (min-width: 701px) and (max-width: 1024px) {
-    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.16); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.16); }
   }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
-    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.02); }
   }
   /* Vodafone pill needs more weight on small screens */
   @media (max-width: 1024px) {
     [data-active-entry="vodafone"] { background: oklch(0.2 0.05 20 / 0.95) !important; }
   }
   @media (max-width: 700px) {
-    [data-role="cv-smart3d"] iframe { transform: translate(2%, 1%) scale(1.22); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(2%, 1%) scale(1.22); }
   }
   @media (max-height: 500px) and (orientation: landscape) {
-    [data-role="cv-smart3d"] iframe { transform: translate(12%, -3%) scale(0.95); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(12%, -3%) scale(0.95); }
   }
   @media (max-width: 700px) and (orientation: portrait) {
-    [data-role="cv-smart3d"] iframe { transform: translate(2%, -9%) scale(0.86); }
+    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(2%, -9%) scale(0.86); }
   }
   @media (max-width: 1024px) {
     [data-role="cv-glow"] { box-shadow:0 0 84px 26px rgba(255,232,196,0.19), 0 0 32px 6px rgba(255,244,224,0.13) !important; }
@@ -273,8 +273,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (min-width: 1441px) { :root { --nesp-inset: 40px 6% 110px; --nesp-scale: scale(0.85); } }
   @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 23vh 11% 27vh; --nesp-scale: scale(0.88); } }
   @media (orientation: landscape) and (min-width: 1000px) and (max-width: 1400px) and (min-height: 700px) { :root { --nesp-inset: 17vh 9% 21vh; --nesp-scale: none; } }
-  [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:none; }
-  @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:auto; } }
+  [data-role="cv-imggroup"][data-nesp="1"] :is(iframe, img.cv-still) { pointer-events:none; }
+  @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] :is(iframe, img.cv-still) { pointer-events:auto; } }
 </style>
 </helmet>
 <div style="position:fixed; inset:0; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
@@ -301,6 +301,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.vf3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=2" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/vodafone.webp" alt="Vodafone app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide4Even }}" hint-placeholder-val="{{ false }}">
@@ -308,6 +309,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.akqa3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe src="./akqa.html?embed=1&v=20260910b" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/akqa.webp" alt="AKQA cardiovascular iPad app" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
@@ -315,6 +317,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=1" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/guardian.webp" alt="The Guardian x Spotify app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide1 }}" hint-placeholder-val="{{ false }}">
@@ -378,6 +381,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
                     <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
+                  <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/nespresso.webp" alt="Nespresso Built Together" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
                 </div>
               </div>
             </div>
@@ -387,6 +391,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=2" title="Smart Pension and DEWS app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
+              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><img class="cv-still" src="./assets/mobile/smart.webp" alt="Smart Pension and DEWS app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide6 }}" hint-placeholder-val="{{ false }}">
@@ -1016,8 +1021,11 @@ class Component extends DCLogic {
     // devices a scene is mounted when it first comes near and then KEPT (it pauses itself when
     // off-screen), so each context is created exactly once.
     const lowMem = typeof window !== "undefined" && ((window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.deviceMemory && navigator.deviceMemory <= 4));
+    // Phones held upright show pre-rendered transparent WebP stills (assets/mobile/) instead of
+    // live 3D: no WebGL at all, so nothing can be wiped, and far less battery/memory.
+    const stills = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse) and (max-width: 700px) and (orientation: portrait)").matches;
     const near3d = (i) => {
-      if (!allow3d) return false;
+      if (!allow3d || stills) return false;
       const hit = i === active || (this._warm3d === true && Math.abs(i - active) <= (lowMem ? 1 : 2));
       if (!lowMem) return hit;
       this._kept3d = this._kept3d || {};
@@ -1113,7 +1121,8 @@ class Component extends DCLogic {
         introCanvasRef: (el) => { this._introCanvas = el; if (el) this._resizeIntro(); },
         nespressoCanvasRef: (el) => { this._nespCanvas = el; if (el) this._resizeNespresso(); },
         abstractComp: !!d.abstractComp,
-        bt3dNear: true,
+        bt3dNear: !stills,
+        stills: stills,
         textColor: d.dayNight ? THEME.dark.text : (d.textColor || theme.text),
         descColor: d.dayNight ? THEME.dark.desc : (d.descColor || theme.desc),
         linkColor: d.dayNight ? THEME.dark.link : theme.desc,
