@@ -1010,12 +1010,20 @@ class Component extends DCLogic {
     const active = this.state.i;
     const allow3d = this._mounted3d === true && Number.isInteger(active);
     // once the page is fully settled, also mount the neighbouring scene so it is warm on arrival
-    // Each 3D scene is its own iframe with its own three.js + WebGL context. Phones run out of
-    // memory with five alive and kill the frames, so on touch / low-memory devices keep only the
-    // active scene and its direct neighbours mounted.
+    // Each 3D scene is its own iframe with its own WebGL context. Mobile Chrome allows only a few
+    // WebGL contexts per page and silently wipes the oldest when a new one is made — so unmounting
+    // and remounting scenes on every swipe makes the visible ones vanish. On touch / low-memory
+    // devices a scene is mounted when it first comes near and then KEPT (it pauses itself when
+    // off-screen), so each context is created exactly once.
     const lowMem = typeof window !== "undefined" && ((window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.deviceMemory && navigator.deviceMemory <= 4));
-    const radius = lowMem ? 1 : 2;
-    const near3d = (i) => allow3d && (i === active || (this._warm3d === true && Math.abs(i - active) <= radius));
+    const near3d = (i) => {
+      if (!allow3d) return false;
+      const hit = i === active || (this._warm3d === true && Math.abs(i - active) <= (lowMem ? 1 : 2));
+      if (!lowMem) return hit;
+      this._kept3d = this._kept3d || {};
+      if (hit) this._kept3d[i] = true;
+      return !!this._kept3d[i];
+    };
     const info = this.state.info;
     const isNarrowPortrait = typeof window !== "undefined" && window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
     const introPalette = this.introPalette();
@@ -1105,7 +1113,7 @@ class Component extends DCLogic {
         introCanvasRef: (el) => { this._introCanvas = el; if (el) this._resizeIntro(); },
         nespressoCanvasRef: (el) => { this._nespCanvas = el; if (el) this._resizeNespresso(); },
         abstractComp: !!d.abstractComp,
-        bt3dNear: !lowMem || near3d(i),
+        bt3dNear: true,
         textColor: d.dayNight ? THEME.dark.text : (d.textColor || theme.text),
         descColor: d.dayNight ? THEME.dark.desc : (d.descColor || theme.desc),
         linkColor: d.dayNight ? THEME.dark.link : theme.desc,
