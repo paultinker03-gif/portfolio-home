@@ -104,7 +104,7 @@ const reveal = () => {
   renderer.domElement.style.opacity = '1';
   try { parent.postMessage({ type: 'vf3d-ready' }, '*'); } catch (e) {}
 };
-texManager.onLoad = reveal;
+texManager.onLoad = () => Promise.all(videoReady).then(reveal);
 // safety net: never leave the canvas hidden if a texture fails
 setTimeout(reveal, 4000);
 
@@ -123,12 +123,46 @@ function roundedRectShape(w, h, r) {
   return s;
 }
 
+// ── TOBi live screens ─────────────────────────────────────────────
+// true  = the two right-hand phones play the TOBi kit loops (welcome pulse + whistle,
+//         and the demo conversation), shaped like the kit's 375×812 phone.
+// false = back to the original still screens and phone shape.
+const TOBI_VIDEO = true;
+
+// A looping muted video as a screen texture. It starts on a poster frame (so the
+// phone is never blank) and swaps to the moving video once the first frame is ready.
+const videoReady = [];
+function videoScreen(src, poster) {
+  const tex = loader.load(poster);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const v = document.createElement('video');
+  v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+  v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+  // VP9 WebM where supported (Chrome, Firefox, Android), H.264 MP4 otherwise (Safari/iPad)
+  const webm = v.canPlayType('video/webm; codecs="vp9"');
+  v.preload = 'auto'; v.crossOrigin = 'anonymous'; v.src = webm ? src.replace(/\.mp4$/, '.webm') : src;
+  const vt = new THREE.VideoTexture(v);
+  vt.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+  videoReady.push(new Promise(res => {
+    const go = () => { mat.map = vt; mat.needsUpdate = true; res(); };
+    v.addEventListener('loadeddata', go, { once: true });
+    v.addEventListener('error', res, { once: true });
+    setTimeout(res, 3500);
+  }));
+  const p = v.play(); if (p && p.catch) p.catch(() => {});
+  mat.userData.video = v;
+  (window.__tobiVideos = window.__tobiVideos || []).push(v);
+  return mat;
+}
+
 function makePhone(cfg) {
   const g = new THREE.Group();
   g.name = cfg.name;
   const h = cfg.height;
-  const w = h * cfg.aspect;
   const bezel = h * 0.022;
+  // screenAspect: size the body around an exact screen shape (kit phone = 375/812)
+  const w = cfg.screenAspect ? (h - bezel * 2) * cfg.screenAspect + bezel * 2 : h * cfg.aspect;
   const depth = 0.085;
   const bevel = 0.022;
 
@@ -148,12 +182,18 @@ function makePhone(cfg) {
   rail.name = cfg.name + '-rail';
   g.add(rail);
 
-  const tex = loader.load(cfg.screen);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const screenMat = new THREE.MeshBasicMaterial({ name: cfg.name + '-screen-mat', map: tex, toneMapped: false });
+  let screenMat;
+  if (cfg.video) {
+    screenMat = videoScreen(cfg.video, cfg.screen);
+    screenMat.name = cfg.name + '-screen-mat';
+  } else {
+    const tex = loader.load(cfg.screen);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    screenMat = new THREE.MeshBasicMaterial({ name: cfg.name + '-screen-mat', map: tex, toneMapped: false });
+  }
   const sw = w - bezel * 2, sh = h - bezel * 2;
-  const screenGeo = new THREE.ShapeGeometry(roundedRectShape(sw, sh, sw * 0.105), 24);
+  const screenGeo = new THREE.ShapeGeometry(roundedRectShape(sw, sh, sw * (cfg.screenRadius || 0.105)), 24);
   const pos = screenGeo.attributes.position, uv = [];
   for (let i = 0; i < pos.count; i++) uv.push((pos.getX(i) + sw / 2) / sw, (pos.getY(i) + sh / 2) / sh);
   screenGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
@@ -177,12 +217,19 @@ function makePhone(cfg) {
 
 const TALL = 720 / 1480, WIDE = 750 / 1334;
 
+const KIT = 375 / 812;
 const configs = [
   { name: 'get-started', screen: CVRES('uploads/get-started.webp'), aspect: TALL, height: 2.75,
     x: -2.05, y: 1.05, z: 0.0, rx: 0.06, ry: 0.20, rz: -0.24, sens: 0.55, ease: 0.045, bobAmp: 0.05, bobFreq: 0.55, phase: 0 },
-  { name: 'welcome', screen: CVRES('uploads/Welcome-Option-02.webp'), aspect: WIDE, height: 2.35,
+  TOBI_VIDEO
+  ? { name: 'welcome', screen: CVRES('assets/tobi/tobi-welcome.webp'), video: CVRES('assets/tobi/tobi-welcome.mp4'), screenAspect: KIT, screenRadius: 0.095, height: 2.5,
+    x: 1.15, y: 1.55, z: -0.55, rx: -0.05, ry: -0.16, rz: -0.55, sens: 0.38, ease: 0.03, bobAmp: 0.04, bobFreq: 0.7, phase: 2.6 }
+  : { name: 'welcome', screen: CVRES('uploads/Welcome-Option-02.webp'), aspect: WIDE, height: 2.35,
     x: 1.15, y: 1.55, z: -0.55, rx: -0.05, ry: -0.16, rz: -0.55, sens: 0.38, ease: 0.03, bobAmp: 0.04, bobFreq: 0.7, phase: 2.6 },
-  { name: 'chat', screen: CVRES('uploads/mobile-screen-02.webp'), aspect: WIDE, height: 2.70,
+  TOBI_VIDEO
+  ? { name: 'chat', screen: CVRES('assets/tobi/tobi-chat.webp'), video: CVRES('assets/tobi/tobi-chat.mp4'), screenAspect: KIT, screenRadius: 0.095, height: 2.9,
+    x: 1.95, y: 0.15, z: 0.25, rx: 0.02, ry: -0.22, rz: -0.28, sens: 0.75, ease: 0.065, bobAmp: 0.06, bobFreq: 0.45, phase: 4.1 }
+  : { name: 'chat', screen: CVRES('uploads/mobile-screen-02.webp'), aspect: WIDE, height: 2.70,
     x: 1.95, y: 0.15, z: 0.25, rx: 0.02, ry: -0.22, rz: -0.28, sens: 0.75, ease: 0.065, bobAmp: 0.06, bobFreq: 0.45, phase: 4.1 },
   { name: 'dashboard', screen: CVRES('uploads/0301-dashboard.webp'), aspect: TALL, height: 3.30,
     x: -1.75, y: -0.85, z: 0.95, rx: 0.05, ry: 0.14, rz: -0.66, sens: 1.0, ease: 0.09, bobAmp: 0.07, bobFreq: 0.5, phase: 1.4 }
@@ -280,8 +327,9 @@ function tick(now) {
   renderer.render(scene, camera);
   if (running) rafId = requestAnimationFrame(tick);
 }
-function start() { if (!running) { running = true; rafId = requestAnimationFrame(tick); } }
-function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+const videos = () => phones.map(p => p.g.children.find(c => c.material && c.material.userData && c.material.userData.video)).filter(Boolean).map(m => m.material.userData.video);
+function start() { if (!running) { running = true; rafId = requestAnimationFrame(tick); } videos().forEach(v => { const q = v.play(); if (q && q.catch) q.catch(() => {}); }); }
+function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; videos().forEach(v => v.pause()); }
 // host page toggles rendering as this slide becomes active/adjacent/inactive, to save GPU when off-screen
 addEventListener('message', e => {
   if (!e.data || e.data.type !== 'vf3d-visibility') return;

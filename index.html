@@ -623,6 +623,15 @@ class Component extends DCLogic {
       setTimeout(() => idle(doWarm, { timeout: 4000 }), 9000);
     };
     if (document.readyState === "complete") armWarm(); else window.addEventListener("load", armWarm, { once: true });
+    // Tablets/desktop: fetch the TOBi screen loops for Vodafone (next section) while the intro
+    // plays, after the page has loaded, so the phones slide in already playing. Phones use stills.
+    const prefetchTobi = () => {
+      if (window.matchMedia && window.matchMedia("(pointer: coarse) and (max-width: 700px) and (orientation: portrait), (pointer: coarse) and (max-height: 500px) and (orientation: landscape)").matches) return;
+      const ext = document.createElement("video").canPlayType('video/webm; codecs="vp9"') ? ".webm" : ".mp4";
+      setTimeout(() => ["assets/tobi/tobi-welcome" + ext, "assets/tobi/tobi-chat" + ext, "assets/tobi/tobi-welcome.webp", "assets/tobi/tobi-chat.webp"]
+        .forEach((u) => { try { fetch(u, { priority: "low" }).catch(() => {}); } catch (e) {} }), 800);
+    };
+    if (document.readyState === "complete") prefetchTobi(); else window.addEventListener("load", prefetchTobi, { once: true });
     this._fwdTouch = (ev) => {
       const t = ev.touches && ev.touches[0];
       if (!t) return;
