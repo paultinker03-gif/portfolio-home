@@ -607,22 +607,18 @@ class Component extends DCLogic {
           .forEach((src, n) => setTimeout(() => { const im = new Image(); im.src = src; }, 300 + n * 150));
       }, 600);
     }
-    // Warming neighbour 3D scenes compiles shaders on the main thread and stutters the
-    // intro bubbles, so wait for first intent (or long idle) instead of a fixed timer.
-    const doWarm = () => {
-      if (this._warm3d) return;
-      this._warm3d = true; this.forceUpdate();
-      ["wheel", "keydown", "touchstart", "pointerdown"].forEach((t) => window.removeEventListener(t, doWarm));
-      if (this._navEl) this._navEl.removeEventListener("pointerenter", doWarm);
+    // Warming neighbour 3D scenes (Vodafone's three.js + TOBi video textures, Smart) runs on the
+    // main thread and would freeze the intro bubbles mid-motion, so it never happens while the
+    // intro is on screen: the intro loop calls this once the intro has been left for 1.5s.
+    window.__ptHoldNesp = true;
+    const bootNesp = () => {
+      if (window.__ptNespGo) return;
+      window.__ptNespGo = true;
+      document.querySelectorAll('iframe[data-role="cv-bt3d"]').forEach((f) => { try { f.contentWindow.__ptBoot && f.contentWindow.__ptBoot(); } catch (e) {} });
     };
+    this._bootNesp = bootNesp;
+    const doWarm = () => { if (this._warm3d) return; this._warm3d = true; this.forceUpdate(); bootNesp(); };
     this._doWarm = doWarm;
-    const armWarm = () => {
-      ["wheel", "keydown", "touchstart", "pointerdown"].forEach((t) => window.addEventListener(t, doWarm, { once: true, passive: true }));
-      if (this._navEl) this._navEl.addEventListener("pointerenter", doWarm, { once: true });
-      const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1));
-      setTimeout(() => idle(doWarm, { timeout: 4000 }), 9000);
-    };
-    if (document.readyState === "complete") armWarm(); else window.addEventListener("load", armWarm, { once: true });
     // Tablets/desktop: fetch the TOBi screen loops for Vodafone (next section) while the intro
     // plays, after the page has loaded, so the phones slide in already playing. Phones use stills.
     const prefetchTobi = () => {
@@ -632,6 +628,10 @@ class Component extends DCLogic {
         .forEach((u) => { try { fetch(u, { priority: "low" }).catch(() => {}); } catch (e) {} }), 800);
     };
     if (document.readyState === "complete") prefetchTobi(); else window.addEventListener("load", prefetchTobi, { once: true });
+    // Vodafone is the very next section, so its 3D phones are built while the page is still loading
+    // (the moment the page is busy anyway), then held on their first frame until Vodafone is opened.
+    // That way they slide in already drawn and playing, and nothing is built mid-intro.
+    this._vfEarly = true;
     this._fwdTouch = (ev) => {
       const t = ev.touches && ev.touches[0];
       if (!t) return;
@@ -737,6 +737,11 @@ class Component extends DCLogic {
       this._lastFrame = now; this._dt = dt;
       if (this.state.i === 0) this._introLeftAt = 0; else if (!this._introLeftAt) this._introLeftAt = now;
       if (!this._introLeftAt || now - this._introLeftAt < 1500) this._drawIntro();
+      else if (!this._warm3d) this._doWarm();
+      const nespOn = !!(DATA[this.state.i] && DATA[this.state.i].abstractComp);
+      window.__ptNespVisible = nespOn;
+      window.__ptOnIntro = this.state.i === 0;
+      if (nespOn && !window.__ptNespGo) this._bootNesp();
       this._drawNespresso();
       this._introRaf = requestAnimationFrame(introLoop);
     };
@@ -1056,7 +1061,6 @@ class Component extends DCLogic {
   }
 
   go(step) {
-    if (this._doWarm) this._doWarm();
     this.setState((s) => {
       const n = DATA.length;
       const i = Math.min(n - 1, Math.max(0, s.i + step));
@@ -1086,6 +1090,7 @@ class Component extends DCLogic {
     const near3d = (i) => {
       if (!allow3d || stills) return false;
       const hit = i === active || (this._warm3d === true && Math.abs(i - active) <= (lowMem ? 1 : 2));
+      if (!hit && this._vfEarly === true && active === 0 && DATA[i].short === "Vodafone") return lowMem ? ((this._kept3d = this._kept3d || {})[i] = true) : true;
       if (!lowMem) return hit;
       this._kept3d = this._kept3d || {};
       if (hit) this._kept3d[i] = true;
@@ -1234,7 +1239,7 @@ class Component extends DCLogic {
     for (const k in els) {
       const idx = +k, el = els[k];
       const dist = Math.abs(idx - active);
-      const state = dist <= 1 ? "active" : "inactive";
+      const state = active === 0 ? "standby" : (dist <= 1 ? "active" : "inactive");
       if (el._vf3dState === state) continue;
       el._vf3dState = state;
       try { el.contentWindow.postMessage({ type: "vf3d-visibility", state }, "*"); } catch (err) {}
@@ -1321,7 +1326,15 @@ class Component extends DCLogic {
         const aspect = 701 / 223, rw = Math.min(w, h * aspect);
         x += (0.5 - 0.481) * rw;
       }
-      if (name === "akqa") {
+      if (name === "akqa" && !land) {
+        // phones upright: a smaller image with the iPad itself (at fx, fy of the still, not the
+        // image's middle, as the blood cells hang off it unevenly) centred across the screen and
+        // in the space between the title and the description
+        const fx = 0.471, fy = 0.442, aspect = 717 / 665;
+        const midY = y + h / 2;
+        const ih = Math.min((ew * 0.9) / aspect, h * 0.9), iw = ih * aspect;
+        x = ew / 2 - fx * iw; w = iw; y = midY - fy * ih; h = ih;
+      } else if (name === "akqa") {
         // the iPad sits at (fx, fy) of the trimmed still; put its centre on the page's vertical centre
         const fy = 0.442, aspect = 717 / 665;
         const cy = eh / 2, top = y, bottom = y + h;

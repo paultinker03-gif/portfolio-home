@@ -52,7 +52,14 @@ class Component extends DCLogic {
     return {stageRef:this.stageRef, tiltRef:this.tiltRef, glRef:this.glRef};
   }
   componentDidMount(){
-    this.fit(); this.bind(); this.initGL(); this.watchdog();
+    this.fit(); this.bind();
+    // Embedded in paultinker.uk: the host holds the WebGL boot until the intro has been left (or
+    // Nespresso is opened), so compiling this scene never freezes the intro bubbles.
+    let host = null; try { host = window.parent !== window ? window.parent : null; } catch (e) {}
+    const go = () => { if (this._booted) return; this._booted = true; this.initGL(); this.watchdog(); };
+    this._host = host;
+    if (host && host.__ptHoldNesp && !host.__ptNespGo) { this._held = true; window.__ptBoot = go; }
+    else go();
   }
   watchdog(){
     clearInterval(this._watch);
@@ -69,6 +76,7 @@ class Component extends DCLogic {
     }, 1000);
   }
   componentDidUpdate(){
+    if(this._held && !this._booted) return;
     if(!this.renderer && !this._booting && this.glRef.current){
       this._booting = true; this.dead = false;
       this.glRef.current.innerHTML = '';
@@ -244,7 +252,9 @@ class Component extends DCLogic {
         p.shadow.position.x = p.home[0] + p.size*0.34 + this.ptr.x * p.size*0.22;
         p.shadow.position.y = p.home[1] - p.size*0.34 - this.ptr.y * p.size*0.18 + Math.sin(ph*0.85 + i) * p.size*0.03 * sway;
       });
-      renderer.render(scene, camera);
+      // Host says Nespresso is off screen: keep the loop alive (watchdog) but skip the GPU work.
+      const hidden = this._host && this._host.__ptNespVisible === false && this._drawnOnce;
+      if (!hidden) { renderer.render(scene, camera); this._drawnOnce = true; }
       requestAnimationFrame(tick);
     };
     return tick;

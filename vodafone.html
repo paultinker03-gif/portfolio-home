@@ -100,7 +100,13 @@ const edgeMat = new THREE.MeshStandardMaterial({ name: 'phone-edge', color: 0x2a
 // phones never slide in with blank/partial screens
 const texManager = new THREE.LoadingManager();
 const loader = new THREE.TextureLoader(texManager);
+let revealed = false, standby = false;
+const onIntro = () => { try { return window.parent !== window && window.parent.__ptOnIntro === true; } catch (e) { return false; } };
 const reveal = () => {
+  if (revealed) return; revealed = true;
+  // built early behind the portfolio intro: draw this first frame, then hold still (videos paused)
+  // until Vodafone is opened, so the intro stays smooth and the phones arrive ready.
+  if (standby || onIntro()) requestAnimationFrame(() => requestAnimationFrame(() => { if (standby || onIntro()) stop(); }));
   renderer.domElement.style.opacity = '1';
   try { parent.postMessage({ type: 'vf3d-ready' }, '*'); } catch (e) {}
 };
@@ -333,7 +339,8 @@ function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); rafId
 // host page toggles rendering as this slide becomes active/adjacent/inactive, to save GPU when off-screen
 addEventListener('message', e => {
   if (!e.data || e.data.type !== 'vf3d-visibility') return;
-  if (e.data.state === 'inactive') stop(); else start();
+  standby = e.data.state === 'standby';
+  if (e.data.state === 'inactive' || (standby && revealed)) stop(); else if (!standby) start();
 });
 requestAnimationFrame(tick);
 </script>
