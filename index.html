@@ -100,23 +100,23 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"], [data-role="cv-gu3d"], [data-role="cv-vf3d"], [data-role="cv-smart3d"] { pointer-events: none !important; }
   }
   @media (max-width: 700px) and (orientation: portrait) {
-    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: translateY(-6%) scale(0.78); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] iframe { transform: translateY(-6%) scale(0.78); transform-origin:50% 50%; }
   }
   @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
-    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(1.45); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] iframe { transform: scale(1.45); transform-origin:50% 50%; }
   }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
-    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(0.88); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] iframe { transform: scale(0.88); transform-origin:50% 50%; }
   }
   /* laptops & mid-size monitors: 3D scenes read smaller than on a large display */
   @media (min-width: 1025px) and (max-width: 1899px) {
-    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: scale(1.08); transform-origin:50% 50%; }
-    [data-role="cv-gu3d"] :is(iframe, img.cv-still) { transform: scale(1.65); transform-origin:50% 50%; }
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.12); transform-origin:50% 50%; }
+    [data-role="cv-akqa3d"] iframe { transform: scale(1.08); transform-origin:50% 50%; }
+    [data-role="cv-gu3d"] iframe { transform: scale(1.65); transform-origin:50% 50%; }
+    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.12); transform-origin:50% 50%; }
   }
   /* 13"/14" MacBook viewports: the Guardian scene overflows at 1.65 */
   @media (min-width: 1025px) and (max-width: 1560px) {
-    [data-role="cv-gu3d"] :is(iframe, img.cv-still) { transform: scale(1.18); transform-origin:50% 50%; }
+    [data-role="cv-gu3d"] iframe { transform: scale(1.18); transform-origin:50% 50%; }
   }
   @media (max-width: 700px) {
     [data-role="cv-akqa-0"] { width:min(552px, 48.9vw) !important; height:min(620px, 54.9vw) !important; }
@@ -162,7 +162,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa-2"] { width:min(193px, 14vw) !important; height:min(179px, 13vw) !important; }
     [data-role="cv-akqa-3"] { width:min(145px, 10.5vw) !important; height:min(120px, 8.7vw) !important; }
     [data-role="cv-imggroup"][data-imgcount="4"] { top:4% !important; bottom:4% !important; }
-    [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { transform: none; }
+    [data-role="cv-akqa3d"] iframe { transform: none; }
     [data-role="cv-desc"] { width:min(360px, 34vw) !important; }
     [data-role="cv-title"] { width:min(320px, 34vw) !important; }
   }
@@ -203,7 +203,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   }
 
   [data-role="cv-imggroup"][data-imgcount="4"]:has([data-role="cv-vf3d"]) { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
-  [data-role="cv-vf3d"] :is(iframe, img.cv-still), [data-role="cv-gu3d"] :is(iframe, img.cv-still), [data-role="cv-smart3d"] :is(iframe, img.cv-still), [data-role="cv-akqa3d"] :is(iframe, img.cv-still) { pointer-events:auto; }
+  [data-role="cv-vf3d"] iframe, [data-role="cv-gu3d"] iframe, [data-role="cv-smart3d"] iframe, [data-role="cv-akqa3d"] iframe { pointer-events:auto; }
   @media (min-width: 1441px) { [data-role="cv-vf3d"] { left:32% !important; right:1% !important; top:5% !important; bottom:11% !important; } }
   @media (min-width: 1024px) and (max-width: 1440px) { [data-role="cv-vf3d"] { left:38% !important; right:0% !important; top:7% !important; bottom:13% !important; } }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) { [data-role="cv-vf3d"] { left:-8% !important; right:-8% !important; top:14% !important; bottom:24% !important; } }
@@ -211,6 +211,24 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (max-width: 700px) and (orientation: portrait) { [data-role="cv-vf3d"] { left:-4% !important; right:-4% !important; top:20% !important; bottom:36% !important; } }
   @media (max-height: 500px) and (orientation: landscape) { [data-role="cv-vf3d"] { left:46vw !important; right:0% !important; top:4% !important; bottom:44px !important; } }
   [data-role="cv-rotate-msg"] { display:none; }
+  /* big portrait screens (a monitor on its side): centre Vodafone, smaller AKQA,
+     description clear of the tabs, tabs left-aligned */
+  @media (orientation: portrait) and (min-width: 1025px) {
+    [data-role="cv-vf3d"] { left:12% !important; right:2% !important; top:27% !important; bottom:33% !important; }
+    [data-role="cv-imggroup"]:has([data-role="cv-akqa3d"]) { left:0 !important; right:0 !important; }
+    [data-role="cv-akqa3d"] { top:20% !important; bottom:20% !important; }
+    [data-role="cv-akqa3d"] iframe { transform: none; }
+    [data-role="cv-desc"] { bottom:96px !important; }
+    [data-role="cv-yearnav"] { justify-content:flex-start !important; padding-left:16px !important; }
+    [data-role="cv-gu3d"] { top:28% !important; bottom:28% !important; }
+  }
+  /* 2. small phones: tighter type so the hero keeps its room */
+  @media (max-width: 359px) and (orientation: portrait) {
+    [data-role="cv-title"] > div:nth-child(1) { font-size:23px !important; }
+    [data-role="cv-title"] > div:nth-child(2) { font-size:14px !important; margin-top:6px !important; }
+    [data-role="cv-title"] > div:nth-child(3) { font-size:13px !important; margin-top:4px !important; }
+    [data-role="cv-desc"] > div:first-child { font-size:13.5px !important; line-height:1.45 !important; }
+  }
   @media (min-width: 1440px) {
     [data-role="cv-imggroup"][data-imgcount="6"] { transform:scale(0.9); transform-origin:50% 50%; }
   }
@@ -235,28 +253,28 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-imggroup"][data-imgcount="0"][data-nesp="1"] { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
     [data-role="cv-imggroup"][data-imgcount="105"] { left:44vw !important; right:auto !important; width:52vw !important; }
   }
-  [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.02); transform-origin:50% 50%; }
+  [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); transform-origin:50% 50%; }
   @media (min-width: 1900px) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1); }
+    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1); }
   }
   @media (min-width: 701px) and (max-width: 1024px) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.16); }
+    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.16); }
   }
   @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(9%, 0%) scale(1.02); }
+    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); }
   }
   /* Vodafone pill needs more weight on small screens */
   @media (max-width: 1024px) {
     [data-active-entry="vodafone"] { background: oklch(0.2 0.05 20 / 0.95) !important; }
   }
   @media (max-width: 700px) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(2%, 1%) scale(1.22); }
+    [data-role="cv-smart3d"] iframe { transform: translate(2%, 1%) scale(1.22); }
   }
   @media (max-height: 500px) and (orientation: landscape) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(12%, -3%) scale(0.95); }
+    [data-role="cv-smart3d"] iframe { transform: translate(12%, -3%) scale(0.95); }
   }
   @media (max-width: 700px) and (orientation: portrait) {
-    [data-role="cv-smart3d"] :is(iframe, img.cv-still) { transform: translate(2%, -9%) scale(0.86); }
+    [data-role="cv-smart3d"] iframe { transform: translate(2%, -9%) scale(0.86); }
   }
   @media (max-width: 1024px) {
     [data-role="cv-glow"] { box-shadow:0 0 84px 26px rgba(255,232,196,0.19), 0 0 32px 6px rgba(255,244,224,0.13) !important; }
@@ -267,14 +285,17 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   :root { --nesp-inset: 24px 4% 84px; --nesp-scale: none; }
   @media (max-width: 700px) and (orientation: portrait) { :root { --nesp-inset: 19vh 12px 36vh; } }
   @media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait) { :root { --nesp-inset: 24vh 24px 24vh; --nesp-scale: scale(0.82); } }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) { :root { --nesp-inset: 12vh 4% 12vh; --nesp-scale: scale(0.84); } }
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) { :root { --nesp-inset: 12vh 4% 12vh; --nesp-scale: scale(0.68); } }
   @media (max-height: 500px) and (orientation: landscape) { :root { --nesp-inset: 10px 2% 46px 44vw; --nesp-scale: scale(0.9); } }
   @media (min-width: 1024px) and (max-width: 1440px) { :root { --nesp-scale: scale(0.85); } }
   @media (min-width: 1441px) { :root { --nesp-inset: 40px 6% 110px; --nesp-scale: scale(0.85); } }
-  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 23vh 11% 27vh; --nesp-scale: scale(0.88); } }
-  @media (orientation: landscape) and (min-width: 1000px) and (max-width: 1400px) and (min-height: 700px) { :root { --nesp-inset: 17vh 9% 21vh; --nesp-scale: none; } }
-  [data-role="cv-imggroup"][data-nesp="1"] :is(iframe, img.cv-still) { pointer-events:none; }
-  @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] :is(iframe, img.cv-still) { pointer-events:auto; } }
+  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 23vh 11% 27vh; --nesp-scale: scale(0.8); } }
+  @media (orientation: landscape) and (min-width: 1000px) and (max-width: 1400px) and (min-height: 700px) { :root { --nesp-inset: 17vh 9% 21vh; --nesp-scale: scale(0.74); } }
+  /* measured alignment offsets, written by _alignFocus() — the translate property composes with the inline transforms */
+  [data-role="cv-imggroup"][data-nesp="1"] { translate: var(--nesp-dx, 0px) var(--nesp-dy, 0px); }
+  [data-role="cv-akqa3d"] { translate: 0 var(--akqa-dy, 0px); }
+  [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:none; }
+  @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:auto; } }
 </style>
 </helmet>
 <div style="position:fixed; inset:0; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
@@ -292,7 +313,12 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   <div style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
 
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
-      <div style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
+      <div data-role="cv-entry" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
+        <sc-if value="{{ e.stillOn }}" hint-placeholder-val="{{ false }}">
+          <div data-role="cv-stillbox" data-still="{{ e.stillName }}" style="position:absolute; left:var(--st-{{ e.stillName }}-x, 0px); top:var(--st-{{ e.stillName }}-y, 0px); width:var(--st-{{ e.stillName }}-w, 0px); height:var(--st-{{ e.stillName }}-h, 0px); z-index:5; pointer-events:none; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <picture style="display:contents"><source media="(orientation: landscape)" srcset="{{ e.stillLand }}"><img class="cv-still" src="{{ e.stillSrc }}" alt="{{ e.stillAlt }}" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain"></picture>
+          </div>
+        </sc-if>
 
 
         <div data-role="cv-imggroup" data-imgcount="{{ e.imgCount }}" style="position:absolute; left:{{ e.groupLeft }}; right:{{ e.groupRight }}; top:{{ e.groupTop }}; bottom:{{ e.groupBottom }}; pointer-events:{{ e.pe }}; z-index:{{ e.imgZ }}">
@@ -301,7 +327,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.vf3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=2" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/vodafone-land.webp"><img class="cv-still" src="./assets/mobile/vodafone.webp" alt="Vodafone app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide4Even }}" hint-placeholder-val="{{ false }}">
@@ -309,7 +334,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.akqa3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe src="./akqa.html?embed=1&v=20260910b" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/akqa-land.webp"><img class="cv-still" src="./assets/mobile/akqa.webp" alt="AKQA cardiovascular iPad app" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
@@ -317,7 +341,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=1" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/guardian-land.webp"><img class="cv-still" src="./assets/mobile/guardian.webp" alt="The Guardian x Spotify app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide1 }}" hint-placeholder-val="{{ false }}">
@@ -381,7 +404,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
                     <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
-                  <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/nespresso-land.webp"><img class="cv-still" src="./assets/mobile/nespresso.webp" alt="Nespresso Built Together" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
                 </div>
               </div>
             </div>
@@ -391,7 +413,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=2" title="Smart Pension and DEWS app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
-              <sc-if value="{{ e.stills }}" hint-placeholder-val="{{ false }}"><picture style="display:contents"><source media="(orientation: landscape)" srcset="./assets/mobile/smart-land.webp"><img class="cv-still" src="./assets/mobile/smart.webp" alt="Smart Pension and DEWS app screens" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain; pointer-events:none"></picture></sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide6 }}" hint-placeholder-val="{{ false }}">
@@ -553,6 +574,15 @@ const THEME = {
   }
 };
 
+// Phone stills (see renderVals): section short name -> [file stem, alt text]
+const STILLS = {
+  "Vodafone": ["vodafone", "Vodafone app screens"],
+  "Smart": ["smart", "Smart Pension and DEWS app screens"],
+  "Nespresso": ["nespresso", "Nespresso Built Together"],
+  "The Guardian": ["guardian", "The Guardian x Spotify app screens"],
+  "AKQA": ["akqa", "AKQA cardiovascular iPad app"]
+};
+
 const SLUGIFY = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const INITIAL_INDEX = (() => {
   const slug = (typeof window !== "undefined" ? (window.location.hash || "") : "").slice(1);
@@ -663,6 +693,16 @@ class Component extends DCLogic {
       this._mouseRaf = requestAnimationFrame(() => { this._mouseRaf = 0; this.setState({ mx: this._mx, my: this._my }); });
     };
     window.addEventListener("mousemove", this._mouse);
+    // Nespresso follows the cursor on every mouse-driven screen size: its iframe only takes the
+    // pointer itself above 1400px wide, so pass mouse positions in from here.
+    this._btMouse = (ev) => {
+      const bt = document.querySelector('iframe[data-role="cv-bt3d"]');
+      if (!bt) return;
+      const r = bt.getBoundingClientRect();
+      if (!r.width || r.right < 0 || r.left > window.innerWidth) return;
+      try { bt.contentWindow.postMessage({ type: "btPointer", nx: (ev.clientX - r.left) / r.width, ny: (ev.clientY - r.top) / r.height, dx: 0 }, "*"); } catch (e) {}
+    };
+    window.addEventListener("mousemove", this._btMouse, { passive: true });
     this._touchMove = () => {};
 
     this._it = 0; this._ipx = null; this._ipy = null; this._icx = 0; this._icy = 0; this._idx = 0; this._idy = 0;
@@ -675,6 +715,12 @@ class Component extends DCLogic {
     window.addEventListener("pointerleave", this._onIntroLeave);
     this._onIntroResize = () => { this._resizeIntro(); this._resizeNespresso(); this._syncIndicator(); this.forceUpdate(); };
     window.addEventListener("resize", this._onIntroResize);
+    this._onStillsResize = () => { this._placeStills(); requestAnimationFrame(() => this._placeStills()); setTimeout(() => this._placeStills(), 350); this._scheduleAlign(); };
+    this._scheduleAlign();
+    window.addEventListener("resize", this._onStillsResize);
+    window.addEventListener("orientationchange", this._onStillsResize);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this._placeStills());
+    requestAnimationFrame(() => this._placeStills());
     window.addEventListener("orientationchange", this._onIntroResize);
     this._lastFrame = 0; this._introLeftAt = 0;
     const introLoop = (now) => {
@@ -948,6 +994,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     window.removeEventListener("mousemove", this._mouse);
+    window.removeEventListener("mousemove", this._btMouse);
     window.removeEventListener("touchmove", this._touchMove);
     window.removeEventListener("touchend", this._btTouchEnd);
     window.removeEventListener("touchcancel", this._btTouchEnd);
@@ -960,6 +1007,8 @@ class Component extends DCLogic {
     window.removeEventListener("touchstart", this._onIntroTouch);
     window.removeEventListener("resize", this._onIntroResize);
     window.removeEventListener("orientationchange", this._onIntroResize);
+    window.removeEventListener("resize", this._onStillsResize);
+    window.removeEventListener("orientationchange", this._onStillsResize);
     cancelAnimationFrame(this._introRaf);
   }
 
@@ -1094,6 +1143,11 @@ class Component extends DCLogic {
         blobRightH: Math.round(50 * (d.blobRightScale || d.blobScale || 1)) + "%",
         blobDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
+        stillOn: stills && !!STILLS[d.short],
+        stillName: (STILLS[d.short] || [""])[0],
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + "-land.webp" : "",
+        stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
         blobRightPx: ((this.state.mx || 0) * 34).toFixed(1) + "px",
@@ -1215,7 +1269,117 @@ class Component extends DCLogic {
     }
   }
 
+  // Fit each phone still into the free space of its section, measured from the real text:
+  //   portrait  — between the bottom of the title block and the top of the description
+  //   landscape — right of the text column, above the tab bar
+  // Written to CSS variables on <html>, re-run on every render, resize and rotation.
+  _placeStills() {
+    this._fitDescs();
+    const boxes = document.querySelectorAll('[data-role="cv-stillbox"]');
+    if (!boxes.length) return;
+    const root = document.documentElement;
+    const land = window.innerWidth > window.innerHeight;
+    const nav = document.querySelector('[data-role="cv-yearnav"]');
+    const navTop = nav ? nav.getBoundingClientRect().top : window.innerHeight;
+    for (const b of boxes) {
+      const entry = b.closest('[data-role="cv-entry"]');
+      const name = b.getAttribute("data-still");
+      if (!entry || !name) continue;
+      const head = entry.querySelector('[data-role="cv-title"]');
+      const desc = entry.querySelector('[data-role="cv-desc"]');
+      const ew = entry.clientWidth, eh = entry.clientHeight;
+      let x, y, w, h;
+      if (!land) {
+        const gap = 12;
+        y = (head ? head.offsetTop + head.offsetHeight : 0) + gap;
+        h = (desc ? desc.offsetTop : Math.min(navTop, eh)) - gap - y;
+        x = 12; w = ew - 24;
+      } else {
+        const textRight = Math.max(head ? head.offsetLeft + head.offsetWidth : 0, desc ? desc.offsetLeft + desc.offsetWidth : 0);
+        x = textRight + 20; w = ew - x - 20;
+        y = 12; h = Math.min(navTop, eh) - 8 - y;
+      }
+      if (name === "akqa") {
+        // the iPad sits at (fx, fy) of the trimmed still; put its centre on the page's vertical centre
+        const fy = land ? 0.443 : 0.442, aspect = land ? 345 / 352 : 717 / 665;
+        const cy = eh / 2, top = y, bottom = y + h;
+        if (cy > top && cy < bottom) {
+          const ih = Math.min((cy - top) / fy, (bottom - cy) / (1 - fy), w / aspect);
+          const iw = ih * aspect;
+          const free = Math.min(h, w / aspect);
+          if (ih >= free * 0.7) { x = x + (w - iw) / 2; w = iw; y = cy - fy * ih; h = ih; }
+        }
+      }
+      root.style.setProperty("--st-" + name + "-x", Math.round(x) + "px");
+      root.style.setProperty("--st-" + name + "-y", Math.round(y) + "px");
+      root.style.setProperty("--st-" + name + "-w", Math.max(0, Math.round(w)) + "px");
+      root.style.setProperty("--st-" + name + "-h", Math.max(0, Math.round(h)) + "px");
+    }
+  }
+
+  // Align the thing the eye should land on, measured from the live layout:
+  //   AKQA (all 3D sizes): the iPad (centre of its scene) on the page's vertical centre
+  //   Nespresso (tablets): the BUILT TOGETHER wordmark centred across the page and in the space
+  //   between title and description, a touch high to balance the taller description.
+  _alignFocus() {
+    const root = document.documentElement, vw = window.innerWidth, vh = window.innerHeight;
+    const num = (v) => parseFloat(getComputedStyle(root).getPropertyValue(v)) || 0;
+    const ak = document.querySelector('[data-role="cv-akqa3d"] iframe');
+    if (ak) {
+      const r = ak.getBoundingClientRect();
+      if (r.height) {
+        const d = vh / 2 - (r.top + r.height / 2);
+        if (Math.abs(d) > 1) root.style.setProperty("--akqa-dy", Math.round(num("--akqa-dy") + d) + "px");
+      }
+    }
+    const tablet = window.matchMedia && window.matchMedia("(pointer: coarse)").matches && !document.querySelector('[data-role="cv-stillbox"]');
+    const bt = document.querySelector('iframe[data-role="cv-bt3d"]');
+    if (!tablet || !bt) return;
+    const r = bt.getBoundingClientRect();
+    if (!r.width || r.left + r.width / 2 < 0 || r.left + r.width / 2 > vw) return;   // only while Nespresso is on screen
+    let doc; try { doc = bt.contentDocument; } catch (e) { return; }
+    const words = doc ? [...doc.querySelectorAll('svg[aria-label="BUILT"], svg[aria-label="TOGETHER"]')] : [];
+    if (words.length < 2) return;
+    const k = r.width / (bt.clientWidth || r.width);
+    let l = 1e9, t = 1e9, rr = -1e9, b = -1e9;
+    for (const w of words) { const q = w.getBoundingClientRect(); l = Math.min(l, q.left); t = Math.min(t, q.top); rr = Math.max(rr, q.right); b = Math.max(b, q.bottom); }
+    const cx = r.left + ((l + rr) / 2) * k, cy = r.top + ((t + b) / 2) * k;
+    const entry = bt.closest('[data-role="cv-entry"]');
+    const head = entry && entry.querySelector('[data-role="cv-title"]');
+    const desc = entry && entry.querySelector('[data-role="cv-desc"]');
+    const top = head ? head.getBoundingClientRect().bottom : vh * 0.15;
+    const bottom = desc ? desc.getBoundingClientRect().top : vh * 0.8;
+    const ty = (top + bottom) / 2 - vh * 0.03;
+    const dx = vw / 2 - cx, dy = ty - cy;
+    if (Math.abs(dx) > 1) root.style.setProperty("--nesp-dx", Math.round(num("--nesp-dx") + dx) + "px");
+    if (Math.abs(dy) > 1) root.style.setProperty("--nesp-dy", Math.round(num("--nesp-dy") + dy) + "px");
+  }
+
+  // Re-measure a few times after the section or the window size changes (scenes load and settle
+  // over a few seconds). Other re-renders don't reset the sequence.
+  _scheduleAlign(force) {
+    const key = this.state.i + ":" + window.innerWidth + "x" + window.innerHeight;
+    if (!force && key === this._alignKey) return;
+    this._alignKey = key;
+    (this._alignTimers || []).forEach(clearTimeout);
+    this._alignTimers = [500, 1200, 2400, 4000, 6500, 9500].map((t) => setTimeout(() => this._alignFocus(), t));
+  }
+
+  _fitDescs() {
+    const short = window.innerWidth > window.innerHeight && window.innerHeight <= 500;
+    for (const entry of document.querySelectorAll('[data-role="cv-entry"]')) {
+      const head = entry.querySelector('[data-role="cv-title"]');
+      const desc = entry.querySelector('[data-role="cv-desc"]');
+      if (!head || !desc) continue;
+      if (short) desc.style.setProperty("top", Math.round(head.offsetTop + head.offsetHeight + 10) + "px", "important");
+      else desc.style.removeProperty("top");
+    }
+  }
+
   componentDidUpdate() {
+    this._fitDescs();
+    this._placeStills();
+    this._scheduleAlign();
     this._applySlotSrc();
     this._syncThemeColor();
     this._syncVf3d();
