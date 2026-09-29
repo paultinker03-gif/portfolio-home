@@ -400,7 +400,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.abstractComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-imggroup" data-nesp="1" data-imgcount="{{ e.imgCount }}" style="position:fixed; inset:var(--nesp-inset, 24px 4% 84px) !important; width:auto !important; height:auto !important; transform:var(--nesp-scale, none) !important; z-index:1; pointer-events:none; opacity:{{ e.bgOp }}; transition:opacity 500ms ease">
               <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
-                <div style="width:100%; height:100%; animation:cvFloat 6.5s ease-in-out infinite">
+                <div style="width:100%; height:100%; animation:none">
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
                     <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
@@ -781,7 +781,8 @@ class Component extends DCLogic {
     const bandTop = hdr + m, bandBotRaw = ftr - m, bandBot = Math.max(bandTop + 60, bandBotRaw), band = bandBot - bandTop;
     const CR = Math.max(30, Math.min(Math.min(W, H) * 0.22, band / 3.2));
     const narrowPortrait = window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
-    const bandBias = narrowPortrait ? 0.3 : 0.5;
+    const tabletPortrait = !narrowPortrait && window.innerHeight > window.innerWidth && window.innerWidth <= 1400;
+    const bandBias = narrowPortrait ? 0.3 : (tabletPortrait ? 0.4 : 0.5);
     const homeX = W / 2, homeY = bandTop + band * bandBias;
     if (!this._introSeeded && W > 0 && H > 0) { this._icx = homeX; this._icy = homeY; this._introSeeded = true; }
     let tx = homeX, ty = homeY;
@@ -1146,7 +1147,8 @@ class Component extends DCLogic {
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
         stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp" : "",
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + "-land.webp" : "",
+        // AKQA: the upright capture frames the iPad larger, so it is used sideways too
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
@@ -1290,7 +1292,7 @@ class Component extends DCLogic {
       const ew = entry.clientWidth, eh = entry.clientHeight;
       let x, y, w, h;
       if (!land) {
-        const gap = 12;
+        const gap = 8;
         y = (head ? head.offsetTop + head.offsetHeight : 0) + gap;
         h = (desc ? desc.offsetTop : Math.min(navTop, eh)) - gap - y;
         x = 12; w = ew - 24;
@@ -1299,9 +1301,14 @@ class Component extends DCLogic {
         x = textRight + 20; w = ew - x - 20;
         y = 12; h = Math.min(navTop, eh) - 8 - y;
       }
+      // bigger heroes on phones: widen the box (a little bleed past the screen edge is fine);
+      // "contain" then grows the image until it meets the height limit
+      const GROW = land ? { smart: 1.3, akqa: 1.35 } : { smart: 1.15, nespresso: 1.12, guardian: 1.2, akqa: 1.3 };
+      const g = GROW[name] || 1;
+      x -= (w * (g - 1)) / 2; w *= g;
       if (name === "akqa") {
         // the iPad sits at (fx, fy) of the trimmed still; put its centre on the page's vertical centre
-        const fy = land ? 0.443 : 0.442, aspect = land ? 345 / 352 : 717 / 665;
+        const fy = 0.442, aspect = 717 / 665;
         const cy = eh / 2, top = y, bottom = y + h;
         if (cy > top && cy < bottom) {
           const ih = Math.min((cy - top) / fy, (bottom - cy) / (1 - fy), w / aspect);
@@ -1328,15 +1335,21 @@ class Component extends DCLogic {
     if (ak) {
       const r = ak.getBoundingClientRect();
       if (r.height) {
-        const d = vh / 2 - (r.top + r.height / 2);
+        const tabletPortrait = vh > vw && vw > 700 && vw <= 1400;
+        const d = (vh / 2 - (tabletPortrait ? vh * 0.035 : 0)) - (r.top + r.height / 2);
         if (Math.abs(d) > 1) root.style.setProperty("--akqa-dy", Math.round(num("--akqa-dy") + d) + "px");
       }
     }
     const tablet = window.matchMedia && window.matchMedia("(pointer: coarse)").matches && !document.querySelector('[data-role="cv-stillbox"]');
     const bt = document.querySelector('iframe[data-role="cv-bt3d"]');
     if (!tablet || !bt) return;
-    const r = bt.getBoundingClientRect();
-    if (!r.width || r.left + r.width / 2 < 0 || r.left + r.width / 2 > vw) return;   // only while Nespresso is on screen
+    // Measure against the group box: it doesn't slide or bob, so this works before Nespresso is
+    // ever on screen and the wordmark is already in place when you arrive (no visible jumps).
+    const group = bt.closest('[data-role="cv-imggroup"]');
+    const r = (group || bt).getBoundingClientRect();
+    if (!r.width) return;
+    const sizeKey = vw + "x" + vh;
+    if (this._nespAlignedFor === sizeKey) return;
     let doc; try { doc = bt.contentDocument; } catch (e) { return; }
     const words = doc ? [...doc.querySelectorAll('svg[aria-label="BUILT"], svg[aria-label="TOGETHER"]')] : [];
     if (words.length < 2) return;
@@ -1351,14 +1364,16 @@ class Component extends DCLogic {
     const bottom = desc ? desc.getBoundingClientRect().top : vh * 0.8;
     const ty = (top + bottom) / 2 - vh * 0.03;
     const dx = vw / 2 - cx, dy = ty - cy;
-    if (Math.abs(dx) > 1) root.style.setProperty("--nesp-dx", Math.round(num("--nesp-dx") + dx) + "px");
-    if (Math.abs(dy) > 1) root.style.setProperty("--nesp-dy", Math.round(num("--nesp-dy") + dy) + "px");
+    if (Math.abs(dx) > 6) root.style.setProperty("--nesp-dx", Math.round(num("--nesp-dx") + dx) + "px");
+    if (Math.abs(dy) > 6) root.style.setProperty("--nesp-dy", Math.round(num("--nesp-dy") + dy) + "px");
+    // settled: lock this size so it never nudges again while you're looking at it
+    if (Math.abs(dx) <= 6 && Math.abs(dy) <= 6) this._nespAlignedFor = sizeKey;
   }
 
   // Re-measure a few times after the section or the window size changes (scenes load and settle
   // over a few seconds). Other re-renders don't reset the sequence.
   _scheduleAlign(force) {
-    const key = this.state.i + ":" + window.innerWidth + "x" + window.innerHeight;
+    const key = (this.state.i === 3 || this.state.i === 6 ? this.state.i : "x") + ":" + window.innerWidth + "x" + window.innerHeight;
     if (!force && key === this._alignKey) return;
     this._alignKey = key;
     (this._alignTimers || []).forEach(clearTimeout);

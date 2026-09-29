@@ -212,6 +212,9 @@ class Component extends DCLogic {
       makePod(0x137f30, 94, [-272,-174, 55], [ 26*d, 0, -118*d])
     ];
 
+    // Each call starts ONE animation loop and retires any older one (token), so the watchdog's
+    // resume can never stack a second loop on top — stacked loops made the pods spin faster and faster.
+    const makeTick = () => {
     const myToken = (this.loopToken = (this.loopToken || 0) + 1);
     const tick = () => {
       if(this.dead || this.loopToken !== myToken) return;
@@ -244,8 +247,10 @@ class Component extends DCLogic {
       renderer.render(scene, camera);
       requestAnimationFrame(tick);
     };
-    this.resume = tick;
-    tick();
+    return tick;
+    };
+    this.resume = () => makeTick()();
+    makeTick()();
   }
 }
 </script>
