@@ -412,8 +412,8 @@ class SmartScene extends HTMLElement {
     };
 
     const coinSpecs = [
-      { r: 0.98, pos: [7.4, 4.3, -3.2], duo: [7.9, 4.6, -3.4], tilt: [-0.28, 0, 0.5], idle: 0.22, gain: 1.0, amp: 0.30, speed: 0.5, phase: 0.4, blur: 0, tint: 0.55, mark: '1' },
-      { r: 0.84, pos: [-7.2, 1.6, 8.0], duo: [-5.6, 1.9, 7.0], tilt: [0.18, 0, -0.55], idle: -0.3, gain: 1.3, amp: 0.36, speed: 0.62, phase: 2.1, blur: 0, mark: '1' },
+      { r: 0.98, pos: [7.4, 4.3, -3.2], duo: [7.9, 4.6, -3.4], duoScale: 0.9, tilt: [-0.28, 0, 0.5], idle: 0.22, gain: 1.0, amp: 0.30, speed: 0.5, phase: 0.4, blur: 0, tint: 0.55, mark: '1' },
+      { r: 0.84, pos: [-7.2, 1.6, 8.0], duo: [-4.9, 1.9, 7.0], duoScale: 0.82, tilt: [0.18, 0, -0.55], idle: -0.3, gain: 1.3, amp: 0.36, speed: 0.62, phase: 2.1, blur: 0, mark: '1' },
       { r: 0.9, pos: [3.6, -4.2, 2.6], duo: [5.9, -2.6, 3.4], tilt: [-0.12, 0, 0.9], idle: 0.26, gain: 1.15, amp: 0.28, speed: 0.44, phase: 4.0, blur: 0, tint: 0.72, mark: '10', allGold: true }
     ];
     const coins = coinSpecs.map(s => {
@@ -434,7 +434,11 @@ class SmartScene extends HTMLElement {
       legacyG.visible = m === 'legacy';
       duoG.visible = m === 'duo';
       floaters = m === 'legacy' ? floatersLegacy : floatersDuo;
-      coins.forEach(c => { const p = m === 'duo' ? c.spec.duo : c.spec.pos; c.base.set(p[0], p[1], p[2]); });
+      coins.forEach(c => {
+        const p = m === 'duo' ? c.spec.duo : c.spec.pos;
+        c.base.set(p[0], p[1], p[2]);
+        c.obj.scale.setScalar(m === 'duo' ? (c.spec.duoScale || 1) : 1);
+      });
     };
     try { mq.addEventListener('change', applyMode); } catch (e) { try { mq.addListener(applyMode); } catch (e2) {} }
 
