@@ -135,6 +135,8 @@ class SmartScene extends HTMLElement {
       notch.rotation.z = Math.PI / 2;
       notch.position.set(0, h / 2 - bezel * 0.55, depth / 2 + bevel + 0.014);
       g.add(notch);
+
+      g.userData.screen = screen;
       return g;
     };
 
@@ -333,28 +335,86 @@ class SmartScene extends HTMLElement {
     };
 
     // ---------- composition ----------
+    // Phones (≤700px, or a phone on its side) keep the original layout: phone + DEWS card + board.
+    // Tablets and up get the "duo": two phones that flip between Smart (light, LTR) and
+    // Zurich (dark, RTL) depending on which half of the screen the cursor is on.
+    const MOBILE_Q = '(max-width: 700px), (max-height: 500px) and (orientation: landscape)';
+    const mq = (() => {
+      try { if (parent !== window && parent.matchMedia) return parent.matchMedia(MOBILE_Q); } catch (e) {}
+      return window.matchMedia(MOBILE_Q);
+    })();
     const TILT = 10 * Math.PI / 180;
-    const CARD_W = 11.0 * (548 / 1157);
+    const legacyG = new THREE.Group(), duoG = new THREE.Group();
+    stack.add(legacyG, duoG);
+    let floatersLegacy = null, floatersDuo = null, duoPhones = [];
 
-    const phone = makePhone(R('uploads/smart-dashboard-2026.webp'), 11.91, 824 / 1848);
-    phone.position.set(-1.0, 0.1, 1.6);
-    phone.rotation.set(0, 0, TILT);
-    stack.add(phone);
+    const buildLegacy = () => {
+      const CARD_W = 11.0 * (548 / 1157);
+      const phone = makePhone(R('uploads/smart-dashboard-2026.webp'), 11.91, 824 / 1848);
+      phone.position.set(-1.0, 0.1, 1.6);
+      phone.rotation.set(0, 0, TILT);
+      legacyG.add(phone);
 
-    const dews = makeCard(R('uploads/zurich-balance-2026.webp'), 11.59 * (824 / 1848), 11.59);
-    dews.position.set(4.25, 0.9, -0.8);
-    dews.rotation.set(0, 0, TILT);
-    stack.add(dews);
+      const dews = makeCard(R('uploads/zurich-balance-2026.webp'), 11.59 * (824 / 1848), 11.59);
+      dews.position.set(4.25, 0.9, -0.8);
+      dews.rotation.set(0, 0, TILT);
+      legacyG.add(dews);
 
-    const board = makeCard(R('uploads/smart-343d.webp'), CARD_W, CARD_W * (495 / 620));
-    board.position.set(-6.2, -0.3, 3.2);
-    board.rotation.set(0, 0, TILT);
-    stack.add(board);
+      const board = makeCard(R('uploads/smart-343d.webp'), CARD_W, CARD_W * (495 / 620));
+      board.position.set(-6.2, -0.3, 3.2);
+      board.rotation.set(0, 0, TILT);
+      legacyG.add(board);
+
+      floatersLegacy = [
+        { obj: phone, base: phone.position.clone(), amp: 0.30, speed: 0.55, phase: 0, depth: 1.2, follow: 0.15, yaw: 0 },
+        { obj: dews, base: dews.position.clone(), amp: 0.40, speed: 0.42, phase: 1.6, depth: 0.7, follow: 0.10, yaw: 0 },
+        { obj: board, base: board.position.clone(), amp: 0.34, speed: 0.36, phase: 3.2, depth: 0.35, follow: 0.21, yaw: 0 }
+      ];
+    };
+
+    const buildDuo = () => {
+      const PH = 11.9, PA = 624 / 1398;
+      // Each phone has one screen and swaps it halfway through a full 360° turn (while it faces
+      // away). RTL reads right-to-left, so on Zurich the dashboard is on the right phone and the
+      // balance on the left. The phones spin in opposite directions, in step, and ease apart
+      // mid-turn, so they never pass through each other.
+      const mk = (smartSrc, zurichSrc, pos, tiltDeg, yaw, spin, f) => {
+        const outer = new THREE.Group(), flip = new THREE.Group();
+        const phone = makePhone(R(smartSrc), PH, PA);
+        const texS = phone.userData.screen.material.map;
+        const texZ = loadTex(R(zurichSrc));
+        texZ.repeat.set(1, 1846 / 1848);
+        flip.add(phone);
+        outer.add(flip);
+        outer.position.set(pos[0], pos[1], pos[2]);
+        outer.rotation.z = tiltDeg * Math.PI / 180;
+        duoG.add(outer);
+        return Object.assign({ obj: outer, flip, mat: phone.userData.screen.material, texS, texZ, spin,
+          base: outer.position.clone(), yaw, ang: 0, from: 0, to: 0, t0: -1, push: 0, lift: 0 }, f);
+      };
+      const a = mk('uploads/smart-dashboard-light.webp', 'uploads/zurich-balance-dark.webp',
+        [-1.55, -0.35, 1.3], 7, 0.16, 1, { amp: 0.30, speed: 0.55, phase: 0, depth: 1.1, follow: 0.15, apart: -1 });
+      const b = mk('uploads/smart-balance-light.webp', 'uploads/zurich-dashboard-dark.webp',
+        [3.75, 0.45, -0.6], -7, -0.16, -1, { amp: 0.36, speed: 0.46, phase: 1.6, depth: 0.75, follow: 0.12, apart: 1 });
+      duoPhones = [a, b];
+      floatersDuo = duoPhones;
+      duoPhones.forEach(ph => { ph.ang = ph.to = side === 'zurich' ? ph.spin * Math.PI * 2 : 0; poseDuo(ph); });
+    };
+    const DUO_CX = 1.1; // centre of the pair in world units (midway between the phone centres)
+    // apply a phone's spin angle: rotation, which screen shows, and how far the pair eases apart
+    const poseDuo = ph => {
+      ph.flip.rotation.y = ph.ang;
+      const tex = Math.abs(ph.ang) > Math.PI ? ph.texZ : ph.texS;
+      if (ph.mat.map !== tex) { ph.mat.map = tex; ph.mat.needsUpdate = true; }
+      const s = Math.abs(Math.sin(ph.ang / 2)); // 0 at rest, 1 when facing away
+      ph.push = ph.apart * 1.4 * s;
+      ph.lift = 0.6 * s;
+    };
 
     const coinSpecs = [
-      { r: 0.98, pos: [7.4, 4.3, -3.2], tilt: [-0.28, 0, 0.5], idle: 0.22, gain: 1.0, amp: 0.30, speed: 0.5, phase: 0.4, blur: 0, tint: 0.55, mark: '1' },
-      { r: 0.84, pos: [-7.2, 1.6, 8.0], tilt: [0.18, 0, -0.55], idle: -0.3, gain: 1.3, amp: 0.36, speed: 0.62, phase: 2.1, blur: 0, mark: '1' },
-      { r: 0.9, pos: [3.6, -4.2, 2.6], tilt: [-0.12, 0, 0.9], idle: 0.26, gain: 1.15, amp: 0.28, speed: 0.44, phase: 4.0, blur: 0, tint: 0.72, mark: '10', allGold: true }
+      { r: 0.98, pos: [7.4, 4.3, -3.2], duo: [7.9, 4.6, -3.4], tilt: [-0.28, 0, 0.5], idle: 0.22, gain: 1.0, amp: 0.30, speed: 0.5, phase: 0.4, blur: 0, tint: 0.55, mark: '1' },
+      { r: 0.84, pos: [-7.2, 1.6, 8.0], duo: [-5.6, 1.9, 7.0], tilt: [0.18, 0, -0.55], idle: -0.3, gain: 1.3, amp: 0.36, speed: 0.62, phase: 2.1, blur: 0, mark: '1' },
+      { r: 0.9, pos: [3.6, -4.2, 2.6], duo: [5.9, -2.6, 3.4], tilt: [-0.12, 0, 0.9], idle: 0.26, gain: 1.15, amp: 0.28, speed: 0.44, phase: 4.0, blur: 0, tint: 0.72, mark: '10', allGold: true }
     ];
     const coins = coinSpecs.map(s => {
       const c = makeCoin(s.r, s.blur ? s.blur * s.r : 0, s.tint, s.colors, s.mark, s.allGold);
@@ -364,23 +424,58 @@ class SmartScene extends HTMLElement {
       return { obj: c, spec: s, base: c.position.clone(), spin: 0 };
     });
 
-    const floaters = [
-      { obj: phone, base: phone.position.clone(), amp: 0.30, speed: 0.55, phase: 0, depth: 1.2, follow: 0.15 },
-      { obj: dews, base: dews.position.clone(), amp: 0.40, speed: 0.42, phase: 1.6, depth: 0.7, follow: 0.10 },
-      { obj: board, base: board.position.clone(), amp: 0.34, speed: 0.36, phase: 3.2, depth: 0.35, follow: 0.21 }
-    ];
+    let mode = null, floaters = [];
+    const applyMode = () => {
+      const m = mq.matches ? 'legacy' : 'duo';
+      if (m === mode) return;
+      mode = m;
+      if (m === 'legacy' && !floatersLegacy) buildLegacy();
+      if (m === 'duo' && !floatersDuo) buildDuo();
+      legacyG.visible = m === 'legacy';
+      duoG.visible = m === 'duo';
+      floaters = m === 'legacy' ? floatersLegacy : floatersDuo;
+      coins.forEach(c => { const p = m === 'duo' ? c.spec.duo : c.spec.pos; c.base.set(p[0], p[1], p[2]); });
+    };
+    try { mq.addEventListener('change', applyMode); } catch (e) { try { mq.addListener(applyMode); } catch (e2) {} }
+
+    // ---------- Smart / Zurich side ----------
+    let side = 'zurich'; // Smart opens on Zurich; the page then follows the cursor
+    const now = () => performance.now() / 1000; // real time, so the flip keeps pace with the background fade
+    const setSide = s => {
+      s = s === 'zurich' ? 'zurich' : 'smart';
+      if (s === side) return;
+      side = s;
+      duoPhones.forEach(ph => { ph.from = ph.ang; ph.to = s === 'zurich' ? ph.spin * Math.PI * 2 : 0; ph.t0 = now(); });
+    };
+    applyMode();
+    const embedded = (() => { try { return parent !== window; } catch (e) { return true; } })();
+    addEventListener('message', e => {
+      const d = e.data;
+      if (!d || typeof d !== 'object') return;
+      if (d.type === 'smart-side') setSide(d.side);
+      else if (d.type === 'smart-pointer' && mode === 'duo') setFromNorm(d.nx * 2 - 1, d.ny * 2 - 1);
+    });
 
     // ---------- pointer ----------
     const target = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
     let vel = 0;
-    const setFromEvent = (cx, cy) => {
-      const rct = this.getBoundingClientRect();
-      const nx = ((cx - rct.left) / rct.width) * 2 - 1;
-      const ny = ((cy - rct.top) / rct.height) * 2 - 1;
+    const setFromNorm = (nx, ny) => {
       vel = Math.min(3.2, vel + Math.hypot(nx - target.x, ny - target.y) * 5.5);
       target.x = nx; target.y = ny;
     };
-    const onMove = e => setFromEvent(e.clientX, e.clientY);
+    const setFromEvent = (cx, cy) => {
+      const rct = this.getBoundingClientRect();
+      setFromNorm(((cx - rct.left) / rct.width) * 2 - 1, ((cy - rct.top) / rct.height) * 2 - 1);
+    };
+    const onMove = e => {
+      setFromEvent(e.clientX, e.clientY);
+      // the page decides the side from where the cursor is on the whole screen
+      if (embedded) {
+        try { parent.postMessage({ type: 'smart-ptr', nx: e.clientX / innerWidth, ny: e.clientY / innerHeight }, '*'); } catch (err) {}
+      } else if (mode === 'duo') {
+        setSide(e.clientX >= innerWidth / 2 ? 'zurich' : 'smart');
+      }
+    };
     const onTouch = e => { if (e.touches[0]) setFromEvent(e.touches[0].clientX, e.touches[0].clientY); };
     window.addEventListener('mousemove', onMove, { passive: true });
     window.addEventListener('touchmove', onTouch, { passive: true });
@@ -424,7 +519,33 @@ class SmartScene extends HTMLElement {
       camera.position.y = 0;
       camera.updateProjectionMatrix();
     };
-    new ResizeObserver(resize).observe(this);
+    let centreX = 0, centreCur = 0, centreSnap = false, centreKnown = false, centreTick = 0;
+    const measureCentre = () => {
+      if (mode !== 'duo') return;
+      let left = 0, width = this.clientWidth || innerWidth, pageW = innerWidth;
+      let fe = null;
+      try { fe = window.frameElement; } catch (e) {}
+      if (fe) {
+        const r = fe.getBoundingClientRect();
+        if (!r.width) return;
+        // ignore the panel slide-in (a translateX on the scene's wrapper), so it's right from the start
+        let tx = 0;
+        try {
+          const wrap = fe.parentElement, cs = wrap && getComputedStyle(wrap).transform;
+          if (cs && cs !== 'none') tx = new DOMMatrixReadOnly(cs).m41;
+          const own = getComputedStyle(fe).transform;
+          const ownScale = own && own !== 'none' ? new DOMMatrixReadOnly(own).a : 1;
+          tx *= r.width / ((fe.offsetWidth || r.width) * ownScale);
+        } catch (e) {}
+        left = r.left - tx; width = r.width;
+        pageW = fe.ownerDocument.documentElement.clientWidth || pageW;
+      }
+      const ndc = ((pageW / 2 - left) / width) * 2 - 1;
+      const halfW = Math.tan(camera.fov * Math.PI / 360) * (camera.position.z - 0.35) * camera.aspect;
+      centreX = ndc * halfW - DUO_CX;
+      if (!centreKnown) { centreKnown = true; centreSnap = true; } // first reading: jump, later: glide
+    };
+    new ResizeObserver(() => { resize(); measureCentre(); }).observe(this);
     let _lw = 0, _lh = 0;
     this._checkSize = () => {
       const w = this.clientWidth || 1, h = this.clientHeight || 1;
@@ -445,7 +566,20 @@ class SmartScene extends HTMLElement {
       const dt = Math.min(clock.getDelta(), 0.05);
       t += dt * fs;
       this._checkSize();
-      this.style.background = this._transparent ? 'transparent' : (this.getAttribute('background') || '#C6D9EF');
+      this.style.background = this._transparent ? 'transparent'
+        : (mode === 'duo' && side === 'zurich' ? '#051240' : (this.getAttribute('background') || '#C6D9EF'));
+      // spin each duo phone a full turn towards its target side (in step, eased)
+      duoPhones.forEach(ph => {
+        if (ph.t0 < 0) return;
+        const k = Math.min(1, Math.max(0, (now() - ph.t0) / 1.1));
+        const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        ph.ang = ph.from + (ph.to - ph.from) * e;
+        poseDuo(ph);
+        if (k >= 1) ph.t0 = -1;
+      });
+      if (++centreTick % 20 === 0) measureCentre();
+      centreCur += (centreX - centreCur) * (centreSnap ? 1 : 0.12);
+      centreSnap = false;
       cur.x += (target.x - cur.x) * 0.16;
       cur.y += (target.y - cur.y) * 0.16;
       vel *= Math.pow(0.02, dt); // decays back to the idle drift
@@ -454,14 +588,15 @@ class SmartScene extends HTMLElement {
       root.rotation.x = cur.y * 0.05 * px;
       stack.rotation.y = -cur.x * 0.05 * px;
       stack.rotation.x = cur.y * 0.03 * px;
-      root.position.x = -cur.x * 1.1 * px;
+      root.position.x = (mode === 'duo' ? centreCur : 0) - cur.x * 1.1 * px;
       root.position.y = -cur.y * 0.35 * px;
 
       floaters.forEach(f => {
         f.obj.position.y = f.base.y + Math.sin(t * f.speed + f.phase) * f.amp - cur.y * 0.5 * px;
-        f.obj.position.x = f.base.x + Math.cos(t * f.speed * 0.7 + f.phase) * f.amp * 0.35 + cur.x * f.depth * px;
+        f.obj.position.x = f.base.x + (f.push || 0) + Math.cos(t * f.speed * 0.7 + f.phase) * f.amp * 0.35 + cur.x * f.depth * px;
         // each interface starts face-on and turns toward the cursor at its own rate
-        f.obj.rotation.y = -cur.x * f.follow * px;
+        f.obj.rotation.y = (f.yaw || 0) - cur.x * f.follow * px;
+        f.obj.position.z = f.base.z + (f.lift || 0);
         f.obj.rotation.x = cur.y * f.follow * 0.55 * px;
       });
 
