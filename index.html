@@ -18,7 +18,7 @@
 <style>html,body{background:#04122a;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
-<script src="./smart-switch.js" defer></script>
+<script src="./smart-switch.js?v=2" defer></script>
 </head>
 <body style="background:#092044">
 <x-dc>
@@ -298,13 +298,15 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:none; }
   @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:auto; } }
   /* Smart panel (tablet+): cursor on the right half shows Zurich — dark #051240 background,
-     light text. smart-switch.js sets html[data-smart-side] only while Smart is on screen. */
+     light text. smart-switch.js keeps html[data-smart-bg] on Smart's current side at all times
+     (reset to Zurich while off screen, so it slides in already dark) and sets
+     html[data-smart-side] only while Smart is on screen (for the shared nav). */
   [data-role="cv-bg"][data-smart="true"] { transition:opacity 500ms ease, background-color 600ms ease !important; }
-  html[data-smart-side="zurich"] [data-role="cv-bg"][data-smart="true"] { background:#051240 !important; }
+  html[data-smart-bg="zurich"] [data-role="cv-bg"][data-smart="true"] { background:#051240 !important; }
   [data-role="cv-title"] { transition:opacity 520ms ease 120ms, transform 620ms cubic-bezier(.16,1,.3,1) 120ms, color 500ms ease !important; }
   [data-role="cv-desc"] > div:first-child { transition:color 500ms ease; }
-  html[data-smart-side="zurich"] [data-role="cv-title"],
-  html[data-smart-side="zurich"] [data-role="cv-desc"] > div:first-child { color:#fff !important; }
+  html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-title"],
+  html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-desc"] > div:first-child { color:#fff !important; }
   html[data-smart-side="zurich"] [data-role="cv-yearnav"] button:not([aria-current="true"]) { color:rgba(255,255,255,0.8) !important; }
   [data-role="cv-smart-pal"] { position:absolute; top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:8px; padding:4px; border-radius:6px; pointer-events:none; transition:opacity 500ms ease 120ms; }
   [data-role="cv-smart-pal"] > span { display:block; width:28px; height:28px; border-radius:3px; }
@@ -330,7 +332,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   <div style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
 
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
-      <div data-role="cv-entry" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
+      <div data-role="cv-entry" data-smart="{{ e.smartComp }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
         <sc-if value="{{ e.stillOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-stillbox" data-still="{{ e.stillName }}" style="position:absolute; left:var(--st-{{ e.stillName }}-x, 0px); top:var(--st-{{ e.stillName }}-y, 0px); width:var(--st-{{ e.stillName }}-w, 0px); height:var(--st-{{ e.stillName }}-h, 0px); z-index:5; pointer-events:none; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <picture style="display:contents"><source media="(orientation: landscape)" srcset="{{ e.stillLand }}"><img class="cv-still" src="{{ e.stillSrc }}" alt="{{ e.stillAlt }}" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain"></picture>
@@ -540,7 +542,7 @@ const DATA = [
   {
     themeColor: "#B9CEE9", idKey: "6b", year: "2020", short: "Smart", company: "Smart Pension", title: "Design Lead - Product Design & Design System", imageCount: 105, smartComp: true, bg: "#B9CEE9", navBg: "oklch(0.9 0.03 250)",
     meta: "2020–2024",
-    desc: "Transformed Smart's fragmented libraries into a scalable, multi-brand design platform serving 3 core experiences and 5 brands — working end-to-end across product journeys to turn recurring problems into reusable patterns, with design and engineering united around a shared approach.",
+    desc: "Transformed Smart's fragmented libraries into a scalable, multi-brand design platform serving 3 core experiences and 5 brands — in light and dark themes, left-to-right and right-to-left — working end-to-end across product journeys to turn recurring problems into reusable patterns, with design and engineering united around a shared approach.",
     link: "https://smart.paultinker.uk/", linkLabel: "Discover more", slot: "Smart platform screens"
   },
   {
@@ -751,6 +753,13 @@ class Component extends DCLogic {
     window.addEventListener("resize", this._onStillsResize);
     window.addEventListener("orientationchange", this._onStillsResize);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this._placeStills());
+    // Nav pill: DM Sans arrives after first paint and changes the tab widths, so re-measure the
+    // indicator when fonts are ready and whenever any tab changes size.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this._syncIndicator());
+    if (typeof ResizeObserver !== "undefined") {
+      this._navRO = new ResizeObserver(() => this._syncIndicator());
+      requestAnimationFrame(() => { for (const k in (this._navItemEls || {})) this._navRO.observe(this._navItemEls[k]); });
+    }
     requestAnimationFrame(() => this._placeStills());
     window.addEventListener("orientationchange", this._onIntroResize);
     this._lastFrame = 0; this._introLeftAt = 0;

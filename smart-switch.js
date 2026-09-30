@@ -1,8 +1,10 @@
 /* Smart panel, tablets and up: which half of the screen the cursor is on picks the brand.
    Left half  → Smart (light, LTR), the panel's normal background.
    Right half → Zurich (dark, RTL), background #051240.
-   Sets html[data-smart-side="smart"|"zurich"] while Smart is on screen (the CSS in
-   index.html keys off it) and tells the Smart 3D iframe (smart.html) which side to flip to.
+   html[data-smart-bg] always holds Smart's side (background + Smart's own text), and is reset
+   to Zurich once Smart has left the screen, so the panel slides in already dark.
+   html[data-smart-side] is set only while Smart is on screen (shared nav colours).
+   The Smart 3D iframe (smart.html) is told which side to spin to.
    Smart opens on Zurich. Phones (≤700px, or a phone on its side) are left alone: they keep the original scene. */
 (function () {
   var MOBILE = '(max-width: 700px), (max-height: 500px) and (orientation: landscape)';
@@ -20,7 +22,10 @@
     var f = frame();
     if (f && f.contentWindow) { try { f.contentWindow.postMessage(msg, '*'); } catch (e) {} }
   }
+  var resetTimer = null;
   function apply() {
+    if (mq.matches) html.removeAttribute('data-smart-bg');
+    else html.setAttribute('data-smart-bg', side);
     if (on) html.setAttribute('data-smart-side', side);
     else html.removeAttribute('data-smart-side');
     tellFrame({ type: 'smart-side', side: side });
@@ -29,7 +34,11 @@
     var now = smartOn();
     if (now === on) return;
     on = now;
-    if (on) side = 'zurich'; // every visit opens on Zurich until the cursor says otherwise
+    clearTimeout(resetTimer);
+    if (!on) {
+      // every visit opens on Zurich: reset once Smart has faded/slid out, so it's ready off screen
+      resetTimer = setTimeout(function () { if (!on) { side = 'zurich'; apply(); } }, 900);
+    }
     apply();
   }
   function fromX(x) {
@@ -69,7 +78,8 @@
   function start() {
     check();
     new MutationObserver(check).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-active-entry'] });
-    try { mq.addEventListener('change', check); } catch (e) { try { mq.addListener(check); } catch (e2) {} }
+    var onMq = function () { check(); apply(); };
+    try { mq.addEventListener('change', onMq); } catch (e) { try { mq.addListener(onMq); } catch (e2) {} }
     // the iframe mounts lazily; when it (re)loads, give it the current side
     document.addEventListener('load', function (e) {
       if (e.target && e.target.tagName === 'IFRAME' && e.target === frame()) setTimeout(apply, 50);
