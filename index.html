@@ -430,7 +430,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=12" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=13" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -627,7 +627,7 @@ class Component extends DCLogic {
     // instantly. Skipped in a bundled artifact, where assets are inlined already.
     if (!RES()["capco-video"]) {
       setTimeout(() => {
-        ["uploads/spotify-1.webp", "uploads/spotify-2.webp", "uploads/spotify-3.webp", "uploads/get-started.webp", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=3", "uploads/smart-balance-light.webp?v=3", "uploads/zurich-dashboard-dark.webp?v=4", "uploads/zurich-balance-dark.webp?v=3"]
+        ["uploads/spotify-1.webp", "uploads/spotify-2.webp", "uploads/spotify-3.webp", "uploads/get-started.webp", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=5", "uploads/smart-balance-light.webp?v=5", "uploads/zurich-dashboard-dark.webp?v=5", "uploads/zurich-balance-dark.webp?v=5"]
           .forEach((src, n) => setTimeout(() => { const im = new Image(); im.src = src; }, 300 + n * 150));
       }, 600);
     }
@@ -1191,9 +1191,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=2" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=3" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=2" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=3" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",

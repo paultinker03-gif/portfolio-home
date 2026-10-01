@@ -350,12 +350,12 @@ class SmartScene extends HTMLElement {
 
     const buildLegacy = () => {
       const CARD_W = 11.0 * (548 / 1157);
-      const phone = makePhone(R('uploads/smart-dashboard-2026.webp?v=2'), 11.91, 824 / 1848);
+      const phone = makePhone(R('uploads/smart-dashboard-2026.webp?v=3'), 11.91, 824 / 1848);
       phone.position.set(-1.0, 0.1, 1.6);
       phone.rotation.set(0, 0, TILT);
       legacyG.add(phone);
 
-      const dews = makeCard(R('uploads/zurich-balance-2026.webp?v=2'), 11.59 * (824 / 1848), 11.59);
+      const dews = makeCard(R('uploads/zurich-balance-2026.webp?v=3'), 11.59 * (824 / 1848), 11.59);
       dews.position.set(4.25, 0.9, -0.8);
       dews.rotation.set(0, 0, TILT);
       legacyG.add(dews);
@@ -392,9 +392,9 @@ class SmartScene extends HTMLElement {
         return Object.assign({ obj: outer, flip, mat: phone.userData.screen.material, texS, texZ, spin,
           base: outer.position.clone(), yaw, ang: 0, from: 0, to: 0, t0: -1, push: 0, lift: 0 }, f);
       };
-      const a = mk('uploads/smart-dashboard-light.webp?v=3', 'uploads/zurich-balance-dark.webp?v=3',
+      const a = mk('uploads/smart-dashboard-light.webp?v=5', 'uploads/zurich-balance-dark.webp?v=5',
         [-1.55, -0.35, 1.3], 7, 0.16, 1, { amp: 0.30, speed: 0.55, phase: 0, depth: 1.1, follow: 0.15, apart: -1 });
-      const b = mk('uploads/smart-balance-light.webp?v=3', 'uploads/zurich-dashboard-dark.webp?v=4',
+      const b = mk('uploads/smart-balance-light.webp?v=5', 'uploads/zurich-dashboard-dark.webp?v=5',
         [3.75, 0.45, -0.6], -7, -0.16, -1, { amp: 0.36, speed: 0.46, phase: 1.6, depth: 0.75, follow: 0.12, apart: 1 });
       duoPhones = [a, b];
       floatersDuo = duoPhones;
