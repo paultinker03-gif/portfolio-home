@@ -1,6 +1,6 @@
 /* Smart panel, tablets and up: which half of the screen the cursor is on picks the brand.
    Left half  → Smart (light, LTR), the panel's normal background.
-   Right half → Zurich (dark, RTL), background #2e3757.
+   Right half → Zurich (dark, RTL), background #262e4a.
    html[data-smart-bg] always holds Smart's side (background + Smart's own text), and is reset
    to Zurich once Smart has left the screen, so the panel slides in already dark.
    html[data-smart-side] is set only while Smart is on screen (shared nav colours).
@@ -92,6 +92,17 @@
     if (!on || (e.target && e.target.closest && e.target.closest('a, button'))) return;
     fromX(e.clientX);
   });
+
+  // touch tablets: a sideways swipe flips the theme first, like two cards (swipe left → Zurich on
+  // the right, swipe right → Smart on the left); once on that side, the same swipe changes section.
+  // Called by index.html's swipe handlers; returns true when it used the swipe.
+  window.__ptSmartSwipe = function (dir) {
+    if (!on) return false;
+    var want = dir > 0 ? 'zurich' : 'smart';
+    if (want === side) return false;
+    side = want; apply();
+    return true;
+  };
 
   function start() {
     check();
