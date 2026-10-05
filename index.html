@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html style="background:#04122a">
+<html style="background:#0a243b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#04122a">
+<meta name="theme-color" content="#0a243b">
 <title>Paul Tinker — Principal Product Designer · Design Systems</title>
 <meta name="description" content="Product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension.">
 <meta property="og:type" content="website">
@@ -15,12 +15,12 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://paultinker.uk/">
-<style>html,body{background:#04122a;margin:0;padding:0;overscroll-behavior-x:none}</style>
+<style>html,body{background:#0a243b;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
-<script src="./smart-switch.js?v=2" defer></script>
+<script src="./smart-switch.js?v=3" defer></script>
 </head>
-<body style="background:#092044">
+<body style="background:#123d5e">
 <x-dc>
 <template id="__bundler_thumbnail" data-bg-color="#092044">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +61,7 @@
 setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready',''); }, 3000);
 </script>
 <style>
-  html, body { margin:0; padding:0; background:#04122a; overflow:hidden; height:100%; }
+  html, body { margin:0; padding:0; background:#0a243b; overflow:hidden; height:100%; }
   x-dc { visibility:hidden; }
   html[data-dc-ready] x-dc { visibility:visible; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -167,9 +167,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-desc"] { width:min(360px, 34vw) !important; }
     [data-role="cv-title"] { width:min(320px, 34vw) !important; }
   }
-  @media (min-width: 1025px) and (max-width: 1194px) and (orientation: landscape) and (min-height: 501px) {
-    [data-role="cv-imggroup"][data-imgcount="3"][data-imgcount="3"] { left:-14vw !important; right:-14vw !important; top:-10% !important; bottom:-6% !important; }
-  }
   @media (min-width: 1024px) and (max-width: 1440px), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) {
     [data-role="cv-vf-0"] { left:5% !important; top:15% !important; width:20% !important; height:45% !important; }
     [data-role="cv-vf-1"] { left:15% !important; top:10% !important; width:40% !important; height:62% !important; }
@@ -221,7 +218,12 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"] iframe { transform: none; }
     [data-role="cv-desc"] { bottom:96px !important; }
     [data-role="cv-yearnav"] { justify-content:flex-start !important; padding-left:16px !important; }
-    [data-role="cv-gu3d"] { top:28% !important; bottom:28% !important; }
+    [data-role="cv-gu3d"] { top:22% !important; bottom:26% !important; }
+    /* portrait monitors: these heroes fit the narrow width and came out small in all that height */
+    [data-role="cv-gu3d"] iframe { transform: scale(1.6); }
+    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.75) !important; }
+    /* (repeated attribute: beats the laptop rule that insets every hero by 18vw a side) */
+    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { left:24px !important; right:24px !important; top:20% !important; bottom:30% !important; }
   }
   /* 2. small phones: tighter type so the hero keeps its room */
   @media (max-width: 359px) and (orientation: portrait) {
@@ -255,6 +257,11 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-imggroup"][data-imgcount="105"] { left:47vw !important; right:auto !important; width:46vw !important; }
   }
   [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); transform-origin:50% 50%; }
+  /* Smart (tablet+): lift the phones and coins together; they sat low on every screen size.
+     A separate translate, so it adds to each breakpoint's own transform instead of replacing it. */
+  @media (min-width: 701px) and (min-height: 501px) {
+    [data-role="cv-smart3d"] { translate: 0 var(--smart-lift, -6vh); }
+  }
   @media (min-width: 1900px) {
     [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1); }
   }
@@ -290,24 +297,43 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (max-height: 500px) and (orientation: landscape) { :root { --nesp-inset: 10px 2% 46px 44vw; --nesp-scale: scale(0.9); } }
   @media (min-width: 1024px) and (max-width: 1440px) { :root { --nesp-scale: scale(0.85); } }
   @media (min-width: 1441px) { :root { --nesp-inset: 40px 6% 110px; --nesp-scale: scale(0.85); } }
-  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 23vh 11% 27vh; --nesp-scale: scale(0.8); } }
+  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 24vh 4% 28vh; --nesp-scale: scale(0.95); } }
   @media (orientation: landscape) and (min-width: 1000px) and (max-width: 1400px) and (min-height: 700px) { :root { --nesp-inset: 17vh 9% 21vh; --nesp-scale: scale(0.74); } }
+  @media (orientation: portrait) and (min-width: 1025px) { :root { --nesp-inset: 26vh 3% 30vh; --nesp-scale: none; } }
   /* measured alignment offsets, written by _alignFocus() — the translate property composes with the inline transforms */
   [data-role="cv-imggroup"][data-nesp="1"] { translate: var(--nesp-dx, 0px) var(--nesp-dy, 0px); }
   [data-role="cv-akqa3d"] { translate: 0 var(--akqa-dy, 0px); }
   [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:none; }
   @media (hover: hover) and (pointer: fine) and (min-width: 1401px) { [data-role="cv-imggroup"][data-nesp="1"] iframe { pointer-events:auto; } }
-  /* Smart panel (tablet+): cursor on the right half shows Zurich — dark #051240 background,
+  /* Smart panel (tablet+): cursor on the right half shows Zurich — dark #2e3757 background,
      light text. smart-switch.js keeps html[data-smart-bg] on Smart's current side at all times
      (reset to Zurich while off screen, so it slides in already dark) and sets
      html[data-smart-side] only while Smart is on screen (for the shared nav). */
   [data-role="cv-bg"][data-smart="true"] { transition:opacity 500ms ease, background-color 600ms ease !important; }
-  html[data-smart-bg="zurich"] [data-role="cv-bg"][data-smart="true"] { background:#051240 !important; }
+  html[data-smart-bg="zurich"] [data-role="cv-bg"][data-smart="true"] { background:#2e3757 !important; }
   [data-role="cv-title"] { transition:opacity 520ms ease 120ms, transform 620ms cubic-bezier(.16,1,.3,1) 120ms, color 500ms ease !important; }
   [data-role="cv-desc"] > div:first-child { transition:color 500ms ease; }
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-title"],
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-desc"] > div:first-child { color:#fff !important; }
   html[data-smart-side="zurich"] [data-role="cv-yearnav"] button:not([aria-current="true"]) { color:rgba(255,255,255,0.8) !important; }
+  /* Smart panel: left/right cursor, same as the portrait page; links and nav keep the hand */
+  html[data-smart-side] body { cursor: ew-resize; }
+  html[data-smart-side] a, html[data-smart-side] button { cursor: pointer; }
+  /* Approach panel: the portrait iframe already shows the left/right cursor; match it over the
+     title and text laid on top (an inactive panel has pointer-events:none, so this only applies on Approach) */
+  @media (min-width: 701px) {
+    [data-role="cv-entry"][data-approach="true"] { cursor: ew-resize; }
+    [data-role="cv-entry"][data-approach="true"] a, [data-role="cv-entry"][data-approach="true"] button { cursor: pointer; }
+  }
+  /* Approach: on wide screens the portrait is centred, so its text block fits in the space to the
+     left of it; on tall screens (portrait tablets/monitors) the portrait sits between the title and
+     the text, so the text gets a normal reading width */
+  @media (min-width: 701px) and (orientation: landscape) {
+    html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: clamp(220px, calc((100vw - min(68vh * 1300 / 1168, 1000px)) / 2 - 60px), 480px) !important; }
+  }
+  @media (min-width: 701px) and (orientation: portrait) {
+    html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: min(600px, 75vw) !important; }
+  }
   [data-role="cv-smart-pal"] { position:absolute; top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:8px; padding:4px; border-radius:6px; pointer-events:none; transition:opacity 500ms ease 120ms; }
   [data-role="cv-smart-pal"] > span { display:block; width:28px; height:28px; border-radius:3px; }
   [data-pal="smart"] { left:22px; background:#fff; }
@@ -332,14 +358,21 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   <div style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
 
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
-      <div data-role="cv-entry" data-smart="{{ e.smartComp }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
+      <div data-role="cv-entry" data-smart="{{ e.smartComp }}" data-approach="{{ e.isApproach }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
         <sc-if value="{{ e.stillOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-stillbox" data-still="{{ e.stillName }}" style="position:absolute; left:var(--st-{{ e.stillName }}-x, 0px); top:var(--st-{{ e.stillName }}-y, 0px); width:var(--st-{{ e.stillName }}-w, 0px); height:var(--st-{{ e.stillName }}-h, 0px); z-index:5; pointer-events:none; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
-            <picture style="display:contents"><source media="(orientation: landscape)" srcset="{{ e.stillLand }}"><img class="cv-still" src="{{ e.stillSrc }}" alt="{{ e.stillAlt }}" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain"></picture>
+            <picture style="display:contents"><source media="(orientation: landscape)" srcset="{{ e.stillLand }}"><img class="cv-still" srcset="{{ e.stillSrc }}" alt="{{ e.stillAlt }}" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain"></picture>
           </div>
         </sc-if>
 
 
+        <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
+          <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
+              <iframe src="./portrait/?v=18" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+            </sc-if>
+          </div>
+        </sc-if>
         <div data-role="cv-imggroup" data-imgcount="{{ e.imgCount }}" style="position:absolute; left:{{ e.groupLeft }}; right:{{ e.groupRight }}; top:{{ e.groupTop }}; bottom:{{ e.groupBottom }}; pointer-events:{{ e.pe }}; z-index:{{ e.imgZ }}">
           <sc-if value="{{ e.wide4 }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-vf3d" style="position:absolute; left:30%; right:2%; top:6%; bottom:12%; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
@@ -358,7 +391,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-gu3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=1" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
+                <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=12" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -421,7 +454,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
                 <div style="width:100%; height:100%; animation:none">
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
-                    <iframe data-role="cv-bt3d" src="./nespresso.html" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                    <iframe data-role="cv-bt3d" src="./nespresso.html?v=3" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
                 </div>
               </div>
@@ -430,7 +463,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=13" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=14" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -526,7 +559,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
 <script type="text/x-dc" data-dc-script data-props="{&quot;smartLeftOffset&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 0, &quot;min&quot;: -10, &quot;max&quot;: 10, &quot;step&quot;: 0.5, &quot;unit&quot;: &quot;%&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Smart layout&quot;}}">
 const DATA = [
   {
-    themeColor: "#092044", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
+    themeColor: "#123d5e", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
     imageCount: 0, dayNight: true,
     meta: "", email: "hello@paultinker.uk",
     desc: "I'm a product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension. I design end-to-end journeys and the systems behind them, prototyping directly with AI.",
@@ -571,6 +604,13 @@ const DATA = [
     meta: "2010–2012",
     desc: "Worked across global digital products and campaigns for brands including Nissan, NatWest and Dorling Kindersley. Delivered apps, websites and interactive experiences. Awards: Apple iPad App of the Week, FWA Site of the Day, Lovie Awards, Webby Awards.",
     link: null, linkLabel: null, slot: "AKQA campaign work"
+  },
+  {
+    themeColor: "#F7F3EA", idKey: "approach", year: "Now", short: "Approach", company: "My Approach", title: "Craft, systems and time outdoors", imageCount: 0, approach: true, dark: false,
+    bg: "#F7F3EA", navBg: "#E3D8C6",
+    meta: "",
+    desc: "I'm a hands-on designer who loves the craft: sketching, prototyping and getting every detail right. I work systematically, building components and patterns that help a product grow, and I'm always exploring new tools, AI especially.\n\nAway from the screen, I'm outside with my family, cycling, running and camping. It's how I recharge, and often where my best ideas come from.",
+    link: null, linkLabel: null, slot: "self portrait"
   }
 ];
 
@@ -604,7 +644,8 @@ const STILLS = {
   "Smart": ["smart", "Smart Pension and Zurich app screens"],
   "Nespresso": ["nespresso", "Nespresso Built Together"],
   "The Guardian": ["guardian", "The Guardian x Spotify app screens"],
-  "AKQA": ["akqa", "AKQA cardiovascular iPad app"]
+  "AKQA": ["akqa", "AKQA cardiovascular iPad app"],
+  "Approach": ["approach", "Paul at his desk and on his bike"]
 };
 
 const SLUGIFY = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -627,7 +668,7 @@ class Component extends DCLogic {
     // instantly. Skipped in a bundled artifact, where assets are inlined already.
     if (!RES()["capco-video"]) {
       setTimeout(() => {
-        ["uploads/spotify-1.webp", "uploads/spotify-2.webp", "uploads/spotify-3.webp", "uploads/get-started.webp", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=5", "uploads/smart-balance-light.webp?v=5", "uploads/zurich-dashboard-dark.webp?v=5", "uploads/zurich-balance-dark.webp?v=5"]
+        ["uploads/spotify-1.webp?v=11", "uploads/spotify-2.webp?v=11", "uploads/spotify-3.webp?v=11", "uploads/get-started.webp", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=5", "uploads/smart-balance-light.webp?v=5", "uploads/zurich-dashboard-dark.webp?v=5", "uploads/zurich-balance-dark.webp?v=5"]
           .forEach((src, n) => setTimeout(() => { const im = new Image(); im.src = src; }, 300 + n * 150));
       }, 600);
     }
@@ -675,7 +716,7 @@ class Component extends DCLogic {
           const dx = this._btLastX == null ? 0 : t.clientX - this._btLastX;
           this._btLastX = t.clientX;
           try {
-            bt.contentWindow.postMessage({ type: "btPointer", nx: (t.clientX - r.left) / r.width, ny: (t.clientY - r.top) / r.height, dx: dx }, "*");
+            bt.contentWindow.postMessage({ type: "btPointer", nx: (t.clientX - r.left) / r.width, ny: (t.clientY - r.top) / r.height, dx: dx, touch: true }, "*");
           } catch (e) {}
         }
       }
@@ -741,7 +782,11 @@ class Component extends DCLogic {
     this._it = 0; this._ipx = null; this._ipy = null; this._icx = 0; this._icy = 0; this._idx = 0; this._idy = 0;
     this._onIntroMove = (e) => { if (e.pointerType === "touch") return; this._ipx = e.clientX; this._ipy = e.clientY; };
     this._onIntroLeave = () => { this._ipx = null; this._ipy = null; };
-    this._onIntroTouch = () => {};
+    // Touch: a finger held on the bubbles shows the screen print until it lifts (it doesn't pull them about)
+    this._onIntroTouch = (e) => { const t = e.touches && e.touches[0]; if (t) { this._itx = t.clientX; this._ity = t.clientY; } };
+    this._onIntroTouchEnd = (e) => { if (!e.touches || !e.touches.length) { this._itx = null; this._ity = null; } };
+    window.addEventListener("touchend", this._onIntroTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", this._onIntroTouchEnd, { passive: true });
     window.addEventListener("pointermove", this._onIntroMove, { passive: true });
     window.addEventListener("touchmove", this._onIntroTouch, { passive: true });
     window.addEventListener("touchstart", this._onIntroTouch, { passive: true });
@@ -784,7 +829,7 @@ class Component extends DCLogic {
   _slug(short) { return short.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
 
   introPalette() {
-    const lobes = [[245, 145, 115], [245, 140, 186], [90, 210, 167], [158, 146, 217]];
+    const lobes = [[245, 145, 115], [245, 140, 186], [90, 210, 167], [160, 140, 236]];
     return { bg: "#092044", ink: "#F8C777", strong: "rgba(248,199,119,0.92)", shadow: "2,14,11", shadowA: 0.2, lobes };
   }
 
@@ -816,6 +861,9 @@ class Component extends DCLogic {
     const nowMs = performance.now();
     if (!this._bandAt || nowMs - this._bandAt > 250) {
       this._bandAt = nowMs;
+      // re-measure where the canvas sits: a render while the intro was slid off-screen leaves
+      // _icLeft pointing off-screen, which would aim the rollover hit-test at the wrong place
+      if (this.state.i === 0) { const cr = c.getBoundingClientRect(); this._icLeft = cr.left; this._icTop = cr.top; }
       const titleEl = document.querySelectorAll('[data-role="cv-title"]')[this.state.i];
       const navEl = this._navEl;
       this._hdr = titleEl ? titleEl.getBoundingClientRect().bottom - this._icTop : H * 0.08;
@@ -863,11 +911,59 @@ class Component extends DCLogic {
       const r = CR * (0.295 + 0.035 * Math.sin(t * (0.9 + i * 0.23) + i));
       lobes.push({ x: this._icx + Math.cos(a0) * d, y: this._icy + Math.sin(a0) * d * 0.9, rr: r * r });
     }
+    // Rollover: with the cursor on (or just outside) the bubbles they ease into a screen print
+    const onBubbles = (cx, cy) => {
+      const px = cx - (this._icLeft || 0), py = cy - (this._icTop || 0);
+      let s = 0;
+      for (const b of lobes) { const dx = px - b.x, dy = py - b.y; s += b.rr / (dx * dx + dy * dy + 0.0001); }
+      return s > 0.75;
+    };
+    // the mouse, or a finger held down on them (this._itx, touch only)
+    const over = (this._ipx != null && onBubbles(this._ipx, this._ipy)) || (this._itx != null && onBubbles(this._itx, this._ity));
+    this._iHov = (this._iHov || 0) + ((over ? 1 : 0) - (this._iHov || 0)) * ease(over ? 0.09 : 0.06);
+    if (this._iHov < 0.002) this._iHov = 0;
     ctx.clearRect(0, 0, W, H);
-    this._strokeIntroField(ctx, lobes, this._icx, this._icy, CR, ink, pal.lobes);
+    this._strokeIntroField(ctx, lobes, this._icx, this._icy, CR, ink, pal.lobes, this._iHov);
   }
 
-  _strokeIntroField(ctx, lobes, cx, cy, CR, ink, cols) {
+  // Screen-print layers under the outline: a halftone dot screen in each bubble's ink, printed
+  // slightly out of register, plus a second offset pass of the outline in the gold ink.
+  _printIntroField(ctx, f, lobes, cx, cy, CR, ink, cols, hov, T) {
+    const k = hov * hov * (3 - 2 * hov);
+    const o = CR * 0.06 * k;
+    const sp = Math.max(4, CR * 0.07);
+    const pad = CR * 1.9;
+    const x0 = cx - pad, y0 = cy - pad, n = Math.ceil(pad * 2 / sp);
+    const paths = cols.map(() => new Path2D());
+    for (let j = 0; j <= n; j++) {
+      const y = y0 + j * sp * 0.866;
+      const xo = (j & 1) ? sp * 0.5 : 0;
+      for (let i = 0; i <= n; i++) {
+        const x = x0 + xo + i * sp;
+        const v = f(x, y);
+        if (v < T) continue;
+        let best = 0, bw = -1;
+        for (let q = 0; q < lobes.length; q++) {
+          const b = lobes[q], dx = x - b.x, dy = y - b.y, w = b.rr / (dx * dx + dy * dy + 0.0001);
+          if (w > bw) { bw = w; best = q; }
+        }
+        // tone deepens towards each bubble's heart, like a halftone gradient
+        const tone = Math.min(1, 0.3 + (v - T) * 0.55);
+        const r = sp * 0.6 * Math.sqrt(tone) * k;
+        if (r < 0.4) continue;
+        const p = paths[best % paths.length];
+        p.moveTo(x + o + r, y + o);
+        p.arc(x + o, y + o, r, 0, Math.PI * 2);
+      }
+    }
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    paths.forEach((p, q) => { const c = cols[q]; ctx.fillStyle = "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")"; ctx.fill(p); });
+    ctx.restore();
+    return o;
+  }
+
+  _strokeIntroField(ctx, lobes, cx, cy, CR, ink, cols, hov) {
     const T = 1;
     const pad = CR * 1.9;
     const x0 = cx - pad, x1 = cx + pad, y0 = cy - pad, y1 = cy + pad;
@@ -881,6 +977,7 @@ class Component extends DCLogic {
       }
       return s;
     };
+    const off = hov > 0 && cols ? this._printIntroField(ctx, f, lobes, cx, cy, CR, ink, cols, hov, T) : 0;
     let row = new Float32Array(nx + 1);
     for (let i = 0; i <= nx; i++) row[i] = f(x0 + i * cell, y0);
     ctx.lineWidth = Math.max(3.5, CR * 0.055);
@@ -935,6 +1032,16 @@ class Component extends DCLogic {
       row = next;
     }
     if (!cols) { ctx.stroke(); return; }
+    if (off > 0.05) {
+      // misregistered second pass of the outline in gold ink, nudged the other way
+      ctx.save();
+      ctx.translate(-off * 0.8, -off * 0.5);
+      ctx.globalAlpha = Math.min(1, off / (CR * 0.06)) * 0.9;
+      ctx.strokeStyle = ink; ctx.beginPath();
+      buckets.forEach((a) => { for (let n = 0; n < a.length; n += 4) { ctx.moveTo(a[n], a[n + 1]); ctx.lineTo(a[n + 2], a[n + 3]); } });
+      ctx.stroke();
+      ctx.restore();
+    }
     buckets.forEach((a, k) => {
       ctx.strokeStyle = k; ctx.beginPath();
       for (let n = 0; n < a.length; n += 4) { ctx.moveTo(a[n], a[n + 1]); ctx.lineTo(a[n + 2], a[n + 3]); }
@@ -1051,6 +1158,8 @@ class Component extends DCLogic {
     window.removeEventListener("pointerleave", this._onIntroLeave);
     window.removeEventListener("touchmove", this._onIntroTouch);
     window.removeEventListener("touchstart", this._onIntroTouch);
+    window.removeEventListener("touchend", this._onIntroTouchEnd);
+    window.removeEventListener("touchcancel", this._onIntroTouchEnd);
     window.removeEventListener("resize", this._onIntroResize);
     window.removeEventListener("orientationchange", this._onIntroResize);
     window.removeEventListener("resize", this._onStillsResize);
@@ -1191,9 +1300,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=3" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=11" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=3" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=11" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
@@ -1209,12 +1318,15 @@ class Component extends DCLogic {
         gu3dNear: near3d(i),
         smart3dNear: near3d(i),
         akqa3dNear: near3d(i),
+        isApproach: !!d.approach,
+        approachOn: !!d.approach && !stills,
+        approachNear: near3d(i),
         wide4: (d.imageCount != null ? d.imageCount : 5) === 4 && !d.evenGrid,
         wide4Even: (d.imageCount != null ? d.imageCount : 5) === 4 && !!d.evenGrid,
         wide5: (d.imageCount != null ? d.imageCount : 5) === 5,
         wide6: (d.imageCount != null ? d.imageCount : 5) === 6,
         imgCount: d.imageCount != null ? d.imageCount : 5,
-        bg: d.dayNight ? "radial-gradient(circle at 50% 45%, #0e335f 0%, #092044 55%, #04122a 100%)" : (d.bg || "oklch(0.934 0.02 6)"),
+        bg: d.dayNight ? "radial-gradient(circle at 50% 45%, #1c5485 0%, #123d5e 55%, #0a243b 100%)" : (d.bg || "oklch(0.934 0.02 6)"),
         bgOp: on ? 1 : 0,
         dayNight: !!d.dayNight,
         introBg: introPalette.bg,
@@ -1302,7 +1414,7 @@ class Component extends DCLogic {
   }
 
   _syncThemeColor() {
-    // Browser chrome tint is a single static #04122a meta in <head>; nothing per-section here
+    // Browser chrome tint is a single static #0a243b meta in <head>; nothing per-section here
     
     document.documentElement.style.background = "";
     document.body.style.background = "";

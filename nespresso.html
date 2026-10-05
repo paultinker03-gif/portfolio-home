@@ -90,7 +90,6 @@ class Component extends DCLogic {
     window.removeEventListener('pointermove', this._move);
     window.removeEventListener('touchmove', this._touch);
     window.removeEventListener('message', this._msg);
-    window.removeEventListener('wheel', this._wheel);
     if(this.renderer) this.renderer.dispose();
   }
   fit(){
@@ -115,20 +114,19 @@ class Component extends DCLogic {
       if(this.last !== null) this.swipe += (t.clientX - this.last) * 0.012 * this.sens();
       this.last = t.clientX;
     };
-    this._wheel = (e) => { this.swipe += e.deltaY * 0.004 * this.sens(); };
     this._msg = (ev) => {
       const d = ev && ev.data;
       if (!d || d.type !== 'btPointer') return;
       this.ptr.tx = (d.nx - 0.5) * 2;
       this.ptr.ty = (d.ny - 0.5) * 2;
-      this.lastInput = performance.now();
+      // only a finger lifting should let the capsules drift home; a resting mouse keeps its tilt
+      this.lastInput = d.touch ? performance.now() : 0;
       if (d.dx) this.swipe += d.dx * 0.012 * this.sens();
     };
     window.addEventListener('message', this._msg);
     window.addEventListener('resize', this._fit);
     window.addEventListener('pointermove', this._move);
     window.addEventListener('touchmove', this._touch, {passive:true});
-    window.addEventListener('wheel', this._wheel, {passive:true});
   }
   sens(){ return this.props.spinSensitivity ?? 1; }
   async initGL(){
@@ -227,7 +225,14 @@ class Component extends DCLogic {
     const tick = () => {
       if(this.dead || this.loopToken !== myToken) return;
       this.lastFrame = performance.now();
-      this.drift += (this.props.idleSpin ?? true) ? 0.005 : 0;
+      // Coming back to Nespresso: start from the middle again (no leftover tilt, spin or drift).
+      // The host flips __ptNespVisible as the panel starts sliding in, so the reset happens unseen.
+      const vis = !(this._host && this._host.__ptNespVisible === false);
+      if (vis && this._wasVisible === false) {
+        this.ptr = {x:0, y:0, tx:0, ty:0}; this.spin = 0; this.swipe = 0; this.drift = 0; this.last = null;
+      }
+      this._wasVisible = vis;
+      this.drift += (this.props.idleSpin ?? true) ? 0.008 : 0;   // idle spin + sway speed (was 0.005)
       if (this.lastInput && performance.now() - this.lastInput > 900) { this.ptr.tx *= 0.94; this.ptr.ty *= 0.94; }
       const target = this.ptr.x * 5.2 * this.sens() + this.swipe;
       this.spin += (target - this.spin) * 0.09;

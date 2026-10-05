@@ -121,11 +121,10 @@ class GuardianSceneCopy extends HTMLElement {
     // bevelled edge + a thin metal rail, and a flat unlit screen sitting on top.
     const PHONE_ASPECT = 375 / 772;
     const PHONE_H = 9.9;
-    const screens = [R('uploads/spotify-3.webp'), R('uploads/spotify-2.webp'), R('uploads/spotify-1.webp')];
+    const screens = [R('uploads/spotify-1.webp?v=11'), R('uploads/spotify-2.webp?v=11'), R('uploads/spotify-3.webp?v=11')];   // left, middle, right: home, your genres, genre page
 
     const bodyMat = new THREE.MeshPhysicalMaterial({ name: 'phone-body', color: 0x050607, roughness: 0.5, metalness: 0.6, clearcoat: 0.15, clearcoatRoughness: 0.5, envMapIntensity: 0.5 });
     const edgeMat = new THREE.MeshPhysicalMaterial({ name: 'phone-edge', color: 0xd8dde1, roughness: 0.34, metalness: 0.92, clearcoat: 0.25, clearcoatRoughness: 0.35, envMapIntensity: 1.05 });
-    const speakerMat = new THREE.MeshStandardMaterial({ name: 'speaker', color: 0x9aa0a5, roughness: 0.6, metalness: 0.6 });
     const buttonMat = new THREE.MeshPhysicalMaterial({ name: 'button', color: 0xd6dade, roughness: 0.35, metalness: 0.9, clearcoat: 0.2, envMapIntensity: 1.0 });
 
     function roundedRectShape(w, h, r) {
@@ -184,11 +183,6 @@ class GuardianSceneCopy extends HTMLElement {
       }));
       sheen.position.z = screen.position.z + 0.01;
       g.add(sheen);
-
-      const notch = new THREE.Mesh(new THREE.CapsuleGeometry(w * 0.008, w * 0.16, 4, 12), speakerMat);
-      notch.rotation.z = Math.PI / 2;
-      notch.position.set(0, h / 2 - bezel * 0.55, depth / 2 + bevel + 0.014);
-      g.add(notch);
 
       const layout = [
         { x: -6.6, y: -0.7, z: -0.4, rz: -0.26, scale: 0.86 },

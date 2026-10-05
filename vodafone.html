@@ -48,7 +48,7 @@ try {
   #stage {
     position: relative; width: 100%; height: 100vh; min-height: 520px; overflow: hidden;
     background: transparent;
-    touch-action: none; cursor: grab;
+    touch-action: none; cursor: default;
   }
   #stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 200ms ease-out; }
 </style>
@@ -272,7 +272,6 @@ stage.addEventListener('pointerdown', e => {
   if (e.pointerType === 'mouse') return;
   drag = { x: e.clientX, y: e.clientY };
   drag.tx = 0; drag.ty = 0;
-  stage.style.cursor = 'grabbing';
   try { stage.setPointerCapture(e.pointerId); } catch (err) {}
 });
 
@@ -297,7 +296,6 @@ function endDrag() {
     try { parent.postMessage({ type: 'vf3d-swipe', dir: drag.tx < 0 ? 1 : -1 }, '*'); } catch (err) {}
   }
   drag = null;
-  stage.style.cursor = 'grab';
 }
 stage.addEventListener('pointerup', endDrag);
 stage.addEventListener('pointercancel', endDrag);

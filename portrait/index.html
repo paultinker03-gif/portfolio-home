@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Approach · Paul Tinker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- inside the homepage timeline: switch to the embedded layout before the first paint, so the
+     standalone layout never flashes up on load -->
+<script>try { if (window.parent !== window) document.documentElement.classList.add('is-embedded'); } catch (e) { document.documentElement.classList.add('is-embedded'); }</script>
+<link rel="stylesheet" href="style.css?v=14">
+</head>
+<body>
+<main class="portrait" id="portrait" style="--mix:1">
+
+  <!-- Phones get two flat pictures instead of the interactive frame -->
+  <figure class="flat flat--desk">
+    <picture>
+      <source type="image/avif" srcset="img/flat-desk.avif?v=3">
+      <source type="image/webp" srcset="img/flat-desk.webp?v=3">
+      <img src="img/flat-desk.jpg?v=3" width="900" height="809" alt="Paul at his desk, working on a laptop" loading="lazy" decoding="async">
+    </picture>
+  </figure>
+
+  <div class="frame" id="frame">
+    <div class="tilt" id="tilt">
+      <!-- Left: at the desk -->
+      <div class="scene scene--desk" id="desk">
+        <div class="layer" data-key="desk-bg" data-depth="0.35" style="left:-9.529%;top:-5.0%;width:119.058%;height:110.0%">
+          <picture>
+            <source type="image/avif" srcset="img/desk-bg.avif">
+            <source type="image/webp" srcset="img/desk-bg.webp">
+            <img src="img/desk-bg.jpg" width="1780" height="1478" alt="" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="layer" data-key="screens" data-depth="1" style="left:10.416%;top:6.68%;width:83.645%;height:61.658%">
+          <div class="float">
+          <picture>
+            <source type="image/avif" srcset="img/screens.avif">
+            <source type="image/webp" srcset="img/screens.webp">
+            <img src="img/screens.png" width="1250" height="828" alt="" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        </div>
+        <div class="layer" data-key="person" data-depth="1.7" style="left:15.291%;top:37.052%;width:69.091%;height:60.646%">
+          <picture>
+            <source type="image/avif" srcset="img/person.avif?v=3">
+            <source type="image/webp" srcset="img/person.webp?v=3">
+            <img src="img/person.png?v=3" width="1033" height="815" alt="Paul at his desk, working on a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="shade"></div>
+      </div>
+
+      <!-- Right: on the bike -->
+      <div class="scene scene--bike" id="bike">
+        <div class="layer" data-key="bike-bg" data-depth="0.35" style="left:-8.262%;top:-5.0%;width:116.524%;height:110.0%">
+          <picture>
+            <source type="image/avif" srcset="img/bike-bg.avif">
+            <source type="image/webp" srcset="img/bike-bg.webp">
+            <img src="img/bike-bg.jpg" width="1742" height="1478" alt="" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="layer" data-key="rider" data-depth="1.7" style="left:45%;top:37.073%;width:25.846%;height:57.583%">
+          <picture>
+            <source type="image/avif" srcset="img/rider.avif">
+            <source type="image/webp" srcset="img/rider.webp">
+            <img src="img/rider.png" width="386" height="773" alt="Paul cycling a winding road through Provence" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="layer" data-key="flowers-l" data-depth="2.8" style="left:-5.0%;top:62.312%;width:34.0%;height:41.688%">
+          <picture>
+            <source type="image/avif" srcset="img/flowers-l.avif">
+            <source type="image/webp" srcset="img/flowers-l.webp">
+            <img src="img/flowers-l.png" width="508" height="560" alt="" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="layer" data-key="flowers-r" data-depth="2.8" style="left:63.0%;top:67.028%;width:42.0%;height:36.972%">
+          <picture>
+            <source type="image/avif" srcset="img/flowers-r.avif">
+            <source type="image/webp" srcset="img/flowers-r.webp">
+            <img src="img/flowers-r.png" width="628" height="497" alt="" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="shade"></div>
+      </div>
+
+      <div class="fog" id="fog" aria-hidden="true"></div>
+      <div class="haze" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+      <div class="bloom" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Phones get two flat pictures instead of the interactive frame -->
+  <figure class="flat flat--bike">
+    <picture>
+      <source type="image/avif" srcset="img/flat-bike.avif">
+      <source type="image/webp" srcset="img/flat-bike.webp">
+      <img src="img/flat-bike.jpg" width="900" height="809" alt="Paul cycling a winding road through Provence" loading="lazy" decoding="async">
+    </picture>
+  </figure>
+
+  <p class="hint" id="hint" aria-hidden="true"><span>&larr;</span> move <span>&rarr;</span></p>
+</main>
+<script src="script.js?v=15"></script>
+</body>
+</html>

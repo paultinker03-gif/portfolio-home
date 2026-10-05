@@ -1,0 +1,325 @@
+:root {
+  --paper: #f7f3ea;
+  --ink: #2b2a28;
+  --gap: clamp(24px, 3.5vw, 64px);
+  --frame-w: min(calc(100vw - 64px), calc(80vh * 1300 / 1168), 1000px);
+  --radius: 18px;
+  --mix: 0; /* 0 = desk in focus, 1 = bike in focus (set by script.js) */
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Sans", Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* faint paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.3  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Layout: the framed picture, centred (the paultinker Approach panel supplies the text) */
+.portrait {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: center;
+  gap: var(--gap);
+  padding-inline: 16px;
+  touch-action: pan-y;
+  cursor: ew-resize;
+}
+
+.frame {
+  position: relative;
+  width: var(--frame-w);
+  aspect-ratio: 1300 / 1168;
+  perspective: 1400px;
+}
+
+.tilt {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  box-shadow:
+    0 2px 4px rgba(40, 30, 20, .08),
+    0 30px 70px -20px rgba(40, 30, 20, .35);
+  background: #1d1f33;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The bike scene sits on top and is revealed through a soft diagonal mask.
+   --a / --b are pixel stops computed in script.js. */
+.scene--bike {
+  -webkit-mask-image: linear-gradient(var(--angle, 102deg), transparent var(--a, 100%), #000 var(--b, 100%));
+          mask-image: linear-gradient(var(--angle, 102deg), transparent var(--a, 100%), #000 var(--b, 100%));
+}
+
+.layer {
+  position: absolute;
+  will-change: transform;
+  pointer-events: none;
+}
+.layer picture, .layer img,
+.layer .float, .layer .drone {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.layer img { object-fit: fill; }
+/* pre-blurred copy (added by script.js) under the sharp picture; it overhangs the layer by its margin */
+.layer picture { position: relative; will-change: opacity; }
+.layer .float { position: relative; }
+.layer img.blur { position: absolute; display: block; max-width: none; pointer-events: none; will-change: opacity; }
+
+/* Foreground flowers sway a little, rooted at the bottom */
+.layer[data-depth="2.8"] img { transform-origin: 50% 100%; animation: sway 6.5s ease-in-out infinite; }
+.layer[data-depth="2.8"]:nth-last-child(2) img { animation-duration: 7.7s; animation-delay: -2s; }
+@keyframes sway { 0%,100% { transform: rotate(-0.8deg); } 50% { transform: rotate(0.9deg); } }
+
+/* The holographic screens drift very gently */
+.float { animation: float 9s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: translateY(-0.6%); } 50% { transform: translateY(0.8%); } }
+
+/* Drone hovers on the spot: bob, sway and tilt on different periods */
+.drone { animation: hover-y 3.4s ease-in-out infinite; }
+.drone picture { animation: hover-x 7.3s ease-in-out infinite; }
+.drone img { animation: hover-tilt 4.1s ease-in-out infinite; transform-origin: 50% 45%; }
+@keyframes hover-y    { 0%,100% { transform: translateY(-7%); } 50% { transform: translateY(7%); } }
+@keyframes hover-x    { 0%,100% { transform: translateX(-2.5%); } 50% { transform: translateX(2.5%); } }
+@keyframes hover-tilt { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(1.6deg); } }
+
+/* The scene out of focus drops into a cool indigo "night" version, so the
+   sliver reads as a hint and the reveal feels like light switching on. */
+.shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #2b2c6e;
+  mix-blend-mode: multiply;
+}
+.scene--desk .shade { opacity: calc(var(--mix) * .85); }
+.scene--bike .shade { opacity: calc((1 - var(--mix)) * .85); }
+
+/* Glowing diagonal light where the two scenes meet */
+.seam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(var(--angle, 100deg),
+    transparent calc(var(--s, 0px) - 90px),
+    rgba(255, 236, 200, .07) calc(var(--s, 0px) - 30px),
+    rgba(255, 246, 225, .35) calc(var(--s, 0px) - 3px),
+    rgba(255, 255, 250, 1) calc(var(--s, 0px) - 1px),
+    rgba(255, 255, 250, 1) calc(var(--s, 0px) + 1px),
+    rgba(200, 220, 255, .30) calc(var(--s, 0px) + 3px),
+    rgba(200, 220, 255, .06) calc(var(--s, 0px) + 30px),
+    transparent calc(var(--s, 0px) + 90px));
+}
+
+/* Low haze along the ground */
+.haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(250, 244, 230, .16), rgba(250, 244, 230, 0) 22%);
+}
+
+/* On load the frame fades up from white, like an exposure bloom */
+.bloom {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #fffaf0;
+  animation: bloom 1.8s cubic-bezier(.3, 0, .2, 1) .15s both;
+}
+@keyframes bloom { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+
+/* Fine film grain over both scenes so the layers sit together */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+}
+
+.sparks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Layered mode: each layer gets its own full-frame slot with its own diagonal mask */
+.slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(var(--angle, 100deg), var(--c0, transparent) var(--a, 100%), var(--c1, #000) var(--b, 100%));
+          mask-image: linear-gradient(var(--angle, 100deg), var(--c0, transparent) var(--a, 100%), var(--c1, #000) var(--b, 100%));
+}
+.slot--desk { --c0: #000; --c1: transparent; }
+/* Warm light on the freshly revealed strip of landscape: a crisp diagonal edge
+   trails behind the line, like the dark shade on the desk side, then fades */
+.sun {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  background: linear-gradient(var(--angle, 100deg),
+    rgba(255, 196, 120, .42) var(--a, -100%),
+    transparent var(--b, -100%));
+}
+
+.hint {
+  position: absolute;
+  bottom: max(14px, calc((100vh - var(--frame-w) * 1168 / 1300) / 4 - 10px));
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-size: 12px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  opacity: .55;
+  transition: opacity .8s;
+  user-select: none;
+}
+.hint span { display: inline-block; animation: nudge 1.8s ease-in-out infinite; }
+.hint span:last-child { animation-direction: reverse; }
+.hint.is-gone { opacity: 0; }
+@keyframes nudge { 0%,100% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
+
+/* Narrow screens: the picture stacks and the page scrolls */
+@media (max-width: 900px), (max-aspect-ratio: 5/4) {
+  html, body { overflow: auto; height: auto; }
+  .portrait {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    height: auto;
+    min-height: 100%;
+    padding-block: 64px 48px;
+    --frame-w: min(100%, calc(70vh * 1300 / 1168));
+  }
+  .hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom, .layer[data-depth="2.8"] img, .float, .drone, .drone picture, .drone img, .hint span { animation: none; }
+  .bloom { display: none; }   /* without its fade-out it would sit on top as a solid cream sheet */
+}
+
+
+/* Phones: two flat pictures, each above its paragraph, and no interactive frame */
+.flat { display: none; margin: 0; }
+@media (max-width: 700px) {
+  .portrait { cursor: auto; gap: 20px; padding-block: 32px 48px; }
+  .frame, .hint { display: none; }
+  .flat {
+    display: block;
+    width: 100%;
+    max-width: 34rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(40, 30, 20, .08), 0 18px 40px -12px rgba(40, 30, 20, .28);
+  }
+  .flat img { display: block; width: 100%; height: auto; }
+  .flat--bike { margin-top: 28px; }
+}
+
+/* ── v3: misty focus-pull instead of the diagonal line ─────────────────────── */
+.scene--bike { -webkit-mask-image: none; mask-image: none; }
+.shade { display: none; }
+.layer { transform-origin: 50% 60%; will-change: transform, opacity; }
+.tilt { background: #10203a; }
+
+/* soft fields of colour that swell between the two scenes and drift slowly */
+.fog {
+  position: absolute;
+  inset: -15%;
+  pointer-events: none;
+  opacity: .12;
+  translate: var(--fx, 0) var(--fy, 0);
+  background:
+    radial-gradient(38% 30% at 30% 35%, rgba(14, 133, 147, .9), transparent 70%),
+    radial-gradient(34% 28% at 70% 30%, rgba(232, 112, 92, .9), transparent 70%),
+    radial-gradient(40% 34% at 55% 70%, rgba(142, 72, 112, .8), transparent 72%),
+    radial-gradient(30% 24% at 20% 75%, rgba(197, 106, 144, .75), transparent 70%),
+    radial-gradient(26% 20% at 82% 72%, rgba(190, 73, 80, .7), transparent 70%);
+  filter: blur(30px);
+  will-change: translate, opacity;   /* its own layer, so drifting it never re-blurs it */
+  mix-blend-mode: screen;
+}
+/* warmer, fuller grain like the painted reference */
+.grain { opacity: .28; }
+
+/* Inside the paultinker timeline (Approach panel): the panel shows the title and the text
+   (bottom left, like every other panel) and the frame sits centred,
+   sized to clear that text block. The homepage nav takes the hint's place. */
+.is-embedded .hint { display: none; }
+.is-embedded .portrait { grid-template-columns: 1fr; justify-items: center; }
+/* centred on the page; the panel narrows its bottom-left text to fit beside it */
+.is-embedded { --frame-w: min(calc(68vh * 1300 / 1168), 1000px); }
+
+/* Inside the timeline on a tall screen (portrait tablets/monitors): the frame fits the space between
+   the panel's title and its text (--bt / --bb, measured by script.js) instead of sitting centred */
+@media (min-width: 701px) and (orientation: portrait) {
+  /* (beats the standalone page's scrolling layout for narrow/tall screens above) */
+  .is-embedded, .is-embedded body { overflow: hidden; height: 100%; }
+  .is-embedded .portrait {
+    height: 100%;
+    min-height: 0;
+    padding-block: var(--bt, 120px) var(--bb, 360px);
+    --frame-w: min(calc(100vw - 64px), calc((100vh - var(--bt, 120px) - var(--bb, 360px)) * 1300 / 1168), 1000px);
+  }
+}
+
+/* Inside the timeline on a narrow window (phones get a still instead, see make_stills.py): the two
+   flat pictures as overlapping prints, desk top-left and bike over its bottom-right corner, fitted
+   between the panel's title and text. script.js sets --bt / --bb (space taken by the title above
+   and the text + nav below). Same geometry as the phone still: bike at 55% across, 64% down. */
+@media (max-width: 700px) {
+  .is-embedded {
+    --avail: calc(100vh - var(--bt, 96px) - var(--bb, 340px));
+    --w: min(calc((100vw - 40px) / 1.55), calc(var(--avail) / 1.474));
+    --x0: calc((100vw - 1.55 * var(--w)) / 2);
+    --y0: calc(var(--bt, 96px) + (var(--avail) - 1.474 * var(--w)) / 2);
+  }
+  /* (beats the standalone page's scrolling layout: here the page must keep the frame's full height,
+     or the absolutely placed pictures are clipped away) */
+  .is-embedded, .is-embedded body { overflow: hidden; height: 100%; }
+  .is-embedded .portrait { display: block; padding: 0; height: 100%; min-height: 0; }
+  .is-embedded .flat { position: absolute; margin: 0; max-width: none; width: var(--w); }
+  .is-embedded .flat--desk { left: var(--x0); top: var(--y0); }
+  .is-embedded .flat--bike {
+    left: calc(var(--x0) + .55 * var(--w));
+    top: calc(var(--y0) + .64 * .899 * var(--w));
+    z-index: 2;
+    box-shadow: 0 0 0 5px var(--paper), 0 20px 44px -12px rgba(40, 30, 20, .45);
+  }
+}

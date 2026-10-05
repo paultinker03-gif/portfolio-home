@@ -1,6 +1,6 @@
 /* Smart panel, tablets and up: which half of the screen the cursor is on picks the brand.
    Left half  → Smart (light, LTR), the panel's normal background.
-   Right half → Zurich (dark, RTL), background #051240.
+   Right half → Zurich (dark, RTL), background #2e3757.
    html[data-smart-bg] always holds Smart's side (background + Smart's own text), and is reset
    to Zurich once Smart has left the screen, so the panel slides in already dark.
    html[data-smart-side] is set only while Smart is on screen (shared nav colours).
@@ -12,6 +12,10 @@
   var html = document.documentElement;
   var side = 'zurich';
   var on = null;
+  // The 3D devices only follow the cursor after it has really moved, like the Guardian scene:
+  // arriving from the bottom nav would otherwise drag them down. Until then they rest centred.
+  var armed = false, armFrom = null;
+  var ARM_PX = 40;
 
   function smartOn() {
     var el = document.querySelector('[data-active-entry]');
@@ -35,6 +39,8 @@
     if (now === on) return;
     on = now;
     clearTimeout(resetTimer);
+    armed = false; armFrom = null;
+    if (on) tellFrame({ type: 'smart-pointer', nx: 0.5, ny: 0.5 });
     if (!on) {
       // every visit opens on Zurich: reset once Smart has faded/slid out, so it's ready off screen
       resetTimer = setTimeout(function () { if (!on) { side = 'zurich'; apply(); } }, 900);
@@ -53,6 +59,13 @@
     fromX(e.clientX);
     var f = frame();
     if (!f) return;
+    // over the panel nav (bottom bar) the devices stay where they are
+    if (e.target && e.target.closest && e.target.closest('[data-role="cv-yearnav"]')) return;
+    if (!armed) {
+      if (!armFrom) { armFrom = { x: e.clientX, y: e.clientY }; return; }
+      if (Math.hypot(e.clientX - armFrom.x, e.clientY - armFrom.y) < ARM_PX) return;
+      armed = true;
+    }
     var r = f.getBoundingClientRect();
     if (r.width && r.height) {
       tellFrame({ type: 'smart-pointer', nx: (e.clientX - r.left) / r.width, ny: (e.clientY - r.top) / r.height });
@@ -67,6 +80,11 @@
     if (!f || e.source !== f.contentWindow) return;
     var r = f.getBoundingClientRect();
     fromX(r.left + d.nx * r.width);
+  });
+
+  // cursor leaves the window: ease the devices back to their resting position
+  document.addEventListener('mouseleave', function () {
+    if (on) tellFrame({ type: 'smart-pointer', nx: 0.5, ny: 0.5 });
   });
 
   // touch tablets have no cursor: a tap on either half switches
