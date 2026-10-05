@@ -20,6 +20,8 @@
 <style>
   html,body{margin:0;padding:0;background:transparent;overflow:hidden;height:100%}
   a{color:#F4C5CD}a:hover{color:#fff}
+  /* iPad: no save-image menu or selection on a long press */
+  html, body, img, picture, video, canvas, svg, image-slot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 </style>
 </helmet>
 <div style="position:fixed;inset:0;background:transparent;perspective:1600px;overflow:hidden">

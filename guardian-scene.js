@@ -185,9 +185,9 @@ class GuardianSceneCopy extends HTMLElement {
       g.add(sheen);
 
       const layout = [
-        { x: -6.6, y: -0.7, z: -0.4, rz: -0.26, scale: 0.86 },
-        { x: 0.4,  y: 0.9,  z: 1.1,  rz: 0.07,  scale: 1.2 },
-        { x: 6.4,  y: -0.4, z: -0.6, rz: 0.32,  scale: 0.92 }
+        { x: -6.6, y: -0.7, z: -0.4, rz: -0.26, scale: 0.97 },
+        { x: 0.4,  y: 0.9,  z: 1.1,  rz: 0.07,  scale: 1.06 },   // only slightly bigger than the side phones
+        { x: 6.4,  y: -0.4, z: -0.6, rz: 0.32,  scale: 0.97 }
       ][i];
       g.position.set(layout.x, layout.y, layout.z);
       g.rotation.y = 0;

@@ -36,6 +36,8 @@ try {
   html, body { margin:0; padding:0; height:100%; background:rgba(0,0,0,0) !important; color-scheme:normal; }
   guardian-scene, guardian-scene canvas { background:rgba(0,0,0,0) !important; }
   guardian-scene { display:block; width:100%; height:100vh; min-height:520px; overflow:hidden; touch-action:none; }
+  /* iPad: no save-image menu or selection on a long press */
+  html, body, img, picture, video, canvas, svg, image-slot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 </style>
 <script>
 window.CVRES = function (p) {

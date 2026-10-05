@@ -362,3 +362,6 @@ body::before {
     rgba(200, 220, 255, .22) calc(var(--s, 0px) + 3px),
     transparent calc(var(--s, 0px) + 10px));
 }
+
+/* iPad: no save-image menu or selection on a long press over the pictures */
+.frame, .flat, img, picture, video, canvas, svg, image-slot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }

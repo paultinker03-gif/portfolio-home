@@ -115,7 +115,25 @@
   const target = { mix: 1, px: 0, py: 0 };
   const cur = { mix: 1, px: 0, py: 0 };
   let touched = false, travelled = 0, lastX = null, lastMove = 0;
+  // Touch: a drag reveals the other picture (grab the line and pull it across); on release it
+  // settles on whichever picture is mostly showing. A tap alone changes nothing.
+  // Mouse: the cursor's position across the page picks the picture, as before.
+  let drag = null;
   const onPoint = e => {
+    if (e.pointerType === 'touch') {
+      if (e.type === 'pointerdown') drag = { x: e.clientX, mix: target.mix };
+      if (!drag) return;
+      const fw = Math.max(1, w || innerWidth);
+      target.mix = Math.min(1, Math.max(0, drag.mix - (e.clientX - drag.x) / (fw * 0.8)));   // pull right → desk
+      target.px = 0; target.py = 0;
+      if (!touched && Math.abs(e.clientX - drag.x) > 12) {
+        touched = true;
+        hint.classList.add('is-gone');
+        document.getElementById('swipecue').classList.add('is-gone');
+      }
+      lastMove = performance.now();
+      return;
+    }
     const nx = e.clientX / innerWidth, ny = e.clientY / innerHeight;
     target.mix = smooth(Math.min(1, Math.max(0, (nx - 0.3) / 0.4)));
     target.px = nx - 0.5;
@@ -131,6 +149,13 @@
   };
   addEventListener('pointermove', onPoint, { passive: true });
   addEventListener('pointerdown', onPoint, { passive: true });
+  const endDrag = e => {
+    if (!drag || e.pointerType !== 'touch') return;
+    drag = null;
+    target.mix = target.mix < 0.5 ? 0 : 1;           // settle on the nearer picture
+  };
+  addEventListener('pointerup', endDrag, { passive: true });
+  addEventListener('pointercancel', endDrag, { passive: true });
   document.addEventListener('pointerleave', () => { target.px = 0; target.py = 0; });
 
   // wipe helpers: x of the seam at mid-height (the out-of-focus scene keeps a sliver at the narrow end)

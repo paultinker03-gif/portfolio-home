@@ -31,6 +31,8 @@ try {
   html.standalone, html.standalone body { background: #cbdaec; }
   html.standalone body { background: radial-gradient(circle at 50% 46%, #ebf6ff 0%, #ebf6ff 20%, #dbe8f7 62%, #cbdaec 100%); }
   canvas { display: block; touch-action: none; cursor: default; }
+  /* iPad: no save-image menu or selection on a long press */
+  html, body, img, picture, video, canvas, svg, image-slot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 </style>
 <script>
 window.CVRES = function (p) {
