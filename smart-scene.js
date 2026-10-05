@@ -488,7 +488,7 @@ class SmartScene extends HTMLElement {
     let drag = null;
     this.addEventListener('touchstart', e => {
       const t0 = e.touches[0];
-      if (t0) drag = { x: t0.clientX, y: t0.clientY, tx: 0, ty: 0 };
+      if (t0) drag = { x: t0.clientX, y: t0.clientY, tx: 0, ty: 0, x0: t0.clientX, y0: t0.clientY, t: performance.now() };
     }, { passive: true });
     this.addEventListener('touchmove', e => {
       if (!drag) return;
@@ -497,9 +497,17 @@ class SmartScene extends HTMLElement {
       const ddx = t0.clientX - drag.x, ddy = t0.clientY - drag.y;
       drag = { x: t0.clientX, y: t0.clientY, tx: drag.tx + ddx, ty: drag.ty + ddy };
     }, { passive: true });
+    // Touch screens: this scene covers most of the Smart panel, so its taps and swipes never reach
+    // the homepage. Pass them up: a tap (where on the screen) picks Smart/Zurich, a sideways swipe
+    // flips the theme or changes section (same thresholds as the homepage's own swipe).
     const endTouchDrag = () => {
-      if (drag && Math.abs(drag.tx) > 180 && Math.abs(drag.tx) > Math.abs(drag.ty) * 3) {
-        try { parent.postMessage({ type: 'gu3d-swipe', dir: drag.tx < 0 ? 1 : -1 }, '*'); } catch (err) {}
+      if (drag) {
+        const ax = Math.abs(drag.tx), ay = Math.abs(drag.ty);
+        if (ax < 12 && ay < 12 && performance.now() - drag.t < 600) {
+          try { parent.postMessage({ type: 'smart-tap', nx: drag.x0 / innerWidth, ny: drag.y0 / innerHeight }, '*'); } catch (err) {}
+        } else if (ax > 60 && ax > ay * 1.5) {
+          try { parent.postMessage({ type: 'gu3d-swipe', dir: drag.tx < 0 ? 1 : -1 }, '*'); } catch (err) {}
+        }
       }
       drag = null;
     };

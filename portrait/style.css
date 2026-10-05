@@ -246,7 +246,6 @@ body::before {
     max-width: 34rem;
     border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(40, 30, 20, .08), 0 18px 40px -12px rgba(40, 30, 20, .28);
   }
   .flat img { display: block; width: 100%; height: auto; }
   .flat--bike { margin-top: 28px; }
@@ -320,7 +319,7 @@ body::before {
     left: calc(var(--x0) + .55 * var(--w));
     top: calc(var(--y0) + .64 * .899 * var(--w));
     z-index: 2;
-    box-shadow: 0 0 0 5px var(--paper), 0 20px 44px -12px rgba(40, 30, 20, .45);
+    box-shadow: 0 0 0 5px var(--paper);   /* paper edge only, no drop shadow */
   }
 }
 

@@ -75,7 +75,7 @@
   // …and over the 3D iframe, which reports its cursor in its own coordinates
   window.addEventListener('message', function (e) {
     var d = e.data;
-    if (!d || d.type !== 'smart-ptr' || !on) return;
+    if (!d || (d.type !== 'smart-ptr' && d.type !== 'smart-tap') || !on) return;   // smart-tap: a touch tap inside the 3D scene
     var f = frame();
     if (!f || e.source !== f.contentWindow) return;
     var r = f.getBoundingClientRect();

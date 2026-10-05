@@ -18,7 +18,7 @@
 <style>html,body{background:#0a243b;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
-<script src="./smart-switch.js?v=4" defer></script>
+<script src="./smart-switch.js?v=5" defer></script>
 </head>
 <body style="background:#123d5e">
 <x-dc>
@@ -335,7 +335,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   /* Approach: on wide screens the portrait is centred, so its text block fits in the space to the
      left of it; on tall screens (portrait tablets/monitors) the portrait sits between the title and
      the text, so the text gets a normal reading width */
-  @media (min-width: 701px) and (orientation: landscape) {
+  @media (min-width: 701px) and (orientation: landscape) and (min-height: 501px) {   /* not phones on their side */
     html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: clamp(220px, calc((100vw - min(68vh * 1300 / 1168, 1000px)) / 2 - 60px), 480px) !important; }
   }
   @media (min-width: 701px) and (orientation: portrait) {
@@ -376,7 +376,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe src="./portrait/?v=25" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe src="./portrait/?v=26" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
@@ -470,7 +470,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=15" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=16" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -1308,9 +1308,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=12" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=13" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=12" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=13" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
