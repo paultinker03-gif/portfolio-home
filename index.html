@@ -121,12 +121,13 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     /* (repeated attribute: outranks the general phone rule with its :not() list) */
     [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { left:0 !important; right:0 !important; top:var(--st-free-top, 22%) !important; bottom:auto !important; height:var(--st-free-h, 40%) !important; }
     [data-role="cv-imggroup"][data-imgcount="1"] video { border-radius:6px; }
-    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:96% !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:82% !important; }
   }
   @media (max-height: 500px) and (orientation: landscape) {
     [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"] { top:12px !important; bottom:12px !important; }
-    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:96% !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:80% !important; }
   }
+  /* no button (The Guardian, Agencies, AKQA, Approach): no empty button row, so the text itself lines up with the nav */
   /* tablets on their side (touch, up to iPad Pro width): The Guardian's phones and the Capco video sit a little higher */
   @media (min-width: 900px) and (max-width: 1366px) and (orientation: landscape) and (min-height: 501px) {
     html.is-touch [data-role="cv-gu3d"] { translate: 0 -4vh; }
@@ -411,6 +412,11 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (max-width: 700px), (max-height: 500px) and (orientation: landscape) {
     [data-role="cv-smart-pal"] { display:none !important; }
   }
+  /* 13"/14" laptops (shorter screens): text and nav sit lower, still level with each other */
+  @media (min-width: 1024px) and (max-height: 860px) and (orientation: landscape) {
+    html [data-role="cv-desc"] { bottom:26px !important; }
+    html [data-role="cv-yearnav"] { bottom:26px !important; }
+  }
 </style>
 </helmet>
 <div style="position:fixed; inset:0; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
@@ -606,7 +612,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
 
         <div style="position:absolute; left:28px; bottom:102px; width:min(340px, 25vw); z-index:45; transition:opacity 420ms ease; opacity:{{ e.descOp }}" data-role="cv-desc">
           <div style="font-size:15px; line-height:1.55; text-wrap:pretty; white-space:pre-line; color:{{ e.descColor }}">{{ e.desc }}<sc-if value="{{ e.showEmail }}" hint-placeholder-val="{{ false }}"> Drop me a line at <a href="mailto:hello@paultinker.uk" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">hello@paultinker.uk</a> or view my <a href="https://drive.google.com/file/d/1yZDxT7tIeJI6uo1lH3eONTze7y4aqznz/view?usp=drive_link" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">CV</a>.</sc-if></div>
-          <div style="display:flex; flex-direction:column; align-items:flex-start; gap:14px; margin-top:16px">
+          <div style="display:{{ e.linkRowDisplay }}; flex-direction:column; align-items:flex-start; gap:14px; margin-top:16px">
           <sc-if value="{{ e.showLink }}" hint-placeholder-val="{{ true }}">
             <a href="{{ e.link }}" onClick="{{ e.onLinkClick }}" style="display:inline-flex; align-items:center; gap:3px; white-space:nowrap; font-family:'DM Sans', sans-serif; font-size:14px; font-weight:500; color:#111; background:#fff; padding:9px 20px; border-radius:6px; transition:background-color 150ms ease" style-hover="background:#ececec">{{ e.linkLabel }}<span data-role="cv-link-icon" style="position:relative; display:inline-block; width:13px; height:12px; flex:0 0 auto"><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,-2px) rotate(45deg)"></span><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,2px) rotate(-45deg)"></span></span></a>
           </sc-if>
@@ -1359,6 +1365,7 @@ class Component extends DCLogic {
         showLink: !!d.link,
         active: on ? "true" : undefined,
         navAriaLabel: d.company + ", " + d.year,
+        linkRowDisplay: d.link ? "flex" : "none",   // no button: no empty row, the text lines up with the nav
         hLevel: i === 0 ? "1" : "2",
         onLinkClick: () => { history.replaceState(null, "", "#" + this._slug(d.short)); },
         slotId: "cv-" + i,
