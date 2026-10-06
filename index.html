@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="background:#0a243b">
+<html lang="en" style="background:#0a243b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -362,7 +362,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     Rotate your phone to portrait
   </div>
 
-  <div style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
+  <div role="main" style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
 
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
       <div data-role="cv-entry" data-smart="{{ e.smartComp }}" data-approach="{{ e.isApproach }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
@@ -376,7 +376,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe src="./portrait/?v=26" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe tabindex="-1" src="./portrait/?v=26" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
@@ -384,21 +384,21 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.wide4 }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-vf3d" style="position:absolute; left:30%; right:2%; top:6%; bottom:12%; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.vf3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=3" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
+                <iframe tabindex="-1" ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=4" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide4Even }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-akqa3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.akqa3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe src="./akqa.html?embed=1&v=20261005" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
+                <iframe tabindex="-1" src="./akqa.html?embed=1&v=20261005" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-gu3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=14" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
+                <iframe tabindex="-1" ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=15" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -407,7 +407,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <div style="width:100%; height:100%; transform:translate({{ e.images.0.px }}, {{ e.images.0.py }}); transition:transform 300ms ease-out">
                 <div style="position:absolute; inset:0; z-index:1; border-radius:8px; overflow:hidden">
                   <sc-if value="{{ e.videoReady }}" hint-placeholder-val="{{ false }}">
-                    <video ref="{{ e.videoTagRef }}" preload="auto" autoplay="{{ true }}" loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" style="width:100%; height:100%; object-fit:cover; display:block"></video>
+                    <video ref="{{ e.videoTagRef }}" aria-label="Capco video, silent: art direction and design for Capco, a global management and technology consultancy for financial services and energy. It shows how syncing a customer's services and products with the data cloud around them helps them prosper anytime, anywhere." preload="auto" autoplay="{{ true }}" loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" style="width:100%; height:100%; object-fit:cover; display:block"></video>
                   </sc-if>
                   <sc-if value="{{ e.videoPending }}" hint-placeholder-val="{{ false }}">
                     <image-slot id="{{ e.images.0.id }}-pending" shape="rounded" radius="8" fit="cover" placeholder="{{ e.images.0.hint }}"></image-slot>
@@ -461,7 +461,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
               <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
                 <div style="width:100%; height:100%; animation:none">
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
-                    <iframe data-role="cv-bt3d" src="./nespresso.html?v=4" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                    <iframe tabindex="-1" data-role="cv-bt3d" src="./nespresso.html?v=5" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
                   </sc-if>
                 </div>
               </div>
@@ -470,7 +470,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=16" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                <iframe tabindex="-1" ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=17" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -531,7 +531,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         </sc-if>
 
         <div style="position:absolute; left:28px; top:12px; width:min(340px, 34vw); padding:14px 0; border-radius:6px; z-index:20; color:{{ e.textColor }}; transition:opacity 520ms ease 120ms, transform 620ms cubic-bezier(.16,1,.3,1) 120ms; opacity:{{ e.textOp }}; transform:translateY({{ e.ty }})" data-role="cv-title">
-          <div style="font-family:'DM Serif Text', serif; font-weight:700; font-size:clamp(26px, 3.2vw, 46px); letter-spacing:0; line-height:1.03; text-wrap:balance">{{ e.company }}</div>
+          <div role="heading" aria-level="{{ e.hLevel }}" style="font-family:'DM Serif Text', serif; font-weight:700; font-size:clamp(26px, 3.2vw, 46px); letter-spacing:0; line-height:1.03; text-wrap:balance">{{ e.company }}</div>
           <div style="margin-top:8px; font-family:'DM Sans', sans-serif; font-size:16px; font-weight:500; letter-spacing:-0.01em; opacity:1">{{ e.title }}</div>
           <div style="margin-top:6px; font-size:15px; line-height:1.55; font-family:'DM Sans', sans-serif; font-weight:500; opacity:1">{{ e.meta }}</div>
         </div>
@@ -542,7 +542,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         </sc-if>
 
         <div style="position:absolute; left:28px; bottom:102px; width:min(340px, 25vw); z-index:45; transition:opacity 420ms ease; opacity:{{ e.descOp }}" data-role="cv-desc">
-          <div style="font-size:15px; line-height:1.55; text-wrap:pretty; white-space:pre-line; color:{{ e.descColor }}">{{ e.desc }}<sc-if value="{{ e.showEmail }}" hint-placeholder-val="{{ false }}"> Drop me a line at <a href="mailto:hello@paultinker.uk" style="color:inherit; text-decoration:none; border-bottom:1px solid transparent; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">hello@paultinker.uk</a> or view my <a href="https://drive.google.com/file/d/1yZDxT7tIeJI6uo1lH3eONTze7y4aqznz/view?usp=drive_link" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px solid transparent; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">CV</a>.</sc-if></div>
+          <div style="font-size:15px; line-height:1.55; text-wrap:pretty; white-space:pre-line; color:{{ e.descColor }}">{{ e.desc }}<sc-if value="{{ e.showEmail }}" hint-placeholder-val="{{ false }}"> Drop me a line at <a href="mailto:hello@paultinker.uk" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">hello@paultinker.uk</a> or view my <a href="https://drive.google.com/file/d/1yZDxT7tIeJI6uo1lH3eONTze7y4aqznz/view?usp=drive_link" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">CV</a>.</sc-if></div>
           <div style="display:flex; flex-direction:column; align-items:flex-start; gap:14px; margin-top:16px">
           <sc-if value="{{ e.showLink }}" hint-placeholder-val="{{ true }}">
             <a href="{{ e.link }}" onClick="{{ e.onLinkClick }}" style="display:inline-flex; align-items:center; gap:3px; white-space:nowrap; font-family:'DM Sans', sans-serif; font-size:14px; font-weight:500; color:#111; background:#fff; padding:9px 20px; border-radius:6px; transition:background-color 150ms ease" style-hover="background:#ececec">{{ e.linkLabel }}<span data-role="cv-link-icon" style="position:relative; display:inline-block; width:13px; height:12px; flex:0 0 auto"><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,-2px) rotate(45deg)"></span><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,2px) rotate(-45deg)"></span></span></a>
@@ -553,7 +553,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     </sc-for>
   </div>
 
-  <div data-role="cv-yearnav" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:2px; padding:0 28px; overflow-x:auto; z-index:40">
+  <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:2px; padding:0 28px; overflow-x:auto; z-index:40">
     <div data-active-entry="{{ activeSlug }}" style="position:absolute; left:{{ indicatorLeft }}; top:10px; bottom:10px; width:{{ indicatorWidth }}; border-radius:999px; background:{{ indicatorBg }}; opacity:{{ indicatorOp }}; transition:left 420ms cubic-bezier(.22,1,.36,1), width 420ms cubic-bezier(.22,1,.36,1), background 200ms ease, opacity 200ms ease; z-index:0; pointer-events:none"></div>
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="8">
       <button ref="{{ e.navItemRef }}" onClick="{{ e.select }}" aria-current="{{ e.active }}" aria-label="{{ e.navAriaLabel }}" style="position:relative; z-index:1; flex:0 0 auto; border:none; background:{{ e.navBg }}; border-radius:999px; cursor:pointer; padding:10px 18px; font-family:'DM Sans', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:{{ e.navColor }}; transition:opacity 200ms ease, background 200ms ease, color 200ms ease; font-weight:{{ e.navWeight }}; opacity:{{ e.navOp }}" style-hover="opacity:1">{{ e.short }}</button>
@@ -668,6 +668,14 @@ class Component extends DCLogic {
 
   componentDidMount() {
     document.documentElement.setAttribute("data-dc-ready", "");
+    requestAnimationFrame(() => this._syncInert());
+    // the panels sit in overflow:hidden boxes; if focusing something ever scrolls one (it slid the
+    // Vodafone phones onto the intro), put it straight back. The nav strip is allowed to scroll.
+    document.addEventListener("scroll", (ev) => {
+      const t = ev.target;
+      if (!t || t.nodeType !== 1 || (t.closest && t.closest('[data-role="cv-yearnav"]'))) return;
+      if (t.scrollTop || t.scrollLeft) { t.scrollTop = 0; t.scrollLeft = 0; }
+    }, true);
     this._applySlotSrc();
     requestAnimationFrame(() => this._applySlotSrc());
     requestAnimationFrame(() => { this._mounted3d = true; this.forceUpdate(); });
@@ -1268,6 +1276,7 @@ class Component extends DCLogic {
         showLink: !!d.link,
         active: on ? "true" : undefined,
         navAriaLabel: d.company + ", " + d.year,
+        hLevel: i === 0 ? "1" : "2",
         onLinkClick: () => { history.replaceState(null, "", "#" + this._slug(d.short)); },
         slotId: "cv-" + i,
         slotHint: d.slot,
@@ -1358,7 +1367,7 @@ class Component extends DCLogic {
         textOp: on ? 1 : 0,
         ty: on ? "0px" : "14px",
         descOp: on && info ? 1 : 0,
-        navOp: on ? 1 : (DATA[active].navLinkColor ? 0.86 : 0.68),
+        navOp: on ? 1 : (DATA[active].navLinkColor ? 0.92 : 1),
         navWeight: 700,
         navBg: "transparent",
         navColor: on ? (d.dayNight ? THEME.dark.nav : (d.navTextColor || this._pillContrast(d.navBg || theme.pillBg))) : activeTheme.nav,
@@ -1572,7 +1581,19 @@ class Component extends DCLogic {
     }
   }
 
+  // Only the section on screen can be reached by keyboard or read by screen readers: the others
+  // are inert (no Tab stops, no clicks) and aria-hidden. The 3D scenes are tabindex=-1 in the markup.
+  _syncInert() {
+    document.querySelectorAll('[data-role="cv-entry"]').forEach((el, i) => {
+      const on = i === this.state.i;
+      el.inert = !on;
+      if (on) el.removeAttribute("aria-hidden"); else el.setAttribute("aria-hidden", "true");
+    });
+    document.querySelectorAll('[data-role="cv-entry"] image-slot').forEach((el) => { if (el.getAttribute("tabindex") !== "-1") el.setAttribute("tabindex", "-1"); });
+  }
+
   componentDidUpdate() {
+    this._syncInert();
     this._fitDescs();
     this._placeStills();
     this._scheduleAlign();
