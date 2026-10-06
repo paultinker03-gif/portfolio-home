@@ -72,6 +72,37 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   image-slot::part(ring) { display:none; }
   [data-role="cv-yearnav"] { scrollbar-width:none; bottom:6px !important; padding-bottom:env(safe-area-inset-bottom, 0px); }
   [data-role="cv-yearnav"]::-webkit-scrollbar { display:none; }
+  /* Section nav: pips (current one longer) in a soft pill, then previous / next arrows. Colours follow
+     the section (the nav's own colour). Each pip and arrow has at least a 24x24 target (WCAG 2.5.8). */
+  /* the nav's colour fades with the section and Smart's light/dark switch (the pips, arrows and
+     their tinted backgrounds all follow it through currentColor) */
+  [data-role="cv-yearnav"] { overflow:visible !important; transition:color 600ms ease; }
+  [data-role="cv-pipbar"] { display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, currentColor 13%, transparent); }
+  /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
+  [data-role="cv-yearnav"] .pip { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 30px; width:30px; height:32px; padding:0; border:0; background:none; color:inherit; cursor:pointer; }
+  [data-role="cv-yearnav"] .pip-dot { display:block; width:8px; height:8px; border-radius:999px; background:currentColor; opacity:.7; transition:width 380ms cubic-bezier(.22,1,.36,1), opacity 200ms ease; }
+  [data-role="cv-yearnav"] .pip:hover .pip-dot { opacity:1; }
+  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot { width:24px; opacity:1; }
+  [data-role="cv-yearnav"] .pip-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translate(-50%, 4px); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 160ms ease, transform 160ms ease;
+    font-family:'DM Sans', sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(14,18,28,.88); padding:6px 10px; border-radius:6px; }
+  [data-role="cv-yearnav"] .pip:hover .pip-tip, [data-role="cv-yearnav"] .pip:focus-visible .pip-tip { opacity:1; transform:translate(-50%, 0); }
+  @media (hover: none) { [data-role="cv-yearnav"] .pip:hover .pip-tip { opacity:0; } }
+  [data-role="cv-yearnav"] .pip-arrow { flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:0; display:flex; align-items:center; justify-content:center; cursor:pointer; color:inherit; background:color-mix(in srgb, currentColor 13%, transparent); transition:background 160ms ease, opacity 160ms ease; }
+  [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, currentColor 24%, transparent); }
+  [data-role="cv-yearnav"] .pip-arrow:disabled { opacity:.35; cursor:default; }
+  [data-role="cv-yearnav"] .pip-arrow + .pip-arrow { margin-left:-4px; }
+  [data-role="cv-yearnav"] button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
+  [data-role="cv-yearnav"] [data-active-entry] { display:none !important; }
+  /* phones: a little more compact (targets stay 24px); on the smallest phones the arrows go, swiping covers it */
+  @media (max-width: 700px) {
+    [data-role="cv-yearnav"] { gap:8px; }
+    [data-role="cv-pipbar"] { height:40px; padding:0 6px; }
+    [data-role="cv-yearnav"] .pip { flex-basis:24px; width:24px; }
+    [data-role="cv-yearnav"] .pip-dot { width:7px; height:7px; }
+    [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot { width:16px; }
+    [data-role="cv-yearnav"] .pip-arrow { width:40px; height:40px; }
+  }
+  @media (max-width: 359px) { [data-role="cv-yearnav"] .pip-arrow { display:none; } }
   @keyframes cvFloat { 0%, 100% { transform:translateY(0px); } 50% { transform:translateY(-10px); } }
   @keyframes cvBgDrift { 0%, 100% { transform:translate(0,0); } 50% { transform:translate(3%,-2%); } }
   @keyframes cvMorph { 0%, 100% { transform:scale(1,1) skew(0deg,0deg); } 33% { transform:scale(1.08,0.92) skew(2deg,1deg); } 66% { transform:scale(0.93,1.07) skew(-2deg,-1deg); } }
@@ -197,7 +228,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (min-width: 1024px) {
     [data-role="cv-desc"] { width:min(460px, 25vw) !important; bottom:44px !important; }
     [data-role="cv-title"] { width:min(460px, 32vw) !important; }
-    [data-role="cv-yearnav"] { justify-content:flex-end !important; bottom:16px !important; }
+    [data-role="cv-yearnav"] { justify-content:center !important; bottom:16px !important; }   /* laptops and up: centred */
   }
 
   [data-role="cv-imggroup"][data-imgcount="4"]:has([data-role="cv-vf3d"]) { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
@@ -217,7 +248,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"] { top:20% !important; bottom:20% !important; }
     [data-role="cv-akqa3d"] iframe { transform: none; }
     [data-role="cv-desc"] { bottom:96px !important; }
-    [data-role="cv-yearnav"] { justify-content:flex-start !important; padding-left:16px !important; }
+    [data-role="cv-yearnav"] { justify-content:flex-start !important; padding-left:28px !important; }
     [data-role="cv-gu3d"] { top:22% !important; bottom:26% !important; }
     /* portrait monitors: these heroes fit the narrow width and came out small in all that height */
     [data-role="cv-gu3d"] iframe { transform: scale(1.6); }
@@ -249,7 +280,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-title"] { top:10px !important; left:16px !important; width:44vw !important; padding:0 !important; }
     [data-role="cv-desc"] { top:104px !important; bottom:auto !important; left:16px !important; width:44vw !important; }
     [data-role="cv-desc"] > div:first-child { font-size:12px !important; line-height:1.4 !important; }
-    [data-role="cv-yearnav"] { left:0 !important; right:0 !important; width:auto !important; justify-content:flex-start !important; bottom:6px !important; padding:0 16px !important; height:40px !important; }
+    [data-role="cv-yearnav"] { left:0 !important; right:0 !important; width:auto !important; justify-content:flex-start !important; bottom:14px !important; padding:0 16px !important; height:40px !important; }   /* lifted off the screen edge */
     [data-role="cv-imggroup"]:not([data-imgcount="105"]) { left:48vw !important; right:6px !important; top:6% !important; bottom:52px !important; }
     [data-role="cv-imggroup"][data-imgcount="3"] { left:38vw !important; right:-6vw !important; top:-2% !important; bottom:24px !important; }
     [data-role="cv-imggroup"][data-imgcount="0"]:has([data-nesp="1"]) { left:52vw !important; right:8vw !important; top:2% !important; bottom:44px !important; }
@@ -322,7 +353,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-desc"] > div:first-child { transition:color 500ms ease; }
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-title"],
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-desc"] > div:first-child { color:#fff !important; }
-  html[data-smart-side="zurich"] [data-role="cv-yearnav"] button:not([aria-current="true"]) { color:rgba(255,255,255,0.8) !important; }
+  html[data-smart-side="zurich"] [data-role="cv-yearnav"] { color:#fff !important; }
   /* Smart panel: left/right cursor, same as the portrait page; links and nav keep the hand */
   html[data-smart-side] body { cursor: ew-resize; }
   html[data-smart-side] a, html[data-smart-side] button { cursor: pointer; }
@@ -553,11 +584,17 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     </sc-for>
   </div>
 
-  <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:2px; padding:0 28px; overflow-x:auto; z-index:40">
-    <div data-active-entry="{{ activeSlug }}" style="position:absolute; left:{{ indicatorLeft }}; top:10px; bottom:10px; width:{{ indicatorWidth }}; border-radius:999px; background:{{ indicatorBg }}; opacity:{{ indicatorOp }}; transition:left 420ms cubic-bezier(.22,1,.36,1), width 420ms cubic-bezier(.22,1,.36,1), background 200ms ease, opacity 200ms ease; z-index:0; pointer-events:none"></div>
-    <sc-for list="{{ entries }}" as="e" hint-placeholder-count="8">
-      <button ref="{{ e.navItemRef }}" onClick="{{ e.select }}" aria-current="{{ e.active }}" aria-label="{{ e.navAriaLabel }}" style="position:relative; z-index:1; flex:0 0 auto; border:none; background:{{ e.navBg }}; border-radius:999px; cursor:pointer; padding:10px 18px; font-family:'DM Sans', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:{{ e.navColor }}; transition:opacity 200ms ease, background 200ms ease, color 200ms ease; font-weight:{{ e.navWeight }}; opacity:{{ e.navOp }}" style-hover="opacity:1">{{ e.short }}</button>
-    </sc-for>
+  <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:10px; padding:0 28px; z-index:40; color:{{ pipColor }}">
+    <!-- kept for smart-switch.js and the section colours: which section is showing (not drawn) -->
+    <div data-active-entry="{{ activeSlug }}" hidden></div>
+    <!-- pips: one per section, the current one longer; hover or focus shows the section's name -->
+    <div data-role="cv-pipbar">
+      <sc-for list="{{ entries }}" as="e" hint-placeholder-count="8">
+        <button class="pip" ref="{{ e.navItemRef }}" onClick="{{ e.select }}" aria-current="{{ e.active }}" aria-label="{{ e.navAriaLabel }}"><span class="pip-dot" aria-hidden="true"></span><span class="pip-tip" aria-hidden="true">{{ e.short }}</span></button>
+      </sc-for>
+    </div>
+    <button class="pip-arrow" onClick="{{ prevStep }}" aria-label="Previous section" disabled="{{ atFirst }}"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M8.6 2.8 4.4 7l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="pip-arrow" onClick="{{ nextStep }}" aria-label="Next section" disabled="{{ atLast }}"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5.4 2.8 9.6 7l-4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
 </div>
@@ -669,6 +706,20 @@ class Component extends DCLogic {
   componentDidMount() {
     document.documentElement.setAttribute("data-dc-ready", "");
     requestAnimationFrame(() => this._syncInert());
+    // keyboard: left / right arrow keys step between sections (not while typing or on a link)
+    this._onKey = (ev) => {
+      if (ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+      const t = ev.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+      const step = ev.key === "ArrowRight" ? 1 : -1;
+      const i = Math.min(DATA.length - 1, Math.max(0, this.state.i + step));
+      if (i === this.state.i) return;
+      ev.preventDefault();
+      this.go(step);
+      try { history.replaceState(null, "", "#" + this._slug(DATA[i].short)); } catch (e) {}
+    };
+    window.addEventListener("keydown", this._onKey);
     // the panels sit in overflow:hidden boxes; if focusing something ever scrolls one (it slid the
     // Vodafone phones onto the intro), put it straight back. The nav strip is allowed to scroll.
     document.addEventListener("scroll", (ev) => {
@@ -1383,6 +1434,12 @@ class Component extends DCLogic {
       smartLeftOffsetVar: (this.props.smartLeftOffset ?? 0) + "%",
       prev: () => this.go(-1),
       next: () => this.go(1),
+      // nav arrows: step one section and keep the address in step, like a pip click
+      prevStep: () => { this.go(-1); requestAnimationFrame(() => { try { history.replaceState(null, "", "#" + this._slug(DATA[this.state.i].short)); } catch (e) {} }); },
+      nextStep: () => { this.go(1); requestAnimationFrame(() => { try { history.replaceState(null, "", "#" + this._slug(DATA[this.state.i].short)); } catch (e) {} }); },
+      atFirst: active === 0,
+      atLast: active === DATA.length - 1,
+      pipColor: activeIsDayNight ? THEME.dark.nav : activeTheme.nav,
       toggleInfo: () => this.setState((s) => ({ info: !s.info })),
       navRef: (el) => { this._navEl = el; },
       indicatorLeft: (this.state.indicatorLeft || 0) + "px",
@@ -1474,7 +1531,9 @@ class Component extends DCLogic {
       } else {
         const textRight = Math.max(head ? head.offsetLeft + head.offsetWidth : 0, desc ? desc.offsetLeft + desc.offsetWidth : 0);
         x = textRight + 20; w = ew - x - 20;
-        y = 12; h = Math.min(navTop, eh) - 8 - y;
+        // the nav only sits under the text (left), so the picture uses the full height and is
+        // centred vertically ("contain" centres it in the box)
+        y = 12; h = eh - 24;
       }
       // bigger heroes on phones: widen the box (a little bleed past the screen edge is fine);
       // "contain" then grows the image until it meets the height limit
