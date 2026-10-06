@@ -3,8 +3,6 @@
   // there the homepage nav sits where the "move" hint would be, so the hint is dropped
   const embedded = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
   if (embedded) document.documentElement.classList.add('is-embedded');
-  // touch screens (iPads included, which report a fine pointer): show the swipe cue under the picture
-  if (navigator.maxTouchPoints > 0) document.documentElement.classList.add('is-touch');
 
   // Narrow windows: the flat pictures sit between the panel's title and its text (style.css), so
   // measure how much room those take in the homepage around this frame
@@ -121,15 +119,19 @@
   let drag = null;
   const onPoint = e => {
     if (e.pointerType === 'touch') {
-      if (e.type === 'pointerdown') drag = { x: e.clientX, mix: target.mix };
+      if (e.type === 'pointerdown') {
+        const fr = tilt.getBoundingClientRect();
+        drag = { x: e.clientX, y: e.clientY, mix: target.mix,
+          onPic: e.clientX >= fr.left && e.clientX <= fr.right && e.clientY >= fr.top && e.clientY <= fr.bottom };
+      }
       if (!drag) return;
+      if (!drag.onPic) return;               // swipes off the picture are for changing section (endDrag)
       const fw = Math.max(1, w || innerWidth);
       target.mix = Math.min(1, Math.max(0, drag.mix - (e.clientX - drag.x) / (fw * 0.8)));   // pull right → desk
       target.px = 0; target.py = 0;
       if (!touched && Math.abs(e.clientX - drag.x) > 12) {
         touched = true;
         hint.classList.add('is-gone');
-        document.getElementById('swipecue').classList.add('is-gone');
       }
       lastMove = performance.now();
       return;
@@ -144,15 +146,23 @@
     if (!touched && (travelled > 60 || e.pointerType === 'touch')) {
       touched = true;
       hint.classList.add('is-gone');
-      document.getElementById('swipecue').classList.add('is-gone');
     }
   };
   addEventListener('pointermove', onPoint, { passive: true });
   addEventListener('pointerdown', onPoint, { passive: true });
+  // A sideways swipe changes section (the homepage can't see touches inside this frame) when it
+  // starts off the picture, or when the picture is already as far as it goes that way
+  // (showing the desk and swiping right, or the bike and swiping left).
   const endDrag = e => {
     if (!drag || e.pointerType !== 'touch') return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    const sideways = Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5;
+    const atEnd = (dx > 0 && drag.mix <= 0.02) || (dx < 0 && drag.mix >= 0.98);
+    if (sideways && (!drag.onPic || atEnd)) {
+      try { parent.postMessage({ type: 'gu3d-swipe', dir: dx < 0 ? 1 : -1 }, '*'); } catch (err) {}
+    }
+    if (drag.onPic) target.mix = target.mix < 0.5 ? 0 : 1;   // settle on the nearer picture
     drag = null;
-    target.mix = target.mix < 0.5 ? 0 : 1;           // settle on the nearer picture
   };
   addEventListener('pointerup', endDrag, { passive: true });
   addEventListener('pointercancel', endDrag, { passive: true });

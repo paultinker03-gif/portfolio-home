@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" style="background:#0a243b">
+<script>if (navigator.maxTouchPoints > 0) document.documentElement.classList.add("is-touch");</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,16 +78,27 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   /* the nav's colour fades with the section and Smart's light/dark switch (the pips, arrows and
      their tinted backgrounds all follow it through currentColor) */
   [data-role="cv-yearnav"] { overflow:visible !important; transition:color 600ms ease; }
-  [data-role="cv-pipbar"] { display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, currentColor 13%, transparent); }
+  [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, currentColor 13%, transparent); }
   /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
   [data-role="cv-yearnav"] .pip { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 30px; width:30px; height:32px; padding:0; border:0; background:none; color:inherit; cursor:pointer; }
-  [data-role="cv-yearnav"] .pip-dot { display:block; width:8px; height:8px; border-radius:999px; background:currentColor; opacity:.7; transition:width 380ms cubic-bezier(.22,1,.36,1), opacity 200ms ease; }
-  [data-role="cv-yearnav"] .pip:hover .pip-dot { opacity:1; }
-  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot { width:24px; opacity:1; }
+  /* each pip is a fixed 24x8 box holding a dot and a dash; the current one fades the dash in. Nothing
+     changes size, so Safari (iPad) can't leave half-drawn dashes behind when the selection moves. */
+  [data-role="cv-yearnav"] .pip-dot { position:relative; display:block; width:24px; height:8px; }
+  [data-role="cv-yearnav"] .pip-dot::before, [data-role="cv-yearnav"] .pip-dot::after { content:""; position:absolute; top:0; height:8px; border-radius:999px; background:currentColor; transition:opacity 260ms ease; }
+  [data-role="cv-yearnav"] .pip-dot::before { left:8px; width:8px; opacity:.85; }
+  [data-role="cv-yearnav"] .pip-dot::after { left:0; width:24px; opacity:0; }
+  [data-role="cv-yearnav"] .pip:hover .pip-dot::before { opacity:1; }
+  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::before { opacity:0; }
+  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::after { opacity:1; }
   [data-role="cv-yearnav"] .pip-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translate(-50%, 4px); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 160ms ease, transform 160ms ease;
     font-family:'DM Sans', sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(14,18,28,.88); padding:6px 10px; border-radius:6px; }
   [data-role="cv-yearnav"] .pip:hover .pip-tip, [data-role="cv-yearnav"] .pip:focus-visible .pip-tip { opacity:1; transform:translate(-50%, 0); }
-  @media (hover: none) { [data-role="cv-yearnav"] .pip:hover .pip-tip { opacity:0; } }
+  /* touch screens (iPad reports hover, so go by touch): no hover states, no sticky name tag after a tap,
+     and the dash switches without a width animation (Safari left half-drawn dashes behind) */
+  html.is-touch [data-role="cv-yearnav"] .pip .pip-tip { display:none; }
+  html.is-touch [data-role="cv-yearnav"] .pip:not([aria-current="true"]):hover .pip-dot::before { opacity:.85; }
+  html.is-touch [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, currentColor 13%, transparent); }
+  html.is-touch [data-role="cv-yearnav"] button:focus { outline:none; }
   [data-role="cv-yearnav"] .pip-arrow { flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:0; display:flex; align-items:center; justify-content:center; cursor:pointer; color:inherit; background:color-mix(in srgb, currentColor 13%, transparent); transition:background 160ms ease, opacity 160ms ease; }
   [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, currentColor 24%, transparent); }
   [data-role="cv-yearnav"] .pip-arrow:disabled { opacity:.35; cursor:default; }
@@ -98,11 +110,30 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-yearnav"] { gap:8px; }
     [data-role="cv-pipbar"] { height:40px; padding:0 6px; }
     [data-role="cv-yearnav"] .pip { flex-basis:24px; width:24px; }
-    [data-role="cv-yearnav"] .pip-dot { width:7px; height:7px; }
-    [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot { width:16px; }
+    [data-role="cv-yearnav"] .pip-dot { width:16px; height:7px; }
+    [data-role="cv-yearnav"] .pip-dot::before { left:4.5px; width:7px; height:7px; }
+    [data-role="cv-yearnav"] .pip-dot::after { width:16px; height:7px; }
     [data-role="cv-yearnav"] .pip-arrow { width:40px; height:40px; }
   }
   @media (max-width: 359px) { [data-role="cv-yearnav"] .pip-arrow { display:none; } }
+  /* phones: the Agencies video a similar size to the other sections' pictures, centred in the free space */
+  @media (max-width: 700px) and (orientation: portrait) {
+    /* (repeated attribute: outranks the general phone rule with its :not() list) */
+    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { left:0 !important; right:0 !important; top:var(--st-free-top, 22%) !important; bottom:auto !important; height:var(--st-free-h, 40%) !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"] video { border-radius:6px; }
+    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:96% !important; }
+  }
+  @media (max-height: 500px) and (orientation: landscape) {
+    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"] { top:12px !important; bottom:12px !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:96% !important; }
+  }
+  /* tablets on their side (touch, up to iPad Pro width): The Guardian's phones and the Capco video sit a little higher */
+  @media (min-width: 900px) and (max-width: 1366px) and (orientation: landscape) and (min-height: 501px) {
+    html.is-touch [data-role="cv-gu3d"] { translate: 0 -4vh; }
+    html.is-touch [data-role="cv-imggroup"][data-imgcount="1"] { translate: 0 -4vh; }
+  }
+  /* tablets: clear of the screen edge (iPad) */
+  @media (min-width: 701px) and (max-width: 1023px) { [data-role="cv-yearnav"] { bottom:22px !important; } }
   @keyframes cvFloat { 0%, 100% { transform:translateY(0px); } 50% { transform:translateY(-10px); } }
   @keyframes cvBgDrift { 0%, 100% { transform:translate(0,0); } 50% { transform:translate(3%,-2%); } }
   @keyframes cvMorph { 0%, 100% { transform:scale(1,1) skew(0deg,0deg); } 33% { transform:scale(1.08,0.92) skew(2deg,1deg); } 66% { transform:scale(0.93,1.07) skew(-2deg,-1deg); } }
@@ -228,7 +259,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (min-width: 1024px) {
     [data-role="cv-desc"] { width:min(460px, 25vw) !important; bottom:44px !important; }
     [data-role="cv-title"] { width:min(460px, 32vw) !important; }
-    [data-role="cv-yearnav"] { justify-content:flex-end !important; bottom:16px !important; }   /* laptops and up: bottom right */
+    /* laptops and up: bottom right, the bar's bottom edge level with the bottom of the text / button (desc bottom:44px) */
+    [data-role="cv-yearnav"] { justify-content:flex-end !important; align-items:flex-end !important; height:44px !important; bottom:44px !important; }
   }
 
   [data-role="cv-imggroup"][data-imgcount="4"]:has([data-role="cv-vf3d"]) { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
@@ -248,7 +280,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"] { top:20% !important; bottom:20% !important; }
     [data-role="cv-akqa3d"] iframe { transform: none; }
     [data-role="cv-desc"] { bottom:96px !important; }
-    [data-role="cv-yearnav"] { justify-content:flex-end !important; }   /* portrait monitors: bottom right too */
+    [data-role="cv-yearnav"] { justify-content:flex-end !important; bottom:96px !important; }   /* portrait monitors: bottom right, level with the text (desc bottom:96px) */
     [data-role="cv-gu3d"] { top:22% !important; bottom:26% !important; }
     /* portrait monitors: these heroes fit the narrow width and came out small in all that height */
     [data-role="cv-gu3d"] iframe { transform: scale(1.6); }
@@ -407,7 +439,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe tabindex="-1" src="./portrait/?v=26" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe tabindex="-1" src="./portrait/?v=28" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
@@ -653,7 +685,7 @@ const DATA = [
     themeColor: "#F7F3EA", idKey: "approach", year: "Now", short: "Approach", company: "My Approach", title: "Craft, systems and time outdoors", imageCount: 0, approach: true, dark: false,
     bg: "#F7F3EA", navBg: "#E3D8C6",
     meta: "",
-    desc: "I'm a hands-on designer who loves the craft: sketching, prototyping and getting every detail right. I work systematically, building components and patterns that help a product grow, and I'm always exploring new tools, AI especially.\n\nAway from the screen, I'm outside with my family, cycling, running and camping. It's how I recharge, and often where my best ideas come from.",
+    desc: "I'm a hands-on designer who loves the craft: sketching, prototyping and getting every detail right. I work systematically, building components and patterns that help a product grow, and I'm always exploring new tools, AI especially. Away from the screen, I'm outside with my family, cycling, running and camping. It's how I recharge, and often where my best ideas come from.",
     link: null, linkLabel: null, slot: "self portrait"
   }
 ];
@@ -1511,6 +1543,16 @@ class Component extends DCLogic {
     this._fitDescs();
     const boxes = document.querySelectorAll('[data-role="cv-stillbox"]');
     if (!boxes.length) return;
+    // the Agencies video (no still): the free space between its title and description, for its phone CSS
+    document.querySelectorAll('[data-role="cv-imggroup"][data-imgcount="1"]').forEach((g) => {
+      const entry = g.closest('[data-role="cv-entry"]');
+      const head = entry && entry.querySelector('[data-role="cv-title"]'), desc = entry && entry.querySelector('[data-role="cv-desc"]');
+      if (!head || !desc) return;
+      const er = entry.getBoundingClientRect(); if (!er.height) return;
+      const top = head.getBoundingClientRect().bottom - er.top + 8, bottom = desc.getBoundingClientRect().top - er.top - 8;
+      g.style.setProperty("--st-free-top", top + "px");
+      g.style.setProperty("--st-free-h", Math.max(0, bottom - top) + "px");
+    });
     const root = document.documentElement;
     const land = window.innerWidth > window.innerHeight;
     const nav = document.querySelector('[data-role="cv-yearnav"]');
@@ -1537,7 +1579,7 @@ class Component extends DCLogic {
       }
       // bigger heroes on phones: widen the box (a little bleed past the screen edge is fine);
       // "contain" then grows the image until it meets the height limit
-      const GROW = land ? { smart: 1.1, akqa: 1.35 } : { smart: 1.0, nespresso: 0.94, guardian: 1.2, akqa: 1.12 };
+      const GROW = land ? { smart: 0.92, akqa: 1.35 } : { smart: 1.0, nespresso: 0.94, guardian: 1.04, akqa: 1.12, approach: 0.9 };   // evened out by measured area
       const g = GROW[name] || 1;
       x -= (w * (g - 1)) / 2; w *= g;
       // Nespresso: the wordmark sits at 48% of the image (pods hang off the left), so shift the
@@ -1550,7 +1592,7 @@ class Component extends DCLogic {
         // phones upright: a smaller image with the iPad itself (at fx, fy of the still, not the
         // image's middle, as the blood cells hang off it unevenly) centred across the screen and
         // in the space between the title and the description
-        const fx = 0.471, fy = 0.442, aspect = 717 / 665;
+        const fx = 0.5, fy = 0.5, aspect = 717 / 665;   // centre the image (was the iPad: sat low)
         const midY = y + h / 2;
         const ih = Math.min((ew * 0.9) / aspect, h * 0.9), iw = ih * aspect;
         x = ew / 2 - fx * iw; w = iw; y = midY - fy * ih; h = ih;
@@ -1563,7 +1605,7 @@ class Component extends DCLogic {
           const iw = ih * aspect;
           const free = Math.min(h, w / aspect);
           if (ih >= free * 0.7) { x = x + (w - iw) / 2; w = iw; y = cy - fy * ih; h = ih; }
-          if (land) y -= Math.round(eh * 0.03);   // a touch higher sideways
+          if (land) y = eh / 2 - ih / 2;   // sideways: the whole image centred, like the other sections
         }
       }
       root.style.setProperty("--st-" + name + "-x", Math.round(x) + "px");

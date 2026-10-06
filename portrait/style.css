@@ -298,6 +298,13 @@ body::before {
   }
 }
 
+/* upright tablets: a smaller picture, with more room round it */
+@media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait) {
+  .is-embedded .portrait {
+    --frame-w: min(calc(100vw - 200px), calc((100vh - var(--bt, 120px) - var(--bb, 360px)) * .82 * 1300 / 1168), 1000px);
+  }
+}
+
 /* Inside the timeline on a narrow window (phones get a still instead, see make_stills.py): the two
    flat pictures as overlapping prints, desk top-left and bike over its bottom-right corner, fitted
    between the panel's title and text. script.js sets --bt / --bb (space taken by the title above
@@ -321,45 +328,6 @@ body::before {
     z-index: 2;
     box-shadow: 0 0 0 5px var(--paper);   /* paper edge only, no drop shadow */
   }
-}
-
-/* Touch screens inside the timeline (tablets; phones get a still): a quiet cue that the portrait
-   can be swiped, sitting just under the picture. It fades once the visitor has touched it. */
-.swipe-cue { display: none; }
-@media (min-width: 701px) {
-  .is-embedded.is-touch .swipe-cue {
-    display: block; position: absolute; left: 50%; margin: 0;
-    top: calc(100% + 14px);
-    transform: translateX(-50%);
-    font-size: 11px; letter-spacing: .32em; text-transform: uppercase; white-space: nowrap;
-    color: var(--ink); opacity: .55; transition: opacity .8s; pointer-events: none; user-select: none;
-  }
-  .is-embedded.is-touch .swipe-cue span { display: inline-block; animation: nudge 1.8s ease-in-out infinite; }
-  .is-embedded.is-touch .swipe-cue span:last-child { animation-direction: reverse; }
-  .is-embedded.is-touch .swipe-cue.is-gone { opacity: 0; }
-}
-
-/* ── 'wipe' transition (v1, set by script.js): a diagonal line of light sweeps across ────────── */
-/* each layer sits in its own full-frame slot with its own diagonal mask; desk slots invert it */
-.is-wipe .slot {
-  position: absolute; inset: 0; pointer-events: none;
-  -webkit-mask-image: linear-gradient(var(--angle, 83deg), var(--c0, transparent) var(--a, 100%), var(--c1, #000) var(--b, 100%));
-          mask-image: linear-gradient(var(--angle, 83deg), var(--c0, transparent) var(--a, 100%), var(--c1, #000) var(--b, 100%));
-}
-.is-wipe .slot--desk { --c0: #000; --c1: transparent; }
-/* the out-of-focus scene drops into a cool indigo "night"; the mist fog isn't used here */
-.is-wipe .shade { display: block; }
-.is-wipe .fog { display: none; }
-/* the bright line itself */
-.is-wipe .seam {
-  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
-  background: linear-gradient(var(--angle, 83deg),
-    transparent calc(var(--s, 0px) - 10px),
-    rgba(255, 246, 225, .25) calc(var(--s, 0px) - 3px),
-    rgba(255, 255, 250, 1) calc(var(--s, 0px) - 1px),
-    rgba(255, 255, 250, 1) calc(var(--s, 0px) + 1px),
-    rgba(200, 220, 255, .22) calc(var(--s, 0px) + 3px),
-    transparent calc(var(--s, 0px) + 10px));
 }
 
 /* iPad: no save-image menu or selection on a long press over the pictures */
