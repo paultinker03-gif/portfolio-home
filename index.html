@@ -86,10 +86,18 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-yearnav"] .pip-dot { position:relative; display:block; width:24px; height:8px; }
   [data-role="cv-yearnav"] .pip-dot::before, [data-role="cv-yearnav"] .pip-dot::after { content:""; position:absolute; top:0; height:8px; border-radius:999px; background:currentColor; transition:opacity 260ms ease; }
   [data-role="cv-yearnav"] .pip-dot::before { left:8px; width:8px; opacity:.85; }
-  [data-role="cv-yearnav"] .pip-dot::after { left:0; width:24px; opacity:0; }
+  [data-role="cv-yearnav"] .pip-dot::after { display:none; }
+  /* the selected dash: one element that slides to the chosen pip, stretching a little on the way */
+  [data-role="cv-pipbar"] { position:relative; }
+  [data-role="cv-pipbar"] .pip-ind { position:absolute; left:0; top:50%; width:24px; height:8px; margin-top:-4px; pointer-events:none; z-index:1;
+    transform:translateX(var(--ind-x, 0px)); transition:transform 520ms cubic-bezier(.65,0,.25,1); }
+  [data-role="cv-pipbar"] .pip-ind > span { display:block; width:100%; height:100%; border-radius:999px; background:currentColor; }
+  [data-role="cv-pipbar"] .pip-ind.is-moving > span { animation:pipStretch 520ms cubic-bezier(.65,0,.25,1); }
+  @keyframes pipStretch { 0% { transform:scaleX(1); } 45% { transform:scaleX(var(--ind-stretch, 1.8)); } 100% { transform:scaleX(1); } }
+  [data-role="cv-pipbar"]:not(.is-ready) .pip-ind { transition:none; }
+  @media (prefers-reduced-motion: reduce) { [data-role="cv-pipbar"] .pip-ind { transition:none; } [data-role="cv-pipbar"] .pip-ind.is-moving > span { animation:none; } }
   [data-role="cv-yearnav"] .pip:hover .pip-dot::before { opacity:1; }
-  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::before { opacity:0; }
-  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::after { opacity:1; }
+  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::before { opacity:0; transition-delay:300ms; }   /* the target dot waits for the dash to arrive */
   [data-role="cv-yearnav"] .pip-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translate(-50%, 4px); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 160ms ease, transform 160ms ease;
     font-family:'DM Sans', sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(14,18,28,.88); padding:6px 10px; border-radius:6px; }
   [data-role="cv-yearnav"] .pip:hover .pip-tip, [data-role="cv-yearnav"] .pip:focus-visible .pip-tip { opacity:1; transform:translate(-50%, 0); }
@@ -112,7 +120,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-yearnav"] .pip { flex-basis:24px; width:24px; }
     [data-role="cv-yearnav"] .pip-dot { width:16px; height:7px; }
     [data-role="cv-yearnav"] .pip-dot::before { left:4.5px; width:7px; height:7px; }
-    [data-role="cv-yearnav"] .pip-dot::after { width:16px; height:7px; }
+    [data-role="cv-pipbar"] .pip-ind { width:16px; height:7px; margin-top:-3.5px; }
     [data-role="cv-yearnav"] .pip-arrow { width:40px; height:40px; }
   }
   @media (max-width: 359px) { [data-role="cv-yearnav"] .pip-arrow { display:none; } }
@@ -627,6 +635,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     <div data-active-entry="{{ activeSlug }}" hidden></div>
     <!-- pips: one per section, the current one longer; hover or focus shows the section's name -->
     <div data-role="cv-pipbar">
+      <span class="pip-ind" aria-hidden="true"><span></span></span>
       <sc-for list="{{ entries }}" as="e" hint-placeholder-count="8">
         <button class="pip" ref="{{ e.navItemRef }}" onClick="{{ e.select }}" aria-current="{{ e.active }}" aria-label="{{ e.navAriaLabel }}"><span class="pip-dot" aria-hidden="true"></span><span class="pip-tip" aria-hidden="true">{{ e.short }}</span></button>
       </sc-for>
@@ -743,7 +752,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     document.documentElement.setAttribute("data-dc-ready", "");
-    requestAnimationFrame(() => this._syncInert());
+    requestAnimationFrame(() => { this._syncInert(); this._syncPip(); });
+    window.addEventListener("resize", () => { this._pipX = null; const b = document.querySelector('[data-role="cv-pipbar"]'); if (b) b.classList.remove("is-ready"); this._syncPip(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this._pipX = null; this._syncPip(); });
     // keyboard: left / right arrow keys step between sections (not while typing or on a link)
     this._onKey = (ev) => {
       if (ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
@@ -1700,7 +1711,28 @@ class Component extends DCLogic {
     document.querySelectorAll('[data-role="cv-entry"] image-slot').forEach((el) => { if (el.getAttribute("tabindex") !== "-1") el.setAttribute("tabindex", "-1"); });
   }
 
+  _syncPip() {
+    const bar = document.querySelector('[data-role="cv-pipbar"]');
+    const ind = bar && bar.querySelector(".pip-ind");
+    const pip = bar && bar.querySelectorAll(".pip")[this.state.i];
+    if (!ind || !pip) return;
+    const x = pip.offsetLeft + (pip.offsetWidth - ind.offsetWidth) / 2;
+    const prev = this._pipX;
+    if (prev === x) return;
+    this._pipX = x;
+    bar.style.setProperty("--ind-x", x + "px");
+    if (prev != null && bar.classList.contains("is-ready")) {
+      // stretch more the further it travels
+      const dist = Math.abs(x - prev) / Math.max(1, pip.offsetWidth);
+      ind.style.setProperty("--ind-stretch", (1 + Math.min(1.6, 0.35 + dist * 0.3)).toFixed(2));
+      ind.classList.remove("is-moving"); void ind.offsetWidth; ind.classList.add("is-moving");
+    } else {
+      requestAnimationFrame(() => bar.classList.add("is-ready"));
+    }
+  }
+
   componentDidUpdate() {
+    this._syncPip();
     this._syncInert();
     this._fitDescs();
     this._placeStills();
