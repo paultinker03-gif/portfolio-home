@@ -228,7 +228,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (min-width: 1024px) {
     [data-role="cv-desc"] { width:min(460px, 25vw) !important; bottom:44px !important; }
     [data-role="cv-title"] { width:min(460px, 32vw) !important; }
-    [data-role="cv-yearnav"] { justify-content:center !important; bottom:16px !important; }   /* laptops and up: centred */
+    [data-role="cv-yearnav"] { justify-content:flex-end !important; bottom:16px !important; }   /* laptops and up: bottom right */
   }
 
   [data-role="cv-imggroup"][data-imgcount="4"]:has([data-role="cv-vf3d"]) { left:0 !important; right:0 !important; top:0 !important; bottom:0 !important; }
@@ -248,7 +248,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa3d"] { top:20% !important; bottom:20% !important; }
     [data-role="cv-akqa3d"] iframe { transform: none; }
     [data-role="cv-desc"] { bottom:96px !important; }
-    [data-role="cv-yearnav"] { justify-content:flex-start !important; padding-left:28px !important; }
+    [data-role="cv-yearnav"] { justify-content:flex-end !important; }   /* portrait monitors: bottom right too */
     [data-role="cv-gu3d"] { top:22% !important; bottom:26% !important; }
     /* portrait monitors: these heroes fit the narrow width and came out small in all that height */
     [data-role="cv-gu3d"] iframe { transform: scale(1.6); }
