@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" style="background:#1c5485">
+<html lang="en" style="background:#184a76">
 <script>if (navigator.maxTouchPoints > 0) document.documentElement.classList.add("is-touch");</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1c5485">
+<meta name="theme-color" content="#184a76">
 <title>Paul Tinker — Principal Product Designer · Design Systems</title>
 <meta name="description" content="Product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension.">
 <meta property="og:type" content="website">
@@ -16,12 +16,12 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://paultinker.uk/">
-<style>html,body{background:#1c5485;margin:0;padding:0;overscroll-behavior-x:none}</style>
+<style>html,body{background:#184a76;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
 <script src="./smart-switch.js?v=5" defer></script>
 </head>
-<body style="background:#1c5485">
+<body style="background:#184a76">
 <x-dc>
 <template id="__bundler_thumbnail" data-bg-color="#092044">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
 setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready',''); }, 3000);
 </script>
 <style>
-  html, body { margin:0; padding:0; background:#1c5485; overflow:hidden; height:100%; }
+  html, body { margin:0; padding:0; background:#184a76; overflow:hidden; height:100%; }
   x-dc { visibility:hidden; }
   html[data-dc-ready] x-dc { visibility:visible; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -81,7 +81,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-yearnav"] { overflow:visible !important; color:var(--nav-c, #fff); }
   /* the old-colour snapshot laid over the bar while it crossfades to the new colour */
   [data-role="cv-yearnav"].nav-ghost { pointer-events:none !important; will-change:opacity; animation:navGhost 340ms ease-out forwards; }
-  [data-role="cv-yearnav"].nav-ghost .pip-tip { display:none; }
+  [data-role="cv-yearnav"].nav-ghost .pip-tip, [data-role="cv-yearnav"].nav-ghost .pip-ind { display:none; }   /* only the real dash moves */
+  [data-role="cv-yearnav"].nav-ghost .pip .pip-dot::before { opacity:.85 !important; transition:none !important; }
   @keyframes navGhost { from { opacity:1; } to { opacity:0; } }
   [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
@@ -650,7 +651,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
 <script type="text/x-dc" data-dc-script data-props="{&quot;smartLeftOffset&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 0, &quot;min&quot;: -10, &quot;max&quot;: 10, &quot;step&quot;: 0.5, &quot;unit&quot;: &quot;%&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Smart layout&quot;}}">
 const DATA = [
   {
-    themeColor: "#1c5485", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
+    themeColor: "#184a76", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
     imageCount: 0, dayNight: true,
     meta: "", email: "hello@paultinker.uk",
     desc: "I'm a product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension. I design end-to-end journeys and the systems behind them, prototyping directly with AI.",
@@ -1447,7 +1448,7 @@ class Component extends DCLogic {
         wide5: (d.imageCount != null ? d.imageCount : 5) === 5,
         wide6: (d.imageCount != null ? d.imageCount : 5) === 6,
         imgCount: d.imageCount != null ? d.imageCount : 5,
-        bg: d.dayNight ? "#1c5485" : (d.bg || "oklch(0.934 0.02 6)"),
+        bg: d.dayNight ? "#184a76" : (d.bg || "oklch(0.934 0.02 6)"),
         bgOp: on ? 1 : 0,
         dayNight: !!d.dayNight,
         introBg: introPalette.bg,
@@ -1541,7 +1542,7 @@ class Component extends DCLogic {
   }
 
   _syncThemeColor() {
-    // Browser chrome tint is a single static #1c5485 meta in <head>; nothing per-section here
+    // Browser chrome tint is a single static #184a76 meta in <head>; nothing per-section here
     
     document.documentElement.style.background = "";
     document.body.style.background = "";
