@@ -383,10 +383,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
      html[data-smart-side] only while Smart is on screen (for the shared nav). */
   [data-role="cv-bg"][data-smart="true"] { transition:opacity 500ms ease, background-color 600ms ease !important; }
   html[data-smart-bg="zurich"] [data-role="cv-bg"][data-smart="true"] { background:#262e4a !important; }
-  /* AKQA on tablets: the pale centre read as white on a bright iPad screen, so a touch more blue */
-  @media (min-width: 701px) and (max-width: 1194px), (min-width: 701px) and (max-width: 1366px) and (orientation: portrait) {
-    [data-role="cv-bg"][data-sec="akqa"] { background: radial-gradient(circle at 50% 46%, #DDEBFA 0%, #CFE0F4 35%, #B9CDE8 100%) !important; }
-  }
   /* iPad: a long press on any image, video or scene (intro bubbles, 3D, stills) opens no save-image menu and selects nothing */
   img, picture, video, canvas, svg, image-slot, iframe,
   [data-role="cv-imggroup"], [data-role="cv-stillbox"], [data-role="cv-approach"], [data-role="cv-bg"] { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -475,7 +471,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-gu3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe tabindex="-1" ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=15" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
+                <iframe tabindex="-1" ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=16" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -677,21 +673,21 @@ const DATA = [
     link: "https://nespresso.paultinker.uk/", linkLabel: "Discover more", slot: "design system components"
   },
   {
-    themeColor: "#22503F", idKey: 3, year: "2016", short: "The Guardian", company: "The Guardian", title: "Designer & Art Director", imageCount: 3, bg: "radial-gradient(circle at 50% 50%, #2D6253 0%, #1A3E33 100%)", textColor: "#F7D0D5", descColor: "#F7D0D5", navLinkColor: "#F7D0D5", navBg: "#F7D0D5", navTextColor: "#16332B", float: true, blobs: false, blobColor: "oklch(0.74 0.11 155)", blobScale: 1.8, blobRightScale: 2.6,
+    themeColor: "#077a60", idKey: 3, year: "2016", short: "The Guardian", company: "The Guardian", title: "Designer & Art Director", imageCount: 3, bg: "#077a60", textColor: "#FFFFFF", descColor: "#FFFFFF", navLinkColor: "#FFFFFF", navBg: "#F7D0D5", navTextColor: "#16332B", float: true, blobs: false, blobColor: "oklch(0.74 0.11 155)", blobScale: 1.8, blobRightScale: 2.6,
     meta: "2016",
     desc: "Art directed an interactive digital campaign in partnership with Spotify for The Guardian to promote Discover Weekly, generating personalised musical footprints, bespoke genre catalogues, and custom social media assets that attracted 40,000 visitors over four weeks.",
-    link: null, linkLabel: null, slot: "The Guardian work"
+    link: "https://guardian.paultinker.uk/", linkLabel: "Discover more", slot: "The Guardian work"
   },
   {
     themeColor: "#D9C6EC", idKey: 2, year: "2012", short: "Agencies", company: "Various agencies", title: "Senior Designer & Art Director", imageCount: 1, dark: false,
     bg: "radial-gradient(70% 55% at 8% 12%, #8FBEFF 0%, rgba(143,190,255,0) 62%), radial-gradient(55% 45% at 30% 6%, #A9CCFF 0%, rgba(169,204,255,0) 60%), radial-gradient(45% 40% at 4% 52%, #9BD0FF 0%, rgba(155,208,255,0) 65%), radial-gradient(60% 60% at 46% 34%, #A9C6F7 0%, rgba(169,198,247,0) 62%), radial-gradient(70% 70% at 92% 16%, #A98BD9 0%, rgba(169,139,217,0) 60%), radial-gradient(60% 55% at 84% 96%, #D46BD0 0%, rgba(212,107,208,0) 58%), radial-gradient(90% 80% at 62% 78%, #D9C6EC 0%, rgba(217,198,236,0) 70%), linear-gradient(150deg, #E6CDEA 0%, #D8C8EE 55%, #C9B4E4 100%)", navBg: "#E3D3F0",
     meta: "2012–2017", videoSrc: true,
     desc: "Art direction and design across digital campaigns, apps, and video for agencies including Imagination, Razorfish, Isobar, and Ogilvy. Working with these teams elevated my craft as a designer and established the foundations of my approach to design systems and platform scaling.",
-    link: null, linkLabel: null, slot: "agency showreel video", descColor: "#000000"
+    link: "https://earlier.paultinker.uk/", linkLabel: "Discover more", slot: "agency showreel video", descColor: "#000000"
   },
   {
-    themeColor: "#E4F0FB", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
-    bg: "radial-gradient(circle at 50% 46%, #EBF6FF 0%, #EBF6FF 20%, #DBE8F7 62%, #CBDAEC 100%)", navBg: "#AFC3DD",
+    themeColor: "#A9C6F0", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
+    bg: "radial-gradient(circle at 50% 46%, #DCEBFF 0%, #C9DEFB 22%, #A9C6F0 62%, #86A9DD 100%)", navBg: "#AFC3DD",
     meta: "2010–2012",
     desc: "Worked across global digital products and campaigns for brands including Nissan, NatWest and Dorling Kindersley. Delivered apps, websites and interactive experiences. Awards: Apple iPad App of the Week, FWA Site of the Day, Lovie Awards, Webby Awards.",
     link: null, linkLabel: null, slot: "AKQA campaign work"
@@ -1418,9 +1414,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=13" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=14" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=13" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=14" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
