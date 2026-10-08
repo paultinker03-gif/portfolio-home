@@ -77,8 +77,11 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
      the section (the nav's own colour). Each pip and arrow has at least a 24x24 target (WCAG 2.5.8). */
   /* the nav's colour fades with the section and Smart's light/dark switch (the pips, arrows and
      their tinted backgrounds all follow it through currentColor) */
-  [data-role="cv-yearnav"] { overflow:visible !important; transition:color 600ms ease; }
-  [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, currentColor 13%, transparent); }
+  /* --nav-c: the bar's colour, faded between sections by _syncNavColour() (every part of the bar reads it) */
+  [data-role="cv-yearnav"] { overflow:visible !important; color:var(--nav-c, #fff); }
+  [data-role="cv-yearnav"] > * { will-change:opacity; transition:opacity 340ms ease; }
+  [data-role="cv-yearnav"].is-dim > * { opacity:.12; transition-duration:200ms; }
+  [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
   [data-role="cv-yearnav"] .pip { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 30px; width:30px; height:32px; padding:0; border:0; background:none; color:inherit; cursor:pointer; }
   /* each pip is a fixed 24x8 box holding a dot and a dash; the current one fades the dash in. Nothing
@@ -105,10 +108,10 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
      and the dash switches without a width animation (Safari left half-drawn dashes behind) */
   html.is-touch [data-role="cv-yearnav"] .pip .pip-tip { display:none; }
   html.is-touch [data-role="cv-yearnav"] .pip:not([aria-current="true"]):hover .pip-dot::before { opacity:.85; }
-  html.is-touch [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, currentColor 13%, transparent); }
+  html.is-touch [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   html.is-touch [data-role="cv-yearnav"] button:focus { outline:none; }
-  [data-role="cv-yearnav"] .pip-arrow { flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:0; display:flex; align-items:center; justify-content:center; cursor:pointer; color:inherit; background:color-mix(in srgb, currentColor 13%, transparent); transition:background 160ms ease, opacity 160ms ease; }
-  [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, currentColor 24%, transparent); }
+  [data-role="cv-yearnav"] .pip-arrow { flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:0; display:flex; align-items:center; justify-content:center; cursor:pointer; color:inherit; background:color-mix(in srgb, var(--nav-c) 13%, transparent); transition:background 160ms ease, opacity 160ms ease; }
+  [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, var(--nav-c) 24%, transparent); }
   [data-role="cv-yearnav"] .pip-arrow:disabled { opacity:.35; cursor:default; }
   [data-role="cv-yearnav"] .pip-arrow + .pip-arrow { margin-left:-4px; }
   [data-role="cv-yearnav"] button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
@@ -390,7 +393,6 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-desc"] > div:first-child { transition:color 500ms ease; }
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-title"],
   html[data-smart-bg="zurich"] [data-role="cv-entry"][data-smart="true"] [data-role="cv-desc"] > div:first-child { color:#fff !important; }
-  html[data-smart-side="zurich"] [data-role="cv-yearnav"] { color:#fff !important; }
   /* Smart panel: left/right cursor, same as the portrait page; links and nav keep the hand */
   html[data-smart-side] body { cursor: ew-resize; }
   html[data-smart-side] a, html[data-smart-side] button { cursor: pointer; }
@@ -626,7 +628,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     </sc-for>
   </div>
 
-  <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:10px; padding:0 28px; z-index:40; color:{{ pipColor }}">
+  <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:10px; padding:0 28px; z-index:40" data-nav-target="{{ pipColor }}">
     <!-- kept for smart-switch.js and the section colours: which section is showing (not drawn) -->
     <div data-active-entry="{{ activeSlug }}" hidden></div>
     <!-- pips: one per section, the current one longer; hover or focus shows the section's name -->
@@ -748,7 +750,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     document.documentElement.setAttribute("data-dc-ready", "");
-    requestAnimationFrame(() => { this._syncInert(); this._syncPip(); });
+    requestAnimationFrame(() => { this._syncInert(); this._syncPip(); this._syncNavColour(); });
+    // Smart's light/dark switch changes the bar's colour too
+    new MutationObserver(() => this._syncNavColour()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-smart-side"] });
     window.addEventListener("resize", () => { this._pipX = null; const b = document.querySelector('[data-role="cv-pipbar"]'); if (b) b.classList.remove("is-ready"); this._syncPip(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this._pipX = null; this._syncPip(); });
     // keyboard: left / right arrow keys step between sections (not while typing or on a link)
@@ -1727,7 +1731,31 @@ class Component extends DCLogic {
     }
   }
 
+  // The bar's colour changes with the section. A colour fade would run on the main thread, which is busy
+  // starting the next 3D scene (it stalled, then jumped). So the bar dims (opacity, off the main thread),
+  // takes the new colour while dim, and only fades back up once that colour is actually on screen.
+  _syncNavColour() {
+    const nav = this._navEl; if (!nav) return;
+    let target = nav.getAttribute("data-nav-target") || "#fff";
+    if (document.documentElement.getAttribute("data-smart-side") === "zurich") target = "#ffffff";
+    if (target === this._navTarget) return;
+    const first = this._navTarget == null;
+    this._navTarget = target;
+    if (!this._navStyle) { this._navStyle = document.createElement("style"); document.head.appendChild(this._navStyle); }
+    const apply = () => { this._navStyle.textContent = '[data-role="cv-yearnav"]{--nav-c:' + target + "}"; };
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (first || reduce) { apply(); return; }
+    clearTimeout(this._navT);
+    nav.classList.add("is-dim");
+    this._navT = setTimeout(() => {
+      apply();
+      // two frames: the new colour has been painted before the bar comes back up
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (this._navTarget === target) nav.classList.remove("is-dim"); }));
+    }, 200);
+  }
+
   componentDidUpdate() {
+    this._syncNavColour();
     this._syncPip();
     this._syncInert();
     this._fitDescs();
