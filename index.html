@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" style="background:#0a243b">
+<html lang="en" style="background:#1c5485">
 <script>if (navigator.maxTouchPoints > 0) document.documentElement.classList.add("is-touch");</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0a243b">
+<meta name="theme-color" content="#1c5485">
 <title>Paul Tinker — Principal Product Designer · Design Systems</title>
 <meta name="description" content="Product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension.">
 <meta property="og:type" content="website">
@@ -16,12 +16,12 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://paultinker.uk/">
-<style>html,body{background:#0a243b;margin:0;padding:0;overscroll-behavior-x:none}</style>
+<style>html,body{background:#1c5485;margin:0;padding:0;overscroll-behavior-x:none}</style>
 <script src="./boot.js"></script>
 <script src="./support.js"></script>
 <script src="./smart-switch.js?v=5" defer></script>
 </head>
-<body style="background:#123d5e">
+<body style="background:#1c5485">
 <x-dc>
 <template id="__bundler_thumbnail" data-bg-color="#092044">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
 setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready',''); }, 3000);
 </script>
 <style>
-  html, body { margin:0; padding:0; background:#0a243b; overflow:hidden; height:100%; }
+  html, body { margin:0; padding:0; background:#1c5485; overflow:hidden; height:100%; }
   x-dc { visibility:hidden; }
   html[data-dc-ready] x-dc { visibility:visible; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -79,8 +79,10 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
      their tinted backgrounds all follow it through currentColor) */
   /* --nav-c: the bar's colour, faded between sections by _syncNavColour() (every part of the bar reads it) */
   [data-role="cv-yearnav"] { overflow:visible !important; color:var(--nav-c, #fff); }
-  [data-role="cv-yearnav"] > * { will-change:opacity; transition:opacity 340ms ease; }
-  [data-role="cv-yearnav"].is-dim > * { opacity:.12; transition-duration:200ms; }
+  /* the old-colour snapshot laid over the bar while it crossfades to the new colour */
+  [data-role="cv-yearnav"].nav-ghost { pointer-events:none !important; will-change:opacity; animation:navGhost 340ms ease-out forwards; }
+  [data-role="cv-yearnav"].nav-ghost .pip-tip { display:none; }
+  @keyframes navGhost { from { opacity:1; } to { opacity:0; } }
   [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
   [data-role="cv-yearnav"] .pip { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 30px; width:30px; height:32px; padding:0; border:0; background:none; color:inherit; cursor:pointer; }
@@ -648,7 +650,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
 <script type="text/x-dc" data-dc-script data-props="{&quot;smartLeftOffset&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 0, &quot;min&quot;: -10, &quot;max&quot;: 10, &quot;step&quot;: 0.5, &quot;unit&quot;: &quot;%&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Smart layout&quot;}}">
 const DATA = [
   {
-    themeColor: "#123d5e", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
+    themeColor: "#1c5485", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
     imageCount: 0, dayNight: true,
     meta: "", email: "hello@paultinker.uk",
     desc: "I'm a product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension. I design end-to-end journeys and the systems behind them, prototyping directly with AI.",
@@ -1445,7 +1447,7 @@ class Component extends DCLogic {
         wide5: (d.imageCount != null ? d.imageCount : 5) === 5,
         wide6: (d.imageCount != null ? d.imageCount : 5) === 6,
         imgCount: d.imageCount != null ? d.imageCount : 5,
-        bg: d.dayNight ? "radial-gradient(circle at 50% 45%, #1c5485 0%, #123d5e 55%, #0a243b 100%)" : (d.bg || "oklch(0.934 0.02 6)"),
+        bg: d.dayNight ? "#1c5485" : (d.bg || "oklch(0.934 0.02 6)"),
         bgOp: on ? 1 : 0,
         dayNight: !!d.dayNight,
         introBg: introPalette.bg,
@@ -1539,7 +1541,7 @@ class Component extends DCLogic {
   }
 
   _syncThemeColor() {
-    // Browser chrome tint is a single static #0a243b meta in <head>; nothing per-section here
+    // Browser chrome tint is a single static #1c5485 meta in <head>; nothing per-section here
     
     document.documentElement.style.background = "";
     document.body.style.background = "";
@@ -1731,27 +1733,30 @@ class Component extends DCLogic {
     }
   }
 
-  // The bar's colour changes with the section. A colour fade would run on the main thread, which is busy
-  // starting the next 3D scene (it stalled, then jumped). So the bar dims (opacity, off the main thread),
-  // takes the new colour while dim, and only fades back up once that colour is actually on screen.
+  // The bar's colour crossfades with the section. A CSS colour fade runs on the main thread, which is busy
+  // starting the next 3D scene (it stalled, then jumped). Instead the bar takes the new colour at once and a
+  // snapshot of it in the old colour sits on top and fades out (opacity runs off the main thread, so it
+  // stays smooth however busy the page is).
   _syncNavColour() {
     const nav = this._navEl; if (!nav) return;
     let target = nav.getAttribute("data-nav-target") || "#fff";
     if (document.documentElement.getAttribute("data-smart-side") === "zurich") target = "#ffffff";
     if (target === this._navTarget) return;
-    const first = this._navTarget == null;
+    const old = this._navTarget;
     this._navTarget = target;
     if (!this._navStyle) { this._navStyle = document.createElement("style"); document.head.appendChild(this._navStyle); }
-    const apply = () => { this._navStyle.textContent = '[data-role="cv-yearnav"]{--nav-c:' + target + "}"; };
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (first || reduce) { apply(); return; }
-    clearTimeout(this._navT);
-    nav.classList.add("is-dim");
-    this._navT = setTimeout(() => {
-      apply();
-      // two frames: the new colour has been painted before the bar comes back up
-      requestAnimationFrame(() => requestAnimationFrame(() => { if (this._navTarget === target) nav.classList.remove("is-dim"); }));
-    }, 200);
+    if (old != null && !reduce) {
+      document.querySelectorAll(".nav-ghost").forEach((g) => g.remove());
+      const ghost = nav.cloneNode(true);
+      ghost.classList.add("nav-ghost");
+      ghost.removeAttribute("role"); ghost.removeAttribute("aria-label");
+      ghost.setAttribute("aria-hidden", "true"); ghost.inert = true;
+      ghost.style.setProperty("--nav-c", old);
+      ghost.addEventListener("animationend", () => ghost.remove());
+      nav.after(ghost);
+    }
+    this._navStyle.textContent = '[data-role="cv-yearnav"]{--nav-c:' + target + "}";
   }
 
   componentDidUpdate() {
