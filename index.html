@@ -658,7 +658,7 @@ const DATA = [
     link: "https://ai.paultinker.uk/", linkLabel: "AI-native work", slot: "portrait or showreel still"
   },
   {
-    themeColor: "#8C2016", idKey: 5, year: "2018", short: "Vodafone", company: "Vodafone", title: "Design Lead - Product Design & Design System", imageCount: 4, dark: true,
+    themeColor: "#930001", idKey: 5, year: "2018", short: "Vodafone", company: "Vodafone", title: "Design Lead - Product Design & Design System", imageCount: 4, dark: true,
     bg: "radial-gradient(140% 140% at 90% 8%, oklch(0.58 0.23 29) 0%, oklch(0.4 0.2 25) 45%, oklch(0.14 0.08 20) 100%)", navBg: "oklch(0.3 0.06 20 / 0.9)",
     meta: "2017–2020",
     desc: "Source was Vodafone's enterprise design system, unifying digital experiences across 16 markets. It grew out of TOBi, Vodafone's AI assistant, and went on to transform delivery for products like My Vodafone & M-Pesa.",
@@ -684,14 +684,14 @@ const DATA = [
     link: "https://guardian.paultinker.uk/", linkLabel: "Discover more", slot: "The Guardian work"
   },
   {
-    themeColor: "#D9C6EC", idKey: 2, year: "2012", short: "Agencies", company: "Various agencies", title: "Senior Designer & Art Director", imageCount: 1, dark: false,
+    themeColor: "#c4beee", idKey: 2, year: "2012", short: "Agencies", company: "Various agencies", title: "Senior Designer & Art Director", imageCount: 1, dark: false,
     bg: "radial-gradient(70% 55% at 8% 12%, #8FBEFF 0%, rgba(143,190,255,0) 62%), radial-gradient(55% 45% at 30% 6%, #A9CCFF 0%, rgba(169,204,255,0) 60%), radial-gradient(45% 40% at 4% 52%, #9BD0FF 0%, rgba(155,208,255,0) 65%), radial-gradient(60% 60% at 46% 34%, #A9C6F7 0%, rgba(169,198,247,0) 62%), radial-gradient(70% 70% at 92% 16%, #A98BD9 0%, rgba(169,139,217,0) 60%), radial-gradient(60% 55% at 84% 96%, #D46BD0 0%, rgba(212,107,208,0) 58%), radial-gradient(90% 80% at 62% 78%, #D9C6EC 0%, rgba(217,198,236,0) 70%), linear-gradient(150deg, #E6CDEA 0%, #D8C8EE 55%, #C9B4E4 100%)", navBg: "#E3D3F0",
     meta: "2012–2017", videoSrc: true,
     desc: "Art direction and design across digital campaigns, apps, and video for agencies including Imagination, Razorfish, Isobar, and Ogilvy. Working with these teams elevated my craft as a designer and established the foundations of my approach to design systems and platform scaling.",
     link: "https://earlier.paultinker.uk/", linkLabel: "Discover more", slot: "agency showreel video", descColor: "#000000"
   },
   {
-    themeColor: "#A9C6F0", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
+    themeColor: "#b7d1f5", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
     bg: "radial-gradient(circle at 50% 46%, #DCEBFF 0%, #C9DEFB 22%, #A9C6F0 62%, #86A9DD 100%)", navBg: "#AFC3DD",
     meta: "2010–2012",
     desc: "Worked across global digital products and campaigns for brands including Nissan, NatWest and Dorling Kindersley. Delivered apps, websites and interactive experiences. Awards: Apple iPad App of the Week, FWA Site of the Day, Lovie Awards, Webby Awards.",
@@ -755,7 +755,7 @@ class Component extends DCLogic {
     document.documentElement.setAttribute("data-dc-ready", "");
     requestAnimationFrame(() => { this._syncInert(); this._syncPip(); this._syncNavColour(); });
     // Smart's light/dark switch changes the bar's colour too
-    new MutationObserver(() => this._syncNavColour()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-smart-side"] });
+    new MutationObserver(() => { this._syncNavColour(); this._syncThemeColor(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-smart-side", "data-smart-bg"] });
     window.addEventListener("resize", () => { this._pipX = null; const b = document.querySelector('[data-role="cv-pipbar"]'); if (b) b.classList.remove("is-ready"); this._syncPip(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this._pipX = null; this._syncPip(); });
     // keyboard: left / right arrow keys step between sections (not while typing or on a link)
@@ -1541,9 +1541,17 @@ class Component extends DCLogic {
     }
   }
 
+  // Browser bar colour (theme-color: Safari on Mac/iPhone/iPad, Chrome on Android, installed apps)
+  // follows the section: its solid background, or the average colour of a gradient one; Smart has one
+  // for each side (light / Zurich dark).
   _syncThemeColor() {
-    // Browser chrome tint is a single static #184a76 meta in <head>; nothing per-section here
-    
+    const d = DATA[this.state.i]; if (!d) return;
+    let c = d.themeColor;
+    if (d.smartComp && document.documentElement.getAttribute("data-smart-bg") === "zurich") c = "#262e4a";
+    let m = document.querySelector('meta[name="theme-color"]');
+    if (!m) { m = document.createElement("meta"); m.name = "theme-color"; document.head.appendChild(m); }
+    if (m.getAttribute("content") !== c) m.setAttribute("content", c);
+
     document.documentElement.style.background = "";
     document.body.style.background = "";
   }
