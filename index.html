@@ -83,6 +83,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-yearnav"].nav-ghost { pointer-events:none !important; will-change:opacity; animation:navGhost 340ms ease-out forwards; }
   [data-role="cv-yearnav"].nav-ghost .pip-tip, [data-role="cv-yearnav"].nav-ghost .pip-ind { display:none; }   /* only the real dash moves */
   [data-role="cv-yearnav"].nav-ghost .pip .pip-dot::before { opacity:.85 !important; transition:none !important; }
+  [data-role="cv-yearnav"].nav-ghost .pip.ghost-gap .pip-dot::before { opacity:0 !important; }
   @keyframes navGhost { from { opacity:1; } to { opacity:0; } }
   [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   /* every pip has the same fixed slot, so the bar never changes size as the long dash moves */
@@ -454,7 +455,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe tabindex="-1" src="./portrait/?v=28" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe tabindex="-1" src="./portrait/?v=29" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
@@ -691,15 +692,15 @@ const DATA = [
     link: "https://earlier.paultinker.uk/", linkLabel: "Discover more", slot: "agency showreel video", descColor: "#000000"
   },
   {
-    themeColor: "#b7d1f5", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
+    themeColor: "#c1d8f8", idKey: "akqa", year: "2008", short: "AKQA", company: "AKQA", title: "Senior Designer", imageCount: 4, evenGrid: true, dark: false,
     bg: "radial-gradient(circle at 50% 46%, #DCEBFF 0%, #C9DEFB 22%, #A9C6F0 62%, #86A9DD 100%)", navBg: "#AFC3DD",
     meta: "2010–2012",
     desc: "Worked across global digital products and campaigns for brands including Nissan, NatWest and Dorling Kindersley. Delivered apps, websites and interactive experiences. Awards: Apple iPad App of the Week, FWA Site of the Day, Lovie Awards, Webby Awards.",
     link: null, linkLabel: null, slot: "AKQA campaign work"
   },
   {
-    themeColor: "#F7F3EA", idKey: "approach", year: "Now", short: "Approach", company: "My Approach", title: "Craft, systems and time outdoors", imageCount: 0, approach: true, dark: false,
-    bg: "#F7F3EA", navBg: "#E3D8C6",
+    themeColor: "#F5F0E8", idKey: "approach", year: "Now", short: "Approach", company: "My Approach", title: "Craft, systems and time outdoors", imageCount: 0, approach: true, dark: false,
+    bg: "#F5F0E8", navBg: "#E3D8C6",
     meta: "",
     desc: "I'm a hands-on designer who loves the craft: sketching, prototyping and getting every detail right. I work systematically, building components and patterns that help a product grow, and I'm always exploring new tools, AI especially. Away from the screen, I'm outside with my family, cycling, running and camping. It's how I recharge, and often where my best ideas come from.",
     link: null, linkLabel: null, slot: "self portrait"
@@ -1551,9 +1552,10 @@ class Component extends DCLogic {
     let m = document.querySelector('meta[name="theme-color"]');
     if (!m) { m = document.createElement("meta"); m.name = "theme-color"; document.head.appendChild(m); }
     if (m.getAttribute("content") !== c) m.setAttribute("content", c);
-
-    document.documentElement.style.background = "";
-    document.body.style.background = "";
+    // the page's own background takes the same colour: mobile browsers tint their bottom bar (and any
+    // overscroll) from it, so top and bottom bars match the section
+    document.documentElement.style.background = c;
+    document.body.style.background = c;
   }
 
   _applySlotSrc() {
@@ -1750,18 +1752,26 @@ class Component extends DCLogic {
     const nav = this._navEl; if (!nav) return;
     let target = nav.getAttribute("data-nav-target") || "#fff";
     if (document.documentElement.getAttribute("data-smart-side") === "zurich") target = "#ffffff";
+    const prevI = this._navI; this._navI = this.state.i;
     if (target === this._navTarget) return;
     const old = this._navTarget;
     this._navTarget = target;
     if (!this._navStyle) { this._navStyle = document.createElement("style"); document.head.appendChild(this._navStyle); }
+    if (!this._navCtx) { const c = document.createElement("canvas"); c.width = c.height = 1; this._navCtx = c.getContext("2d", { willReadFrequently: true }); }
+    const rgb = (col) => { const x = this._navCtx; x.clearRect(0, 0, 1, 1); x.fillStyle = "#000"; x.fillStyle = col; x.fillRect(0, 0, 1, 1); return x.getImageData(0, 0, 1, 1).data; };
+    // only crossfade when the colour really changes (white to near-white needs nothing)
+    const same = old != null && (() => { const a = rgb(old), b = rgb(target); return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) < 40; })();
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (old != null && !reduce) {
+    if (old != null && !reduce && !same) {
       document.querySelectorAll(".nav-ghost").forEach((g) => g.remove());
       const ghost = nav.cloneNode(true);
       ghost.classList.add("nav-ghost");
       ghost.removeAttribute("role"); ghost.removeAttribute("aria-label");
       ghost.setAttribute("aria-hidden", "true"); ghost.inert = true;
       ghost.style.setProperty("--nav-c", old);
+      // the copy holds the plain dots only: none where the dash was or is going (the real dash moves alone)
+      const gp = ghost.querySelectorAll(".pip");
+      [prevI, this.state.i].forEach((k) => { if (k != null && gp[k]) gp[k].classList.add("ghost-gap"); });
       ghost.addEventListener("animationend", () => ghost.remove());
       nav.after(ghost);
     }

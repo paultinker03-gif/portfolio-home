@@ -1,5 +1,5 @@
 :root {
-  --paper: #f7f3ea;
+  --paper: #f5f0e8;   /* solid cream, same as the Approach panel and browser bar */
   --ink: #2b2a28;
   --gap: clamp(24px, 3.5vw, 64px);
   --frame-w: min(calc(100vw - 64px), calc(80vh * 1300 / 1168), 1000px);
@@ -332,3 +332,6 @@ body::before {
 
 /* iPad: no save-image menu or selection on a long press over the pictures */
 .frame, .flat, img, picture, video, canvas, svg, image-slot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+/* inside the timeline: a plain solid cream, no paper grain, so it matches the panel and the browser bar */
+.is-embedded body::before { display:none; }
