@@ -82,7 +82,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   /* the old-colour snapshot laid over the bar while it crossfades to the new colour */
   [data-role="cv-yearnav"].nav-ghost { pointer-events:none !important; will-change:opacity; animation:navGhost 340ms ease-out forwards; }
   [data-role="cv-yearnav"].nav-ghost .pip-tip, [data-role="cv-yearnav"].nav-ghost .pip-ind { display:none; }   /* only the real dash moves */
-  [data-role="cv-yearnav"].nav-ghost .pip .pip-dot::before { opacity:.85 !important; transition:none !important; }
+  [data-role="cv-yearnav"].nav-ghost .pip .pip-dot::before { opacity:1 !important; transition:none !important; }
   [data-role="cv-yearnav"].nav-ghost .pip.ghost-gap .pip-dot::before { opacity:0 !important; }
   @keyframes navGhost { from { opacity:1; } to { opacity:0; } }
   [data-role="cv-pipbar"] { transform:translateZ(0); display:flex; align-items:center; gap:0; height:44px; padding:0 8px; border-radius:999px; background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
@@ -92,11 +92,11 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
      changes size, so Safari (iPad) can't leave half-drawn dashes behind when the selection moves. */
   [data-role="cv-yearnav"] .pip-dot { position:relative; display:block; width:24px; height:8px; }
   [data-role="cv-yearnav"] .pip-dot::before, [data-role="cv-yearnav"] .pip-dot::after { content:""; position:absolute; top:0; height:8px; border-radius:999px; background:currentColor; transition:opacity 260ms ease; }
-  [data-role="cv-yearnav"] .pip-dot::before { left:8px; width:8px; opacity:.85; }
+  [data-role="cv-yearnav"] .pip-dot::before { left:8px; width:8px; opacity:1; }   /* same solid colour as the dash: nothing greyer can show at its edges */
   [data-role="cv-yearnav"] .pip-dot::after { display:none; }
   /* the selected dash: one element that slides to the chosen pip, stretching a little on the way */
   [data-role="cv-pipbar"] { position:relative; }
-  [data-role="cv-pipbar"] .pip-ind { position:absolute; left:0; top:50%; width:24px; height:8px; margin-top:-4px; pointer-events:none; z-index:1;
+  [data-role="cv-pipbar"] .pip-ind { position:absolute; left:0; top:50%; width:24px; height:8px; margin-top:-4px; pointer-events:none; z-index:2;
     transform:translateX(var(--ind-x, 0px)); transition:transform 520ms cubic-bezier(.65,0,.25,1); }
   [data-role="cv-pipbar"] .pip-ind > span { display:block; width:100%; height:100%; border-radius:999px; background:currentColor; }
   [data-role="cv-pipbar"] .pip-ind.is-moving > span { animation:pipStretch 520ms cubic-bezier(.65,0,.25,1); }
@@ -104,14 +104,13 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-pipbar"]:not(.is-ready) .pip-ind { transition:none; }
   @media (prefers-reduced-motion: reduce) { [data-role="cv-pipbar"] .pip-ind { transition:none; } [data-role="cv-pipbar"] .pip-ind.is-moving > span { animation:none; } }
   [data-role="cv-yearnav"] .pip:hover .pip-dot::before { opacity:1; }
-  [data-role="cv-yearnav"] .pip[aria-current="true"] .pip-dot::before { opacity:0; transition-delay:300ms; }   /* the target dot waits for the dash to arrive */
+  /* the dots never change; the solid dash slides over and covers the one it sits on (nothing to fade or lag) */
   [data-role="cv-yearnav"] .pip-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translate(-50%, 4px); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 160ms ease, transform 160ms ease;
     font-family:'DM Sans', sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(14,18,28,.88); padding:6px 10px; border-radius:6px; }
   [data-role="cv-yearnav"] .pip:hover .pip-tip, [data-role="cv-yearnav"] .pip:focus-visible .pip-tip { opacity:1; transform:translate(-50%, 0); }
   /* touch screens (iPad reports hover, so go by touch): no hover states, no sticky name tag after a tap,
      and the dash switches without a width animation (Safari left half-drawn dashes behind) */
   html.is-touch [data-role="cv-yearnav"] .pip .pip-tip { display:none; }
-  html.is-touch [data-role="cv-yearnav"] .pip:not([aria-current="true"]):hover .pip-dot::before { opacity:.85; }
   html.is-touch [data-role="cv-yearnav"] .pip-arrow:hover { background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
   html.is-touch [data-role="cv-yearnav"] button:focus { outline:none; }
   [data-role="cv-yearnav"] .pip-arrow { flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:0; display:flex; align-items:center; justify-content:center; cursor:pointer; color:inherit; background:color-mix(in srgb, var(--nav-c) 13%, transparent); transition:background 160ms ease, opacity 160ms ease; }
@@ -1751,7 +1750,11 @@ class Component extends DCLogic {
   _syncNavColour() {
     const nav = this._navEl; if (!nav) return;
     let target = nav.getAttribute("data-nav-target") || "#fff";
-    if (document.documentElement.getAttribute("data-smart-side") === "zurich") target = "#ffffff";
+    // Smart: data-smart-bg already says which side it opens on (Zurich) before it slides in, so the bar
+    // goes straight to that side's colour (data-smart-side only arrives a moment later, which made it
+    // fade to the light side's grey and back)
+    const d = DATA[this.state.i];
+    if (d && d.smartComp && document.documentElement.getAttribute("data-smart-bg") === "zurich") target = "#ffffff";
     const prevI = this._navI; this._navI = this.state.i;
     if (target === this._navTarget) return;
     const old = this._navTarget;
@@ -1760,7 +1763,7 @@ class Component extends DCLogic {
     if (!this._navCtx) { const c = document.createElement("canvas"); c.width = c.height = 1; this._navCtx = c.getContext("2d", { willReadFrequently: true }); }
     const rgb = (col) => { const x = this._navCtx; x.clearRect(0, 0, 1, 1); x.fillStyle = "#000"; x.fillStyle = col; x.fillRect(0, 0, 1, 1); return x.getImageData(0, 0, 1, 1).data; };
     // only crossfade when the colour really changes (white to near-white needs nothing)
-    const same = old != null && (() => { const a = rgb(old), b = rgb(target); return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) < 40; })();
+    const same = old != null && (() => { const a = rgb(old), b = rgb(target); return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) < 70; })();
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (old != null && !reduce && !same) {
       document.querySelectorAll(".nav-ghost").forEach((g) => g.remove());
