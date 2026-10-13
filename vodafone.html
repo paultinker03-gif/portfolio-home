@@ -28,14 +28,14 @@ try {
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.core.js" crossorigin>
-<link rel="preload" as="image" fetchpriority="high" href="uploads/get-started.webp">
+<link rel="preload" as="image" fetchpriority="high" href="uploads/get-started.webp?v=2">
 <link rel="preload" as="image" fetchpriority="high" href="uploads/Welcome-Option-02.webp">
 <link rel="preload" as="image" fetchpriority="high" href="uploads/mobile-screen-02.webp">
 <link rel="preload" as="image" fetchpriority="high" href="uploads/0301-dashboard.webp">
 <script>
   // kick off decode of the phone screens immediately, in parallel with the three.js CDN fetch,
   // so pixels are ready in the browser's image cache by the time the scene needs them
-  ['get-started.webp','Welcome-Option-02.webp','mobile-screen-02.webp','0301-dashboard.webp'].forEach(f => {
+  ['get-started.webp?v=2','Welcome-Option-02.webp','mobile-screen-02.webp','0301-dashboard.webp'].forEach(f => {
     const img = new Image();
     img.decoding = 'sync';
     img.src = 'uploads/' + f;
@@ -227,7 +227,7 @@ const TALL = 720 / 1480, WIDE = 750 / 1334;
 
 const KIT = 375 / 812;
 const configs = [
-  { name: 'get-started', screen: CVRES('uploads/get-started.webp'), aspect: TALL, height: 2.75,
+  { name: 'get-started', screen: CVRES('uploads/get-started.webp?v=2'), aspect: TALL, height: 2.75,
     x: -2.05, y: 1.05, z: 0.0, rx: 0.06, ry: 0.20, rz: -0.24, sens: 0.55, ease: 0.045, bobAmp: 0.05, bobFreq: 0.55, phase: 0 },
   TOBI_VIDEO
   ? { name: 'welcome', screen: CVRES('assets/tobi/tobi-welcome.webp'), video: CVRES('assets/tobi/tobi-welcome.mp4'), screenAspect: KIT, screenRadius: 0.095, height: 2.5,
