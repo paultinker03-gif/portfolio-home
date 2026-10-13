@@ -786,7 +786,7 @@ class Component extends DCLogic {
     // instantly. Skipped in a bundled artifact, where assets are inlined already.
     if (!RES()["capco-video"]) {
       setTimeout(() => {
-        ["uploads/spotify-1.webp?v=11", "uploads/spotify-2.webp?v=11", "uploads/spotify-3.webp?v=11", "uploads/get-started.webp?v=2", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=5", "uploads/smart-balance-light.webp?v=5", "uploads/zurich-dashboard-dark.webp?v=5", "uploads/zurich-balance-dark.webp?v=5"]
+        ["uploads/spotify-1.webp?v=11", "uploads/spotify-2.webp?v=11", "uploads/spotify-3.webp?v=11", "uploads/get-started.webp?v=3", "uploads/Welcome-Option-02.webp", "uploads/mobile-screen-02.webp", "uploads/0301-dashboard.webp", "uploads/frame-2-akqa.webp", "uploads/smart-dashboard-light.webp?v=5", "uploads/smart-balance-light.webp?v=5", "uploads/zurich-dashboard-dark.webp?v=5", "uploads/zurich-balance-dark.webp?v=5"]
           .forEach((src, n) => setTimeout(() => { const im = new Image(); im.src = src; }, 300 + n * 150));
       }, 600);
     }
@@ -1421,9 +1421,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=19" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=21" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=19" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=21" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
