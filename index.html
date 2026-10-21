@@ -356,13 +356,19 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(0.62); }
     [data-role="cv-gu3d"] iframe { transform: scale(0.84); transform-origin:50% 38%; }
     /* (repeated attribute: outranks the tablet-portrait rule with its :not() list) */
-    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { top:21% !important; bottom:41% !important; }
-    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:min(84%, 64vh) !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { top:18% !important; bottom:22% !important; }
+    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:min(84%, 70vh) !important; }
+    /* every picture centred between the title and the text (measured: these sat 35-55px high) */
+    [data-role="cv-vf3d"] { translate: 0 7.5vh; }
+    [data-role="cv-smart3d"] { --smart-lift: 0vh; }
+    [data-role="cv-gu3d"] { translate: 0 5vh; }
     /* text full width, same margin both sides (repeated attribute: outranks the Approach panel's own width) */
     html [data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"] { right:28px !important; width:auto !important; bottom:28px !important; }
     /* the full-width text box sits over the nav (z 45 vs 40): taps go through its empty space, only the text and button catch them */
     [data-role="cv-desc"] { pointer-events:none; }
     [data-role="cv-desc"] > div:first-child, [data-role="cv-desc"] > div > * { pointer-events:auto; }
+    /* job title across the page too, so it only wraps when it has to */
+    [data-role="cv-title"] { width:calc(100vw - 56px) !important; }
     /* nav bottom right, its bottom edge level with the case study button (as on laptops) */
     [data-role="cv-yearnav"] { justify-content:flex-end !important; align-items:flex-end !important; height:44px !important; bottom:28px !important; }
     /* no button (Approach): nothing to sit beside the nav, so the text stays above it */
@@ -1017,7 +1023,7 @@ class Component extends DCLogic {
     const CR = Math.max(30, Math.min(Math.min(W, H) * 0.22, band / 3.2));
     const narrowPortrait = window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
     const tabletPortrait = !narrowPortrait && window.innerWidth <= 1400 && (window.innerHeight > window.innerWidth || (window.innerWidth <= 1024 && window.innerHeight > 500 && window.innerWidth <= window.innerHeight * 1.25));   // incl. near-square (open foldables)
-    const bandBias = narrowPortrait ? 0.3 : (tabletPortrait ? 0.4 : 0.5);
+    const bandBias = narrowPortrait ? 0.3 : (tabletPortrait && window.innerHeight > window.innerWidth ? 0.4 : 0.5);
     const homeX = W / 2, homeY = bandTop + band * bandBias;
     if (!this._introSeeded && W > 0 && H > 0) { this._icx = homeX; this._icy = homeY; this._introSeeded = true; }
     let tx = homeX, ty = homeY;
@@ -1039,7 +1045,10 @@ class Component extends DCLogic {
     this._idy += (Math.sin(ang) * pull - this._idy) * ease(0.06);
     const bulge = Math.sqrt(this._idx * this._idx + this._idy * this._idy);
     const bAng = Math.atan2(this._idy, this._idx);
-    const lo = bandTop + CR * (narrowPortrait ? 0.9 : 1.4), hi = bandBot - CR * 1.9;
+    // near-square (open foldables): the band is short, so the usual uneven margins overlap and pin the
+    // cluster high; it reaches about 0.9·CR each way, so even margins centre it
+    const squarish = tabletPortrait && window.innerWidth > window.innerHeight;
+    const lo = bandTop + CR * (narrowPortrait ? 0.9 : (squarish ? 1 : 1.4)), hi = bandBot - CR * (squarish ? 1 : 1.9);
     this._icy = hi > lo ? Math.max(lo, Math.min(hi, this._icy)) : lo;
     const spawnT = Math.min(1, this._it / 0.6);
     const spawnEase = 1 - Math.pow(1 - spawnT, 3);
