@@ -350,12 +350,12 @@ class SmartScene extends HTMLElement {
 
     const buildLegacy = () => {
       const CARD_W = 11.0 * (548 / 1157);
-      const phone = makePhone(R('uploads/smart-dashboard-2026.webp?v=3'), 11.91, 824 / 1848);
+      const phone = makePhone(R('uploads/smart-dashboard-2026.webp?v=4'), 11.91, 824 / 1848);
       phone.position.set(-1.0, 0.1, 1.6);
       phone.rotation.set(0, 0, TILT);
       legacyG.add(phone);
 
-      const dews = makeCard(R('uploads/zurich-balance-2026.webp?v=3'), 11.59 * (824 / 1848), 11.59);
+      const dews = makeCard(R('uploads/zurich-balance-2026.webp?v=4'), 11.59 * (824 / 1848), 11.59);
       dews.position.set(4.25, 0.9, -0.8);
       dews.rotation.set(0, 0, TILT);
       legacyG.add(dews);

@@ -183,7 +183,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
     [data-role="cv-akqa3d"] iframe { transform: scale(1.45); transform-origin:50% 50%; }
   }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
     [data-role="cv-akqa3d"] iframe { transform: scale(0.88); transform-origin:50% 50%; }
   }
   /* laptops & mid-size monitors: 3D scenes read smaller than on a large display */
@@ -219,9 +219,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     html [data-role="cv-desc"] { width:min(480px, 42vw) !important; }
     [data-role="cv-imggroup"][data-imgcount="0"][data-nesp="1"] { left:-28% !important; right:-22% !important; top:12% !important; bottom:12% !important; }
   }
-  /* near-square tablets (an open foldable, ≤5:4 even when slightly landscape) share every tablet-portrait
-     rule: the stacked layout. The tablet-landscape rules carry min-aspect-ratio 1001/800 so they skip them. */
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
     [data-role="cv-imggroup"]:not([data-imgcount="6"]):not([data-imgcount="105"]):not([data-imgcount="0"]):not([data-imgcount="3"]) { left:48px !important; right:48px !important; top:4% !important; bottom:14% !important; }
     [data-role="cv-imggroup"][data-imgcount="3"] { left:-14% !important; right:-14% !important; top:12% !important; bottom:22% !important; }
     [data-role="cv-imggroup"][data-imgcount="1"] { left:24px !important; right:24px !important; top:6% !important; bottom:6% !important; }
@@ -232,7 +230,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-akqa-2"] { width:min(193px, 17.5vw) !important; height:min(179px, 16.2vw) !important; }
     [data-role="cv-akqa-3"] { width:min(145px, 13.2vw) !important; height:min(120px, 10.9vw) !important; }
   }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (min-aspect-ratio: 1001/800) {
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) {
     [data-role="cv-imggroup"]:not([data-imgcount="105"]):not([data-imgcount="6"]):not([data-imgcount="3"]) { left:min(140px, 14vw) !important; right:min(140px, 14vw) !important; top:6% !important; bottom:12% !important; }
     [data-role="cv-imggroup"][data-imgcount="3"] { left:-4vw !important; right:-4vw !important; top:-2% !important; bottom:2% !important; }
     [data-role="cv-imggroup"][data-imgcount="0"] { top:2% !important; bottom:4% !important; }
@@ -246,7 +244,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-desc"] { width:min(360px, 34vw) !important; }
     [data-role="cv-title"] { width:min(320px, 34vw) !important; }
   }
-  @media (min-width: 1024px) and (max-width: 1440px), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (min-aspect-ratio: 1001/800) {
+  @media (min-width: 1024px) and (max-width: 1440px), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) {
     [data-role="cv-vf-0"] { left:5% !important; top:15% !important; width:20% !important; height:45% !important; }
     [data-role="cv-vf-1"] { left:15% !important; top:10% !important; width:40% !important; height:62% !important; }
     [data-role="cv-vf-2"] { left:54% !important; top:20% !important; width:20% !important; height:36% !important; }
@@ -269,7 +267,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-role="cv-imggroup"][data-imgcount="0"][data-nesp="1"] { left:-14% !important; right:2% !important; top:44% !important; bottom:8% !important; height:auto !important; }
     [data-role="cv-smart3d"] { left:7% !important; right:0 !important; top:9% !important; bottom:0 !important; }
   }
-  @media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait), (min-width: 701px) and (max-width: 1023px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+  @media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait) {
     [data-role="cv-desc"] { width:75% !important; }
     [data-role="cv-imggroup"][data-imgcount="0"][data-nesp="1"] { left:-14% !important; right:-8% !important; top:24% !important; bottom:24% !important; height:auto !important; }
   }
@@ -284,8 +282,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   [data-role="cv-vf3d"] iframe, [data-role="cv-gu3d"] iframe, [data-role="cv-smart3d"] iframe, [data-role="cv-akqa3d"] iframe { pointer-events:auto; }
   @media (min-width: 1441px) { [data-role="cv-vf3d"] { left:32% !important; right:1% !important; top:5% !important; bottom:11% !important; } }
   @media (min-width: 1024px) and (max-width: 1440px) { [data-role="cv-vf3d"] { left:38% !important; right:0% !important; top:7% !important; bottom:13% !important; } }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) { [data-role="cv-vf3d"] { left:-8% !important; right:-8% !important; top:14% !important; bottom:24% !important; } }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (min-aspect-ratio: 1001/800) { [data-role="cv-vf3d"] { left:34% !important; right:0% !important; top:8% !important; bottom:14% !important; } }
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) { [data-role="cv-vf3d"] { left:-8% !important; right:-8% !important; top:14% !important; bottom:24% !important; } }
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) { [data-role="cv-vf3d"] { left:34% !important; right:0% !important; top:8% !important; bottom:14% !important; } }
   @media (max-width: 700px) and (orientation: portrait) { [data-role="cv-vf3d"] { left:-4% !important; right:-4% !important; top:20% !important; bottom:36% !important; } }
   @media (max-height: 500px) and (orientation: landscape) { [data-role="cv-vf3d"] { left:46vw !important; right:0% !important; top:4% !important; bottom:44px !important; } }
   [data-role="cv-rotate-msg"] { display:none; }
@@ -348,31 +346,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   @media (min-width: 701px) and (max-width: 1024px) {
     [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.16); }
   }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: portrait) {
     [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(1.02); }
-  }
-  /* near-square tablets: much less height between title and text than a portrait tablet */
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
-    [data-role="cv-smart3d"] iframe { transform: translate(9%, 0%) scale(0.62); }
-    [data-role="cv-gu3d"] iframe { transform: scale(0.84); transform-origin:50% 38%; }
-    /* (repeated attribute: outranks the tablet-portrait rule with its :not() list) */
-    [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { top:18% !important; bottom:22% !important; }
-    [data-role="cv-imggroup"][data-imgcount="1"] div[style*="min(84%"] { width:min(84%, 70vh) !important; }
-    /* every picture centred between the title and the text (measured: these sat 35-55px high) */
-    [data-role="cv-vf3d"] { translate: 0 7.5vh; }
-    [data-role="cv-smart3d"] { --smart-lift: 0vh; }
-    [data-role="cv-gu3d"] { translate: 0 5vh; }
-    /* text full width, same margin both sides (repeated attribute: outranks the Approach panel's own width) */
-    html [data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"] { right:28px !important; width:auto !important; bottom:28px !important; }
-    /* the full-width text box sits over the nav (z 45 vs 40): taps go through its empty space, only the text and button catch them */
-    [data-role="cv-desc"] { pointer-events:none; }
-    [data-role="cv-desc"] > div:first-child, [data-role="cv-desc"] > div > * { pointer-events:auto; }
-    /* job title across the page too, so it only wraps when it has to */
-    [data-role="cv-title"] { width:calc(100vw - 56px) !important; }
-    /* nav bottom right, its bottom edge level with the case study button (as on laptops) */
-    [data-role="cv-yearnav"] { justify-content:flex-end !important; align-items:flex-end !important; height:44px !important; bottom:28px !important; }
-    /* no button (Approach): nothing to sit beside the nav, so the text stays above it */
-    html [data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"][data-role="cv-desc"]:has(> div[style*="display:none"], > div[style*="display: none"]) { bottom:88px !important; }
   }
   /* Vodafone pill needs more weight on small screens */
   @media (max-width: 1024px) {
@@ -395,12 +370,12 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   }
   :root { --nesp-inset: 24px 4% 84px; --nesp-scale: none; }
   @media (max-width: 700px) and (orientation: portrait) { :root { --nesp-inset: 19vh 12px 36vh; } }
-  @media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait), (min-width: 701px) and (max-width: 1023px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) { :root { --nesp-inset: 24vh 24px 24vh; --nesp-scale: scale(0.82); } }
-  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (min-aspect-ratio: 1001/800) { :root { --nesp-inset: 12vh 4% 12vh; --nesp-scale: scale(0.68); } }
+  @media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait) { :root { --nesp-inset: 24vh 24px 24vh; --nesp-scale: scale(0.82); } }
+  @media (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) { :root { --nesp-inset: 12vh 4% 12vh; --nesp-scale: scale(0.68); } }
   @media (max-height: 500px) and (orientation: landscape) { :root { --nesp-inset: 10px 2% 46px 44vw; --nesp-scale: scale(0.9); } }
   @media (min-width: 1024px) and (max-width: 1440px) { :root { --nesp-scale: scale(0.85); } }
   @media (min-width: 1441px) { :root { --nesp-inset: 40px 6% 110px; --nesp-scale: scale(0.85); } }
-  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) { :root { --nesp-inset: 24vh 4% 28vh; --nesp-scale: scale(0.95); } }
+  @media (orientation: portrait) and (min-width: 701px) and (max-width: 1400px) { :root { --nesp-inset: 24vh 4% 28vh; --nesp-scale: scale(0.95); } }
   @media (orientation: landscape) and (min-width: 1000px) and (max-width: 1400px) and (min-height: 700px) { :root { --nesp-inset: 17vh 9% 21vh; --nesp-scale: scale(0.74); } }
   @media (orientation: portrait) and (min-width: 1025px) { :root { --nesp-inset: 26vh 3% 30vh; --nesp-scale: none; } }
   /* measured alignment offsets, written by _alignFocus() — the translate property composes with the inline transforms */
@@ -433,10 +408,10 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   /* Approach: on wide screens the portrait is centred, so its text block fits in the space to the
      left of it; on tall screens (portrait tablets/monitors) the portrait sits between the title and
      the text, so the text gets a normal reading width */
-  @media (min-width: 1025px) and (orientation: landscape) and (min-height: 501px), (min-width: 701px) and (orientation: landscape) and (min-height: 501px) and (min-aspect-ratio: 1001/800) {   /* not phones on their side */
+  @media (min-width: 701px) and (orientation: landscape) and (min-height: 501px) {   /* not phones on their side */
     html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: clamp(220px, calc((100vw - min(68vh * 1300 / 1168, 1000px)) / 2 - 60px), 480px) !important; }
   }
-  @media (min-width: 701px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+  @media (min-width: 701px) and (orientation: portrait) {
     html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: min(600px, 75vw) !important; }
   }
   [data-role="cv-smart-pal"] { position:absolute; top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:8px; padding:4px; border-radius:6px; pointer-events:none; transition:opacity 500ms ease 120ms; }
@@ -479,7 +454,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
           <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe tabindex="-1" src="./portrait/?v=30" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe tabindex="-1" src="./portrait/?v=29" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
@@ -573,7 +548,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
             <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
-                <iframe tabindex="-1" ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=20" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+                <iframe tabindex="-1" ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=21" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
             </div>
           </sc-if>
@@ -1012,18 +987,14 @@ class Component extends DCLogic {
       const navEl = this._navEl;
       this._hdr = titleEl ? titleEl.getBoundingClientRect().bottom - this._icTop : H * 0.08;
       this._ftr = navEl ? navEl.getBoundingClientRect().top - this._icTop : H * 0.92;
-      // near-square tablets (open foldables): the text sits close under the bubbles, so they stop above it
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const descEl = document.querySelectorAll('[data-role="cv-desc"]')[this.state.i];
-      if (descEl && vw > 700 && vw <= 1024 && vh > 500 && vw > vh && vw <= vh * 1.25) this._ftr = descEl.getBoundingClientRect().top - this._icTop;
     }
     const hdr = this._hdr, ftr = this._ftr;
     const m = Math.min(24, H * 0.03);
     const bandTop = hdr + m, bandBotRaw = ftr - m, bandBot = Math.max(bandTop + 60, bandBotRaw), band = bandBot - bandTop;
     const CR = Math.max(30, Math.min(Math.min(W, H) * 0.22, band / 3.2));
     const narrowPortrait = window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
-    const tabletPortrait = !narrowPortrait && window.innerWidth <= 1400 && (window.innerHeight > window.innerWidth || (window.innerWidth <= 1024 && window.innerHeight > 500 && window.innerWidth <= window.innerHeight * 1.25));   // incl. near-square (open foldables)
-    const bandBias = narrowPortrait ? 0.3 : (tabletPortrait && window.innerHeight > window.innerWidth ? 0.4 : 0.5);
+    const tabletPortrait = !narrowPortrait && window.innerHeight > window.innerWidth && window.innerWidth <= 1400;
+    const bandBias = narrowPortrait ? 0.3 : (tabletPortrait ? 0.4 : 0.5);
     const homeX = W / 2, homeY = bandTop + band * bandBias;
     if (!this._introSeeded && W > 0 && H > 0) { this._icx = homeX; this._icy = homeY; this._introSeeded = true; }
     let tx = homeX, ty = homeY;
@@ -1045,10 +1016,7 @@ class Component extends DCLogic {
     this._idy += (Math.sin(ang) * pull - this._idy) * ease(0.06);
     const bulge = Math.sqrt(this._idx * this._idx + this._idy * this._idy);
     const bAng = Math.atan2(this._idy, this._idx);
-    // near-square (open foldables): the band is short, so the usual uneven margins overlap and pin the
-    // cluster high; it reaches about 0.9·CR each way, so even margins centre it
-    const squarish = tabletPortrait && window.innerWidth > window.innerHeight;
-    const lo = bandTop + CR * (narrowPortrait ? 0.9 : (squarish ? 1 : 1.4)), hi = bandBot - CR * (squarish ? 1 : 1.9);
+    const lo = bandTop + CR * (narrowPortrait ? 0.9 : 1.4), hi = bandBot - CR * 1.9;
     this._icy = hi > lo ? Math.max(lo, Math.min(hi, this._icy)) : lo;
     const spawnT = Math.min(1, this._it / 0.6);
     const spawnEase = 1 - Math.pow(1 - spawnT, 3);
@@ -1688,7 +1656,7 @@ class Component extends DCLogic {
     if (ak) {
       const r = ak.getBoundingClientRect();
       if (r.height) {
-        const tabletPortrait = vw > 700 && vw <= 1400 && (vh > vw || (vw <= 1024 && vh > 500 && vw <= vh * 1.25));
+        const tabletPortrait = vh > vw && vw > 700 && vw <= 1400;
         const d = (vh / 2 - (tabletPortrait ? vh * 0.035 : 0)) - (r.top + r.height / 2);
         if (Math.abs(d) > 1) root.style.setProperty("--akqa-dy", Math.round(num("--akqa-dy") + d) + "px");
       }
@@ -1709,7 +1677,6 @@ class Component extends DCLogic {
     const k = r.width / (bt.clientWidth || r.width);
     let l = 1e9, t = 1e9, rr = -1e9, b = -1e9;
     for (const w of words) { const q = w.getBoundingClientRect(); l = Math.min(l, q.left); t = Math.min(t, q.top); rr = Math.max(rr, q.right); b = Math.max(b, q.bottom); }
-    if (rr - l < 1) return;   // wordmark not drawn yet: measuring now would throw it off to the side
     const cx = r.left + ((l + rr) / 2) * k, cy = r.top + ((t + b) / 2) * k;
     const entry = bt.closest('[data-role="cv-entry"]');
     const head = entry && entry.querySelector('[data-role="cv-title"]');
