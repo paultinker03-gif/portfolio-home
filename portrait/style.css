@@ -287,7 +287,7 @@ body::before {
 
 /* Inside the timeline on a tall screen (portrait tablets/monitors): the frame fits the space between
    the panel's title and its text (--bt / --bb, measured by script.js) instead of sitting centred */
-@media (min-width: 701px) and (orientation: portrait) {
+@media (min-width: 701px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
   /* (beats the standalone page's scrolling layout for narrow/tall screens above) */
   .is-embedded, .is-embedded body { overflow: hidden; height: 100%; }
   .is-embedded .portrait {
@@ -299,7 +299,7 @@ body::before {
 }
 
 /* upright tablets: a smaller picture, with more room round it */
-@media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait) {
+@media (min-width: 701px) and (max-width: 1023px) and (orientation: portrait), (min-width: 701px) and (max-width: 1023px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
   .is-embedded .portrait {
     --frame-w: min(calc(100vw - 200px), calc((100vh - var(--bt, 120px) - var(--bb, 360px)) * .82 * 1300 / 1168), 1000px);
   }
