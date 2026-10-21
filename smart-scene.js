@@ -392,9 +392,9 @@ class SmartScene extends HTMLElement {
         return Object.assign({ obj: outer, flip, mat: phone.userData.screen.material, texS, texZ, spin,
           base: outer.position.clone(), yaw, ang: 0, from: 0, to: 0, t0: -1, push: 0, lift: 0 }, f);
       };
-      const a = mk('uploads/smart-dashboard-light.webp?v=5', 'uploads/zurich-balance-dark.webp?v=5',
+      const a = mk('uploads/smart-dashboard-light.webp?v=8', 'uploads/zurich-balance-dark.webp?v=8',
         [-1.55, -0.35, 1.3], 7, 0.16, 1, { amp: 0.30, speed: 0.55, phase: 0, depth: 1.1, follow: 0.15, apart: -1 });
-      const b = mk('uploads/smart-balance-light.webp?v=5', 'uploads/zurich-dashboard-dark.webp?v=5',
+      const b = mk('uploads/smart-balance-light.webp?v=8', 'uploads/zurich-dashboard-dark.webp?v=8',
         [3.75, 0.45, -0.6], -7, -0.16, -1, { amp: 0.36, speed: 0.46, phase: 1.6, depth: 0.75, follow: 0.12, apart: 1 });
       duoPhones = [a, b];
       floatersDuo = duoPhones;
