@@ -461,6 +461,19 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     [data-pal="smart"] { left:calc(31% - 64px); }
     [data-pal="zurich"] { left:72%; right:auto; }
   }
+  /* the phones sit a touch right of centre, so both palettes shift left by the same amount: equal gaps each side */
+  @media (min-width: 1024px) and (min-height: 501px) and (orientation: landscape) {
+    [data-role="cv-smart-pal"] { translate: -3vw 0; }
+  }
+  @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 760px) and (orientation: landscape) {
+    [data-role="cv-smart-pal"] { translate: -1.2vw 0; }
+  }
+  @media (min-width: 1280px) and (max-width: 1599px) and (min-height: 501px) and (orientation: landscape) {
+    [data-role="cv-smart-pal"] { translate: -0.5vw 0; }
+  }
+  @media (min-width: 1600px) and (min-height: 501px) and (orientation: landscape) {
+    [data-role="cv-smart-pal"] { translate: -1.2vw 0; }
+  }
 
   /* ---- Short laptops: keep text off the pictures (WCAG 1.4.3 contrast) ---------------------------------------
      Agencies: the video sized to the room between the title and the description (it overlapped the
@@ -1663,9 +1676,9 @@ class Component extends DCLogic {
         introDx: on ? "0px" : sm ? (i < active ? "0px, calc(-100vh - 100%)" : "0px, calc(100vh + 100%)") : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
-        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=21" : "",
+        stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=22" : "",
         // AKQA: the upright capture frames the iPad larger, so it is used sideways too
-        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=21" : "",
+        stillLand: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + (STILLS[d.short][0] === "akqa" ? "" : "-land") + ".webp?v=22" : "",
         stillAlt: STILLS[d.short] ? STILLS[d.short][1] : "",
         blobLeftPx: ((this.state.mx || 0) * 26).toFixed(1) + "px",
         blobLeftPy: ((this.state.my || 0) * 16).toFixed(1) + "px",
@@ -1713,7 +1726,7 @@ class Component extends DCLogic {
         dx: on ? "0px" : (i < active ? "-9vw" : "9vw"),
         imgZ: (d.imageCount != null ? d.imageCount : 5) === 6 ? 1 : (on ? 5 : 1),
         textOp: on ? 1 : 0,
-        ty: on ? "0px" : "14px",
+        ty: on || sm ? "0px" : "14px",   // scroll mode: titles only fade, never slide
         descOp: on && info ? 1 : 0,
         navOp: on ? 1 : (DATA[active].navLinkColor ? 0.92 : 1),
         navWeight: 700,
