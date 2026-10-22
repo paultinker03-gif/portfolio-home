@@ -426,6 +426,103 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     html [data-role="cv-desc"] { bottom:26px !important; }
     html [data-role="cv-yearnav"] { bottom:26px !important; }
   }
+
+  /* ---- Home wordmark ----------------------------------------------------------------------------------
+     Big on the intro, laid exactly over the intro heading (which stays in the page for screen readers but is
+     hidden), then shrinking to a small wordmark top left that stays on every section and links home.
+     --home-p: 0 = big, 1 = small (_paintScroll), with a transition. The big size and place are measured from the intro heading (_measureHome). */
+  :root { --home-p:0; --home-sx:28px; --home-sy:16px; --home-sfs:19px; --home-bx:28px; --home-by:26px; --home-bfs:46px; }
+  [data-role="cv-entry"][data-intro="true"] [data-role="cv-title"] > [role="heading"] { opacity:0; }
+  [data-role="cv-home"] { position:absolute; z-index:50; white-space:nowrap; text-decoration:none; border-radius:4px;
+    left:calc(var(--home-sx) + (var(--home-bx) - var(--home-sx)) * (1 - var(--home-p)));
+    top:calc(var(--home-sy) + (var(--home-by) - var(--home-sy)) * (1 - var(--home-p)));
+    font-family:'DM Serif Text', serif; font-weight:700; line-height:1.03; letter-spacing:0;
+    font-size:calc(var(--home-sfs) + (var(--home-bfs) - var(--home-sfs)) * (1 - var(--home-p)));
+    transition:left 620ms cubic-bezier(.16,1,.3,1), top 620ms cubic-bezier(.16,1,.3,1), font-size 620ms cubic-bezier(.16,1,.3,1), color 500ms ease; }
+  [data-role="cv-home"]:hover { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:4px; }
+  html[data-smart-bg="zurich"] [data-role="cv-home"][data-sec="smart"] { color:#fff !important; }
+  /* the section titles sit under the wordmark */
+  [data-role="cv-entry"]:not([data-intro="true"]) > [data-role="cv-title"] { top:46px !important; }
+  @media (max-width: 700px) {
+    :root { --home-sy:14px; --home-sfs:17px; }
+    [data-role="cv-entry"]:not([data-intro="true"]) > [data-role="cv-title"] { top:40px !important; }
+  }
+  @media (max-height: 500px) and (orientation: landscape) {
+    :root { --home-sx:16px; --home-sy:8px; --home-sfs:15px; }
+    [data-role="cv-entry"]:not([data-intro="true"]) > [data-role="cv-title"] { top:30px !important; }
+  }
+
+  /* ---- Smart colour palettes (laptops and up) ------------------------------------------------------------
+     Tied to the phones rather than the screen edges: the phones span about 31%–69% of the width at every
+     laptop/desktop size, so each palette sits just outside its phone, between the coins. */
+  @media (min-width: 1024px) and (min-height: 501px) and (orientation: landscape) {
+    [data-pal="smart"] { left:calc(31% - 64px); }
+    [data-pal="zurich"] { left:72%; right:auto; }
+  }
+
+  /* ---- Short laptops: keep text off the pictures (WCAG 1.4.3 contrast) ---------------------------------------
+     Agencies: the video sized to the room between the title and the description (it overlapped the
+     description's first line on 13"/14" screens). The Guardian: phones lifted clear of the description. */
+  @media (min-width: 1024px) and (min-height: 501px) and (orientation: landscape) {
+    [data-role="cv-imggroup"][data-imgcount="1"] > div[style*="min(84%"] { width:min(84%, calc((100vh - 400px) * 16 / 9)) !important; top:calc(50% - 22px) !important; }
+  }
+  @media (min-width: 1024px) and (max-height: 860px) and (orientation: landscape) {
+    [data-role="cv-gu3d"] { translate:0 -3vh; }
+  }
+  /* Smart on small, short laptops and iPad mini on its side (e.g. 1152x720, 1133x744): the phones a little smaller and higher, clear of the text */
+  @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 760px) and (orientation: landscape) {
+    [data-role="cv-imggroup"][data-imgcount="105"] { transform:translate(-3.5%, -1.5%) scale(0.74) !important; }
+    [data-pal="smart"] { left:calc(33% - 60px); }
+  }
+  @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 660px) and (orientation: landscape) {
+    [data-role="cv-imggroup"][data-imgcount="105"] { transform:translate(-1%, -3%) scale(0.64) !important; }
+    [data-pal="smart"] { left:calc(35% - 60px); }
+    [data-pal="zurich"] { left:70%; }
+  }
+
+  /* ---- Mid-size windows (701–1023 wide, landscape): pictures move right of the text column -----------------
+     The title and description sit in a left column min(360px, 34vw) wide; centred heroes ran under them. */
+  @media (min-width: 701px) and (max-width: 1023px) and (orientation: landscape) and (min-height: 501px) {
+    :root { --nesp-inset: 15vh 3% 24vh calc(34vw + 48px); --nesp-scale: none; }
+    html [data-role="cv-imggroup"][data-imgcount="3"] { left:calc(34vw + 24px) !important; right:0 !important; top:4% !important; bottom:12% !important; }
+    /* (repeated attributes: outrank the mid-size rule with its :not() list) */
+    html [data-role="cv-imggroup"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"][data-imgcount="1"] { left:calc(34vw + 40px) !important; right:24px !important; top:9% !important; bottom:110px !important; }
+    html [data-role="cv-imggroup"][data-imgcount="1"] > div[style*="min(84%"] { width:100% !important; }
+    html [data-role="cv-imggroup"][data-imgcount="4"][data-imgcount="4"][data-imgcount="4"]:has([data-role="cv-akqa3d"]) { left:calc(34vw + 24px) !important; right:0 !important; top:4% !important; bottom:12% !important; }
+  }
+
+  /* ---- Approach: the portrait frame never runs under the text ----------------------------------------------
+     Wide windows: the frame (sized in portrait/style.css to leave at least 320px each side) sits centred with
+     the text beside it. Below 1060px wide the frame sits between the title and the text instead. */
+  @media (min-width: 1060px) and (orientation: landscape) and (min-height: 501px) {
+    html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: clamp(260px, calc((100vw - min(68vh * 1300 / 1168, 1000px, 100vw - 640px)) / 2 - 60px), 480px) !important; }
+  }
+  @media (min-width: 701px) and (max-width: 1059px) and (orientation: landscape) and (min-height: 501px) {
+    html [data-role="cv-entry"][data-approach="true"] [data-role="cv-desc"] { width: min(600px, calc(100vw - 120px)) !important; }
+    html [data-role="cv-entry"][data-approach="true"] [data-role="cv-title"] { width: auto !important; right: 80px; }
+  }
+
+  /* ---- Focus: one ring that shows on every background (a white halo inside a dark outline) ------------- */
+  a:focus-visible, button:focus-visible, [data-role="cv-yearnav"] button:focus-visible { outline:3px solid #111 !important; outline-offset:2px !important; box-shadow:0 0 0 2px #fff !important; }
+
+  /* ---- Scroll mode (laptops and desktops) -------------------------------------------------------------------
+     The wheel, trackpad and up/down keys move through the sections one at a time: the pictures slide in
+     vertically, the text and background fade, as when swiping (_initScroll). Phones and tablets keep swiping. */
+
+  /* scroll mode nav: a slim vertical rail of dots on the right, no arrows (scrolling does that); the soft
+     pill only shows while you use it. Targets stay 24px tall (WCAG 2.5.8). */
+  html.scroll-mode [data-role="cv-yearnav"] { left:auto !important; right:18px !important; top:50% !important; bottom:auto !important; width:auto !important; height:auto !important; padding:0 !important; transform:translateY(-50%); flex-direction:column; justify-content:center !important; align-items:center !important; }
+  html.scroll-mode [data-role="cv-yearnav"] .pip-arrow { display:none; }
+  html.scroll-mode [data-role="cv-pipbar"] { flex-direction:column; height:auto; width:36px; padding:8px 0; background:transparent; transition:background 200ms ease; }
+  html.scroll-mode [data-role="cv-pipbar"]:hover, html.scroll-mode [data-role="cv-pipbar"]:focus-within { background:color-mix(in srgb, var(--nav-c) 13%, transparent); }
+  html.scroll-mode [data-role="cv-yearnav"] .pip { flex:0 0 26px; width:36px; height:26px; }
+  html.scroll-mode [data-role="cv-yearnav"] .pip-dot { width:8px; height:22px; }
+  html.scroll-mode [data-role="cv-yearnav"] .pip-dot::before { left:0; top:7px; width:8px; height:8px; }
+  html.scroll-mode [data-role="cv-pipbar"] .pip-ind { left:50%; top:0; width:8px; height:22px; margin:0 0 0 -4px; transform:translateY(var(--ind-y, 0px)); }
+  html.scroll-mode [data-role="cv-pipbar"] .pip-ind.is-moving > span { animation-name:pipStretchY; }
+  @keyframes pipStretchY { 0% { transform:scaleY(1); } 45% { transform:scaleY(var(--ind-stretch, 1.8)); } 100% { transform:scaleY(1); } }
+  html.scroll-mode [data-role="cv-yearnav"] .pip-tip { left:auto; right:calc(100% + 6px); bottom:auto; top:50%; transform:translate(4px, -50%); }
+  html.scroll-mode [data-role="cv-yearnav"] .pip:hover .pip-tip, html.scroll-mode [data-role="cv-yearnav"] .pip:focus-visible .pip-tip { transform:translate(0, -50%); }
 </style>
 </helmet>
 <div style="position:fixed; inset:0; overflow:hidden; background:oklch(0.934 0.02 6); font-family:'DM Sans', Helvetica, sans-serif; color:oklch(0.22 0.015 20); --smart-left-x:{{ smartLeftOffsetVar }}">
@@ -443,45 +540,45 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
   <div role="main" style="position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden">
 
     <sc-for list="{{ entries }}" as="e" hint-placeholder-count="1">
-      <div data-role="cv-entry" data-smart="{{ e.smartComp }}" data-approach="{{ e.isApproach }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
+      <div data-role="cv-entry" data-smart="{{ e.smartComp }}" data-approach="{{ e.isApproach }}" data-intro="{{ e.isIntro }}" style="position:absolute; inset:0; pointer-events:{{ e.pe }}">
         <sc-if value="{{ e.stillOn }}" hint-placeholder-val="{{ false }}">
-          <div data-role="cv-stillbox" data-still="{{ e.stillName }}" style="position:absolute; left:var(--st-{{ e.stillName }}-x, 0px); top:var(--st-{{ e.stillName }}-y, 0px); width:var(--st-{{ e.stillName }}-w, 0px); height:var(--st-{{ e.stillName }}-h, 0px); z-index:5; pointer-events:none; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+          <div data-role="cv-stillbox" data-still="{{ e.stillName }}" style="position:absolute; left:var(--st-{{ e.stillName }}-x, 0px); top:var(--st-{{ e.stillName }}-y, 0px); width:var(--st-{{ e.stillName }}-w, 0px); height:var(--st-{{ e.stillName }}-h, 0px); z-index:5; pointer-events:none; transform:translate({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <picture style="display:contents"><source media="(orientation: landscape)" srcset="{{ e.stillLand }}"><img class="cv-still" srcset="{{ e.stillSrc }}" alt="{{ e.stillAlt }}" decoding="async" style="width:100%; height:100%; display:block; object-fit:contain"></picture>
           </div>
         </sc-if>
 
 
         <sc-if value="{{ e.approachOn }}" hint-placeholder-val="{{ false }}">
-          <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+          <div data-role="cv-approach" style="position:absolute; inset:0; z-index:6; transform:translate({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
             <sc-if value="{{ e.approachNear }}" hint-placeholder-val="{{ false }}">
-              <iframe tabindex="-1" src="./portrait/?v=29" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
+              <iframe tabindex="-1" src="./portrait/?v=31" title="My approach: Paul at his desk and on his bike" loading="eager" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
             </sc-if>
           </div>
         </sc-if>
         <div data-role="cv-imggroup" data-imgcount="{{ e.imgCount }}" style="position:absolute; left:{{ e.groupLeft }}; right:{{ e.groupRight }}; top:{{ e.groupTop }}; bottom:{{ e.groupBottom }}; pointer-events:{{ e.pe }}; z-index:{{ e.imgZ }}">
           <sc-if value="{{ e.wide4 }}" hint-placeholder-val="{{ false }}">
-            <div data-role="cv-vf3d" style="position:absolute; left:30%; right:2%; top:6%; bottom:12%; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <div data-role="cv-vf3d" style="position:absolute; left:30%; right:2%; top:6%; bottom:12%; z-index:2; transform:translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.vf3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe tabindex="-1" ref="{{ e.vf3dRef }}" src="./vodafone.html?embed=1&v=5" title="Vodafone app screens in 3D" loading="eager" fetchpriority="high" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide4Even }}" hint-placeholder-val="{{ false }}">
-            <div data-role="cv-akqa3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <div data-role="cv-akqa3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.akqa3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe tabindex="-1" src="./akqa.html?embed=1&v=20261005" title="AKQA cardiovascular iPad app in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide3 }}" hint-placeholder-val="{{ false }}">
-            <div data-role="cv-gu3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <div data-role="cv-gu3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <sc-if value="{{ e.gu3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe tabindex="-1" ref="{{ e.gu3dRef }}" src="./guardian.html?embed=1&v=16" title="The Guardian x Spotify app screens in 3D" loading="eager" allowtransparency="true" style="width:100%; height:100%; border:0; display:block; background:transparent; touch-action:none"></iframe>
               </sc-if>
             </div>
           </sc-if>
           <sc-if value="{{ e.wide1 }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute; left:50%; top:50%; width:min(84%, 92vh); min-width:200px; min-height:120px; aspect-ratio:{{ e.images.0.aspect }}; transform:translate(-50%,-50%) translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
+            <div style="position:absolute; left:50%; top:50%; width:min(84%, 92vh); min-width:200px; min-height:120px; aspect-ratio:{{ e.images.0.aspect }}; transform:translate(-50%,-50%) translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.0.px }}, {{ e.images.0.py }}); transition:transform 300ms ease-out">
                 <div style="position:absolute; inset:0; z-index:1; border-radius:8px; overflow:hidden">
                   <sc-if value="{{ e.videoReady }}" hint-placeholder-val="{{ false }}">
@@ -498,35 +595,35 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
             </div>
           </sc-if>
           <sc-if value="{{ e.wide5 }}" hint-placeholder-val="{{ true }}">
-            <div style="position:absolute; left:0; top:0; width:56%; height:100%; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
+            <div style="position:absolute; left:0; top:0; width:56%; height:100%; transform:translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.0.px }}, {{ e.images.0.py }}); transition:transform 300ms ease-out">
                   <div style="width:100%; height:100%; animation:cvFloat 5.2s ease-in-out infinite; animation-delay:0ms">
                     <image-slot id="{{ e.images.0.id }}" shape="rounded" radius="4" fit="contain" placeholder="{{ e.images.0.hint }}"></image-slot>
                   </div>
                 </div>
             </div>
-            <div style="position:absolute; left:58%; top:0; width:20%; height:48%; transform:translateX({{ e.images.1.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.1.delay }}ms">
+            <div style="position:absolute; left:58%; top:0; width:20%; height:48%; transform:translate({{ e.images.1.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.1.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.1.px }}, {{ e.images.1.py }}); transition:transform 300ms ease-out">
                   <div style="width:100%; height:100%; animation:cvFloat 4.6s ease-in-out infinite; animation-delay:300ms">
                     <image-slot id="{{ e.images.1.id }}" shape="rounded" radius="4" fit="contain" placeholder="{{ e.images.1.hint }}"></image-slot>
                   </div>
                 </div>
             </div>
-            <div style="position:absolute; left:80%; top:0; width:20%; height:48%; transform:translateX({{ e.images.2.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.2.delay }}ms">
+            <div style="position:absolute; left:80%; top:0; width:20%; height:48%; transform:translate({{ e.images.2.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.2.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.2.px }}, {{ e.images.2.py }}); transition:transform 300ms ease-out">
                   <div style="width:100%; height:100%; animation:cvFloat 5.8s ease-in-out infinite; animation-delay:600ms">
                     <image-slot id="{{ e.images.2.id }}" shape="rounded" radius="4" fit="contain" placeholder="{{ e.images.2.hint }}"></image-slot>
                   </div>
                 </div>
             </div>
-            <div style="position:absolute; left:58%; top:52%; width:20%; height:48%; transform:translateX({{ e.images.3.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.3.delay }}ms">
+            <div style="position:absolute; left:58%; top:52%; width:20%; height:48%; transform:translate({{ e.images.3.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.3.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.3.px }}, {{ e.images.3.py }}); transition:transform 300ms ease-out">
                   <div style="width:100%; height:100%; animation:cvFloat 4.9s ease-in-out infinite; animation-delay:900ms">
                     <image-slot id="{{ e.images.3.id }}" shape="rounded" radius="4" fit="contain" placeholder="{{ e.images.3.hint }}"></image-slot>
                   </div>
                 </div>
             </div>
-            <div style="position:absolute; left:80%; top:52%; width:20%; height:48%; transform:translateX({{ e.images.4.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.4.delay }}ms">
+            <div style="position:absolute; left:80%; top:52%; width:20%; height:48%; transform:translate({{ e.images.4.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.4.delay }}ms">
               <div style="width:100%; height:100%; transform:translate({{ e.images.4.px }}, {{ e.images.4.py }}); transition:transform 300ms ease-out">
                   <div style="width:100%; height:100%; animation:cvFloat 5.4s ease-in-out infinite; animation-delay:1200ms">
                     <image-slot id="{{ e.images.4.id }}" shape="rounded" radius="4" fit="contain" placeholder="{{ e.images.4.hint }}"></image-slot>
@@ -535,8 +632,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
             </div>
           </sc-if>
           <sc-if value="{{ e.abstractComp }}" hint-placeholder-val="{{ false }}">
-            <div data-role="cv-imggroup" data-nesp="1" data-imgcount="{{ e.imgCount }}" style="position:fixed; inset:var(--nesp-inset, 24px 4% 84px) !important; width:auto !important; height:auto !important; transform:var(--nesp-scale, none) !important; z-index:1; pointer-events:none; opacity:{{ e.bgOp }}; transition:opacity 500ms ease">
-              <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+            <div data-role="cv-imggroup" data-nesp="1" data-imgcount="{{ e.imgCount }}" style="position:fixed; inset:var(--nesp-inset, 24px 4% 84px) !important; width:auto !important; height:auto !important; transform:var(--nesp-scale, none) !important; z-index:1; pointer-events:none; opacity:{{ e.artOp }}; transition:opacity 500ms ease">
+              <div style="width:100%; height:100%; transform:translate({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
                 <div style="width:100%; height:100%; animation:none">
                   <sc-if value="{{ e.bt3dNear }}" hint-placeholder-val="{{ true }}">
                     <iframe tabindex="-1" data-role="cv-bt3d" src="./nespresso.html?v=5" title="Nespresso Built Together composition" loading="eager" fetchpriority="high" allowtransparency="true" scrolling="no" style="position:absolute; inset:0; width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
@@ -546,7 +643,7 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
             </div>
           </sc-if>
           <sc-if value="{{ e.smartComp }}" hint-placeholder-val="{{ false }}">
-            <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translateX({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
+            <div data-role="cv-smart3d" style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:2; transform:translate({{ e.images.0.dx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1) {{ e.images.0.delay }}ms">
               <sc-if value="{{ e.smart3dNear }}" hint-placeholder-val="{{ false }}">
                 <iframe tabindex="-1" ref="{{ e.smart3dRef }}" src="./smart.html?embed=1&bg=transparent&v=21" title="Smart Pension and Zurich app screens in 3D" loading="eager" allowtransparency="true" scrolling="no" style="width:100%; height:100%; border:0; display:block; background:transparent"></iframe>
               </sc-if>
@@ -601,8 +698,8 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
         </div>
 
         <sc-if value="{{ e.dayNight }}" hint-placeholder-val="{{ false }}">
-          <div data-role="cv-imggroup" data-imgcount="{{ e.imgCount }}" style="position:absolute; left:{{ e.groupLeft }}; right:{{ e.groupRight }}; top:{{ e.groupTop }}; bottom:{{ e.groupBottom }}; z-index:3; opacity:{{ e.bgOp }}; transition:opacity 500ms ease; pointer-events:none">
-            <div style="width:100%; height:100%; transform:translateX({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
+          <div data-role="cv-imggroup" data-imgcount="{{ e.imgCount }}" style="position:absolute; left:{{ e.groupLeft }}; right:{{ e.groupRight }}; top:{{ e.groupTop }}; bottom:{{ e.groupBottom }}; z-index:3; opacity:{{ e.artOp }}; transition:opacity 500ms ease; pointer-events:none">
+            <div style="width:100%; height:100%; transform:translate({{ e.introDx }}); transition:transform 820ms cubic-bezier(.3,0,.2,1)">
               <canvas ref="{{ e.introCanvasRef }}" style="position:absolute; inset:0; width:100%; height:100%"></canvas>
             </div>
           </div>
@@ -631,6 +728,10 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
     </sc-for>
   </div>
 
+  <!-- home: the intro's big "Paul Tinker" shrinks into this wordmark once you leave the intro and stays
+       on every section (size and position come from --home-p, written by _syncHome()) -->
+  <a data-role="cv-home" data-sec="{{ activeSlug }}" href="#intro" onClick="{{ goHome }}" aria-label="Paul Tinker, back to the start" style="color:{{ homeColor }}">Paul Tinker</a>
+
   <div data-role="cv-yearnav" role="navigation" aria-label="Sections" ref="{{ navRef }}" style="position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; gap:10px; padding:0 28px; z-index:40" data-nav-target="{{ pipColor }}">
     <!-- kept for smart-switch.js and the section colours: which section is showing (not drawn) -->
     <div data-active-entry="{{ activeSlug }}" hidden></div>
@@ -654,7 +755,7 @@ const DATA = [
     themeColor: "#184a76", idKey: 0, year: "20+", short: "intro", company: "Paul Tinker", title: "Principal Product Designer · Design Systems",
     imageCount: 0, dayNight: true,
     meta: "", email: "hello@paultinker.uk",
-    desc: "I'm a product designer and design systems specialist with 20+ years' experience, including Nespresso, Vodafone and Smart Pension. I design end-to-end journeys and the systems behind them, prototyping directly with AI.",
+    desc: "20+ years designing end-to-end journeys and the systems behind them, for Nespresso, Vodafone and Smart Pension, now prototyping directly with AI.",
     link: "https://ai.paultinker.uk/", linkLabel: "AI-native work", slot: "portrait or showreel still"
   },
   {
@@ -740,6 +841,14 @@ const STILLS = {
   "Approach": ["approach", "Paul at his desk and on his bike"]
 };
 
+// Scroll mode: on laptops and desktops (a mouse or trackpad, at least 1024 x 501) the scroll wheel, trackpad
+// and up/down keys move through the sections, which slide vertically; phones and touch tablets keep swiping. iPads are left out (iPadOS reports a fine pointer).
+// ?scroll=0 / ?scroll=1 force it off / on, for comparing.
+const SCROLL_MQ = "(hover: hover) and (pointer: fine) and (min-width: 1024px) and (min-height: 501px)";
+const IS_IPAD = typeof navigator !== "undefined" && /Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
+const SCROLL_PARAM = (() => { try { return new URLSearchParams(window.location.search).get("scroll"); } catch (e) { return null; } })();
+const WANT_SCROLL = () => SCROLL_PARAM === "1" || (SCROLL_PARAM !== "0" && !IS_IPAD && !!window.matchMedia && window.matchMedia(SCROLL_MQ).matches);
+
 const SLUGIFY = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const INITIAL_INDEX = (() => {
   const slug = (typeof window !== "undefined" ? (window.location.hash || "") : "").slice(1);
@@ -763,8 +872,12 @@ class Component extends DCLogic {
       if (ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
       const t = ev.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-      if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
-      const step = ev.key === "ArrowRight" ? 1 : -1;
+      const NEXT = this._scrollMode ? ["ArrowRight", "ArrowDown", "PageDown", " "] : ["ArrowRight"];
+      const PREV = this._scrollMode ? ["ArrowLeft", "ArrowUp", "PageUp"] : ["ArrowLeft"];
+      if (this._scrollMode && (ev.key === "Home" || ev.key === "End")) { ev.preventDefault(); this._goTo(ev.key === "Home" ? 0 : DATA.length - 1); return; }
+      if (ev.key === " " && t && /^(A|BUTTON)$/.test(t.tagName)) return;   // space on a link/button keeps its own meaning
+      const step = NEXT.includes(ev.key) ? 1 : PREV.includes(ev.key) ? -1 : 0;
+      if (!step) return;
       const i = Math.min(DATA.length - 1, Math.max(0, this.state.i + step));
       if (i === this.state.i) return;
       ev.preventDefault();
@@ -869,6 +982,7 @@ class Component extends DCLogic {
       this._touchStart = null;
       const minDx = onBt ? 130 : 50;
       const ratio = onBt ? 2.2 : 1.5;
+      if (this._scrollMode && Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.5) { this.go(dy < 0 ? 1 : -1); return; }
       if (Math.abs(dx) > minDx && Math.abs(dx) > Math.abs(dy) * ratio) {
         if (window.__ptSmartSwipe && window.__ptSmartSwipe(dx < 0 ? 1 : -1)) return;   // Smart: flips theme first
         this.go(dx < 0 ? 1 : -1);
@@ -926,6 +1040,9 @@ class Component extends DCLogic {
     }
     requestAnimationFrame(() => this._placeStills());
     window.addEventListener("orientationchange", this._onIntroResize);
+    this._initScroll();
+    this._measureHome();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this._measureHome());
     this._lastFrame = 0; this._introLeftAt = 0;
     const introLoop = (now) => {
       const dt = this._lastFrame ? Math.min(4, Math.max(0.25, (now - this._lastFrame) / 16.667)) : 1;
@@ -956,7 +1073,9 @@ class Component extends DCLogic {
     const c = this._introCanvas;
     if (!c) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const r = c.getBoundingClientRect();
+    // measure the canvas's resting place (its group), not the canvas itself: the canvas slides in and out
+    // with its section, and a measurement taken mid-slide made the bubbles jump on the way back to the intro
+    const r = (c.parentElement && c.parentElement.parentElement || c).getBoundingClientRect();
     this._iw = r.width; this._ih = r.height;
     this._icTop = r.top; this._icLeft = r.left;
     c.width = Math.round(r.width * dpr);
@@ -982,20 +1101,37 @@ class Component extends DCLogic {
       this._bandAt = nowMs;
       // re-measure where the canvas sits: a render while the intro was slid off-screen leaves
       // _icLeft pointing off-screen, which would aim the rollover hit-test at the wrong place
-      if (this.state.i === 0) { const cr = c.getBoundingClientRect(); this._icLeft = cr.left; this._icTop = cr.top; }
-      const titleEl = document.querySelectorAll('[data-role="cv-title"]')[this.state.i];
+      if (this.state.i === 0) { const cr = (c.parentElement && c.parentElement.parentElement || c).getBoundingClientRect(); this._icLeft = cr.left; this._icTop = cr.top; }
+      const titleEl = document.querySelectorAll('[data-role="cv-title"]')[0];   // the intro's own title, wherever we are
       const navEl = this._navEl;
       this._hdr = titleEl ? titleEl.getBoundingClientRect().bottom - this._icTop : H * 0.08;
-      this._ftr = navEl ? navEl.getBoundingClientRect().top - this._icTop : H * 0.92;
+      // the bubbles fill the band above the nav; in scroll mode the nav is a rail on the right, so use where
+      // it would sit when swiping (its 44px bar, level with the bottom of the intro text)
+      const introDesc = this._scrollMode && document.querySelectorAll('[data-role="cv-desc"]')[0];
+      this._ftr = introDesc ? introDesc.getBoundingClientRect().bottom - 44 - this._icTop
+        : (navEl ? navEl.getBoundingClientRect().top - this._icTop : H * 0.92);
+      // ...and the bubbles stay right of that text (its right edge, plus a gap), clear of the rail
+      const dr = introDesc && introDesc.getBoundingClientRect();
+      this._dR = dr ? dr.right - (this._icLeft || 0) + 24 : null;
+      this._dT = dr ? dr.top - this._icTop - 16 : null;
     }
     const hdr = this._hdr, ftr = this._ftr;
     const m = Math.min(24, H * 0.03);
     const bandTop = hdr + m, bandBotRaw = ftr - m, bandBot = Math.max(bandTop + 60, bandBotRaw), band = bandBot - bandTop;
-    const CR = Math.max(30, Math.min(Math.min(W, H) * 0.22, band / 3.2));
+    let CR = Math.max(30, Math.min(Math.min(W, H) * 0.22, band / 3.2));
     const narrowPortrait = window.innerWidth <= 700 && window.innerHeight > window.innerWidth;
     const tabletPortrait = !narrowPortrait && window.innerHeight > window.innerWidth && window.innerWidth <= 1400;
     const bandBias = narrowPortrait ? 0.3 : (tabletPortrait ? 0.4 : 0.5);
-    const homeX = W / 2, homeY = bandTop + band * bandBias;
+    let homeX = W / 2;
+    const homeY = bandTop + band * bandBias;
+    // scroll mode on short laptops: the cluster (about 1.6 x CR either side, 1.25 x CR below its centre) would
+    // reach down beside the text, so it moves right of it, and only shrinks if it still can't fit before the rail
+    const cyEst = Math.max(bandTop + CR * 1.4, Math.min(bandBot - CR * 1.9, homeY));
+    if (this._dR != null && cyEst + CR * 1.25 > this._dT && homeX - CR * 1.6 < this._dR) {
+      const rr = W - 72;
+      homeX = Math.max(homeX, this._dR + CR * 1.6);
+      if (homeX + CR * 1.6 > rr) { CR = Math.max(30, (rr - this._dR) / 3.2); homeX = (this._dR + rr) / 2; }
+    }
     if (!this._introSeeded && W > 0 && H > 0) { this._icx = homeX; this._icy = homeY; this._introSeeded = true; }
     let tx = homeX, ty = homeY;
     if (this._ipx != null) {
@@ -1283,6 +1419,8 @@ class Component extends DCLogic {
     window.removeEventListener("orientationchange", this._onIntroResize);
     window.removeEventListener("resize", this._onStillsResize);
     window.removeEventListener("orientationchange", this._onStillsResize);
+    window.removeEventListener("wheel", this._onWheel);
+    window.removeEventListener("resize", this._onModeCheck);
     cancelAnimationFrame(this._introRaf);
   }
 
@@ -1327,6 +1465,103 @@ class Component extends DCLogic {
     });
   }
 
+  // Open a section (and keep the address in step, so coming back from a case study lands on it)
+  _goTo(i) {
+    i = Math.min(DATA.length - 1, Math.max(0, i));
+    try { history.replaceState(null, "", "#" + this._slug(DATA[i].short)); } catch (e) {}
+    this.setState({ i });
+  }
+
+  // ---- scroll mode ----
+  // One section at a time, as when swiping, but driven by the scroll wheel / trackpad, the up/down keys
+  // and vertical swipes: one scroll gesture moves one section, the pictures slide in vertically and the
+  // text and background fade. A trackpad keeps sending wheel events for a second or so after a flick
+  // (momentum), so a gesture only counts once those have died down or a clearly new flick starts.
+  _initScroll() {
+    this._wheel = { acc: 0, last: 0, lockUntil: 0, locked: false, hist: [], dir: 0 };
+    this._onWheel = (ev) => {
+      if (!this._scrollMode || ev.ctrlKey) return;   // ctrl + wheel is pinch-zoom
+      // time the event happened, not when it reached us: while the next section's 3D scene loads, events queue
+      // up and arrive in a burst, and those fake gaps must not read as a new swipe. (Events from inside an
+      // iframe count from that frame's own start time.)
+      const view = ev.view || (ev.target && ev.target.ownerDocument && ev.target.ownerDocument.defaultView) || window;
+      let now = ev.timeStamp;
+      try { if (view !== window) now += view.performance.timeOrigin - performance.timeOrigin; } catch (e) { now = performance.now(); }
+      if (!(now > 0)) now = performance.now();
+      const w = this._wheel;
+      const dy = ev.deltaY * (ev.deltaMode === 1 ? 16 : ev.deltaMode === 2 ? window.innerHeight : 1);
+      // One swipe = one section. A trackpad keeps sending decaying "momentum" events for a second or two after
+      // the fingers lift, and their sizes jitter, so a step locks the wheel until the gesture goes quiet, or
+      // (once the slide is mostly done) until a clear re-acceleration: a new flick, or a swipe the other way.
+      const abs = Math.abs(dy), dir = Math.sign(dy);
+      const quiet = now - w.last > 200;
+      if (quiet) w.hist = [];
+      w.hist.push(abs); if (w.hist.length > 12) w.hist.shift();
+      let newFlick = false;
+      if (w.hist.length >= 6 && abs > 6) {   // the last 3 events clearly up on the 3 before: fingers swiping again
+        const h = w.hist, r = h.slice(-3), pr = h.slice(-6, -3);
+        const rMean = (r[0] + r[1] + r[2]) / 3, pMean = (pr[0] + pr[1] + pr[2]) / 3, bMin = Math.min(...h.slice(0, -3));
+        newFlick = rMean > Math.max(pMean * 2, bMin * 3, 8) && Math.min(...r) > Math.max(...pr) && r[2] >= r[0];
+      }
+      if (w.locked && now > w.lockUntil && (quiet || newFlick || (dir && dir !== w.dir && abs > 20))) { w.locked = false; w.acc = 0; }
+      if (quiet && !w.locked) w.acc = 0;
+      w.last = now;
+      if (w.locked) return;
+      w.acc += dy;
+      if (Math.abs(w.acc) < 40) return;
+      const step = w.acc > 0 ? 1 : -1;
+      w.dir = step; w.locked = true; w.acc = 0; w.lockUntil = now + 750; w.hist = [];
+      this.go(step);   // (Smart's light/dark side follows the cursor here, so scrolling never flips it)
+    };
+    window.addEventListener("wheel", this._onWheel, { passive: true });
+    // the 3D scenes and the portrait are iframes: their wheel and key events never reach this page, so
+    // listen inside them too (same site)
+    this._hookFrame = (f) => {
+      try {
+        const w = f.contentWindow, d = w && w.document;
+        if (!d || d.__ptHooked) return;   // once per loaded page (the frame's first blank page is replaced)
+        d.__ptHooked = true;
+        w.addEventListener("wheel", this._onWheel, { passive: true });
+        w.addEventListener("keydown", (ev) => this._onKey(ev));
+        w.document.querySelectorAll("iframe").forEach((g) => { this._hookFrame(g); g.addEventListener("load", () => this._hookFrame(g)); });
+      } catch (e) {}
+    };
+    this._hookFrames = () => document.querySelectorAll("iframe").forEach((f) => this._hookFrame(f));
+    document.addEventListener("load", (ev) => { if (ev.target && ev.target.tagName === "IFRAME") this._hookFrame(ev.target); }, true);
+    this._onModeCheck = () => { this._measureHome(); this._applyMode(); };
+    window.addEventListener("resize", this._onModeCheck);
+    this._applyMode();
+  }
+
+  // switch scroll mode on or off to suit the window (it can change when the window is resized)
+  _applyMode() {
+    const on = WANT_SCROLL();
+    if (on === this._scrollMode) return;
+    this._scrollMode = on;
+    document.documentElement.classList.toggle("scroll-mode", on);
+    this._pipX = null;
+    this.forceUpdate();
+    requestAnimationFrame(() => { this._paintScroll(); this._syncPip(); });
+  }
+
+  // the home wordmark: big on the intro, small everywhere else
+  _paintScroll() {
+    const root = document.documentElement;
+    root.style.setProperty("--home-p", this.state.i === 0 ? "0" : "1");
+  }
+
+  // where the intro heading sits, so the home wordmark can lie exactly over it at full size
+  _measureHome() {
+    const entry = document.querySelector('[data-role="cv-entry"][data-intro="true"]');
+    const title = entry && entry.querySelector('[data-role="cv-title"]');
+    const head = title && title.querySelector('[role="heading"]');
+    if (!head) return;
+    const root = document.documentElement;
+    root.style.setProperty("--home-bx", (title.offsetLeft + head.offsetLeft) + "px");
+    root.style.setProperty("--home-by", (title.offsetTop + head.offsetTop) + "px");
+    root.style.setProperty("--home-bfs", getComputedStyle(head).fontSize);
+  }
+
   _pillContrast(bg) {
     const m = /oklch\(\s*([\d.]+)/.exec(bg || "");
     const l = m ? parseFloat(m[1]) : 0.9;
@@ -1335,6 +1570,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const active = this.state.i;
+    const sm = this._scrollMode === true;
     const allow3d = this._mounted3d === true && Number.isInteger(active);
     // once the page is fully settled, also mount the neighbouring scene so it is warm on arrival
     // Each 3D scene is its own iframe with its own WebGL context. Mobile Chrome allows only a few
@@ -1392,9 +1628,13 @@ class Component extends DCLogic {
           const factor = d.smartComp ? smartFactors[n] : 1 + rank * 0.16;
           const dx = on
             ? "0%"
-            : (leaving
-                ? "calc(" + (-100 * factor) + "% - " + (100 * factor) + "vw)"
-                : "calc(" + (100 * factor) + "% + " + (100 * factor) + "vw)");
+            : sm
+              ? "0px, " + (leaving
+                  ? "calc(" + (-100 * factor) + "% - " + (100 * factor) + "vh)"
+                  : "calc(" + (100 * factor) + "% + " + (100 * factor) + "vh)")
+              : (leaving
+                  ? "calc(" + (-100 * factor) + "% - " + (100 * factor) + "vw)"
+                  : "calc(" + (100 * factor) + "% + " + (100 * factor) + "vw)");
           const depth = d.videoSrc ? 0 : ([18, 10, 10, 16][n] || 12);
           const mx = this.state.mx || 0, my = this.state.my || 0;
           const px = (mx * depth).toFixed(1) + "px";
@@ -1418,7 +1658,7 @@ class Component extends DCLogic {
         blobRightW: "min(" + Math.round(300 * (d.blobRightScale || d.blobScale || 1)) + "px, " + Math.round(26 * (d.blobRightScale || d.blobScale || 1)) + "vw)",
         blobRightH: Math.round(50 * (d.blobRightScale || d.blobScale || 1)) + "%",
         blobDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
-        introDx: on ? "0px" : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
+        introDx: on ? "0px" : sm ? (i < active ? "0px, calc(-100vh - 100%)" : "0px, calc(100vh + 100%)") : (i < active ? "calc(-100vw - 100%)" : "calc(100vw + 100%)"),
         stillOn: stills && !!STILLS[d.short],
         stillName: (STILLS[d.short] || [""])[0],
         stillSrc: STILLS[d.short] ? "./assets/mobile/" + STILLS[d.short][0] + ".webp?v=21" : "",
@@ -1450,6 +1690,8 @@ class Component extends DCLogic {
         imgCount: d.imageCount != null ? d.imageCount : 5,
         bg: d.dayNight ? "#184a76" : (d.bg || "oklch(0.934 0.02 6)"),
         bgOp: on ? 1 : 0,
+        artOp: on ? 1 : 0,
+        isIntro: !!d.dayNight,
         dayNight: !!d.dayNight,
         introBg: introPalette.bg,
         introInk: introPalette.ink,
@@ -1479,7 +1721,7 @@ class Component extends DCLogic {
         vf3dRef: (el) => { this._vf3dEls = this._vf3dEls || {}; if (el) this._vf3dEls[i] = el; else delete this._vf3dEls[i]; },
         gu3dRef: (el) => { this._gu3dEls = this._gu3dEls || {}; if (el) this._gu3dEls[i] = el; else delete this._gu3dEls[i]; },
         smart3dRef: (el) => { this._smart3dEls = this._smart3dEls || {}; if (el) this._smart3dEls[i] = el; else delete this._smart3dEls[i]; },
-        select: () => { history.replaceState(null, "", "#" + this._slug(d.short)); this.setState({ i }); }
+        select: () => this._goTo(i)
       };
     });
     return {
@@ -1490,6 +1732,8 @@ class Component extends DCLogic {
       // nav arrows: step one section and keep the address in step, like a pip click
       prevStep: () => { this.go(-1); requestAnimationFrame(() => { try { history.replaceState(null, "", "#" + this._slug(DATA[this.state.i].short)); } catch (e) {} }); },
       nextStep: () => { this.go(1); requestAnimationFrame(() => { try { history.replaceState(null, "", "#" + this._slug(DATA[this.state.i].short)); } catch (e) {} }); },
+      goHome: (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); this._goTo(0); },
+      homeColor: DATA[active].dayNight ? THEME.dark.text : (DATA[active].textColor || (DATA[active].dark ? THEME.dark.text : THEME.light.text)),
       atFirst: active === 0,
       atLast: active === DATA.length - 1,
       pipColor: activeIsDayNight ? THEME.dark.nav : activeTheme.nav,
@@ -1655,9 +1899,13 @@ class Component extends DCLogic {
     const ak = document.querySelector('[data-role="cv-akqa3d"] iframe');
     if (ak) {
       const r = ak.getBoundingClientRect();
+      // measured where it will rest: leave out its slide in/out (vertical in scroll mode)
+      const box = ak.closest('[data-role="cv-akqa3d"]');
+      let et = 0;
+      try { et = new DOMMatrixReadOnly(getComputedStyle(box).transform).m42; } catch (e) {}
       if (r.height) {
         const tabletPortrait = vh > vw && vw > 700 && vw <= 1400;
-        const d = (vh / 2 - (tabletPortrait ? vh * 0.035 : 0)) - (r.top + r.height / 2);
+        const d = (vh / 2 - (tabletPortrait ? vh * 0.035 : 0)) - (r.top - et + r.height / 2);
         if (Math.abs(d) > 1) root.style.setProperty("--akqa-dy", Math.round(num("--akqa-dy") + d) + "px");
       }
     }
@@ -1728,14 +1976,16 @@ class Component extends DCLogic {
     const ind = bar && bar.querySelector(".pip-ind");
     const pip = bar && bar.querySelectorAll(".pip")[this.state.i];
     if (!ind || !pip) return;
-    const x = pip.offsetLeft + (pip.offsetWidth - ind.offsetWidth) / 2;
+    const vert = this._scrollMode === true;   // scroll mode: the rail is vertical
+    const x = vert ? pip.offsetTop + (pip.offsetHeight - ind.offsetHeight) / 2 : pip.offsetLeft + (pip.offsetWidth - ind.offsetWidth) / 2;
     const prev = this._pipX;
     if (prev === x) return;
     this._pipX = x;
-    bar.style.setProperty("--ind-x", x + "px");
+    bar.style.setProperty(vert ? "--ind-y" : "--ind-x", x + "px");
+    bar.style.setProperty(vert ? "--ind-x" : "--ind-y", "0px");
     if (prev != null && bar.classList.contains("is-ready")) {
       // stretch more the further it travels
-      const dist = Math.abs(x - prev) / Math.max(1, pip.offsetWidth);
+      const dist = Math.abs(x - prev) / Math.max(1, vert ? pip.offsetHeight : pip.offsetWidth);
       ind.style.setProperty("--ind-stretch", (1 + Math.min(1.6, 0.35 + dist * 0.3)).toFixed(2));
       ind.classList.remove("is-moving"); void ind.offsetWidth; ind.classList.add("is-moving");
     } else {
@@ -1782,6 +2032,11 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate() {
+    // the address always names the section on screen (Back from a case study returns to it)
+    const slug = "#" + this._slug(DATA[this.state.i].short);
+    if (window.location.hash !== slug && (this.state.i !== 0 || window.location.hash)) { try { history.replaceState(null, "", slug); } catch (e) {} }
+    this._paintScroll();
+    if (this._hookFrames) this._hookFrames();
     this._syncNavColour();
     this._syncPip();
     this._syncInert();

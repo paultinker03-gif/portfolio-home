@@ -283,11 +283,20 @@ body::before {
 .is-embedded .hint { display: none; }
 .is-embedded .portrait { grid-template-columns: 1fr; justify-items: center; }
 /* centred on the page; the panel narrows its bottom-left text to fit beside it */
-.is-embedded { --frame-w: min(calc(68vh * 1300 / 1168), 1000px); }
+.is-embedded { --frame-w: min(calc(68vh * 1300 / 1168), 1000px, calc(100vw - 640px)); }   /* 320px each side for the text */
+/* see-through, so the homepage's own background colour fades in behind it while only the frame slides */
+.is-embedded, .is-embedded body { background: transparent; }
+.is-embedded body::before { display: none; }
+/* near-square monitors (e.g. 1280x1024): undo the standalone page's stacked, scrolling layout above,
+   so the frame stays centred and sized to leave room for the text */
+@media (min-width: 1060px) and (orientation: landscape) and (max-aspect-ratio: 5/4) {
+  .is-embedded, .is-embedded body { overflow: hidden; height: 100%; }
+  .is-embedded .portrait { height: 100%; min-height: 0; padding-block: 0; --frame-w: min(calc(68vh * 1300 / 1168), 1000px, calc(100vw - 640px)); }
+}
 
 /* Inside the timeline on a tall screen (portrait tablets/monitors): the frame fits the space between
    the panel's title and its text (--bt / --bb, measured by script.js) instead of sitting centred */
-@media (min-width: 701px) and (orientation: portrait), (min-width: 701px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 5/4) {
+@media (min-width: 701px) and (orientation: portrait), (min-width: 701px) and (max-width: 1059px) and (orientation: landscape) and (min-height: 501px) {
   /* (beats the standalone page's scrolling layout for narrow/tall screens above) */
   .is-embedded, .is-embedded body { overflow: hidden; height: 100%; }
   .is-embedded .portrait {
