@@ -740,9 +740,12 @@ setTimeout(function(){ document.documentElement.setAttribute('data-dc-ready','')
 
         <div style="position:absolute; left:28px; bottom:102px; width:min(340px, 25vw); z-index:45; transition:opacity 420ms ease; opacity:{{ e.descOp }}" data-role="cv-desc">
           <div style="font-size:15px; line-height:1.55; text-wrap:pretty; white-space:pre-line; color:{{ e.descColor }}">{{ e.desc }}<sc-if value="{{ e.showEmail }}" hint-placeholder-val="{{ false }}"> Drop me a line at <a href="mailto:hello@paultinker.uk" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">hello@paultinker.uk</a> or view my <a href="https://drive.google.com/file/d/1yZDxT7tIeJI6uo1lH3eONTze7y4aqznz/view?usp=drive_link" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px solid currentColor; transition:border-color 150ms ease" style-hover="border-bottom-color:currentColor">CV</a>.</sc-if></div>
-          <div style="display:{{ e.linkRowDisplay }}; flex-direction:column; align-items:flex-start; gap:14px; margin-top:16px">
+          <div style="display:{{ e.linkRowDisplay }}; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:16px">
           <sc-if value="{{ e.showLink }}" hint-placeholder-val="{{ true }}">
             <a href="{{ e.link }}" onClick="{{ e.onLinkClick }}" style="display:inline-flex; align-items:center; gap:3px; white-space:nowrap; font-family:'DM Sans', sans-serif; font-size:14px; font-weight:500; color:#111; background:#fff; padding:9px 20px; border-radius:6px; transition:background-color 150ms ease" style-hover="background:#ececec">{{ e.linkLabel }}<span data-role="cv-link-icon" style="position:relative; display:inline-block; width:13px; height:12px; flex:0 0 auto"><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,-2px) rotate(45deg)"></span><span style="position:absolute; left:50%; top:50%; width:8px; height:2px; border-radius:1px; background:currentColor; transition:transform 260ms cubic-bezier(.22,1,.36,1), width 260ms cubic-bezier(.22,1,.36,1); transform:translate(-50%,-50%) translate(1px,2px) rotate(-45deg)"></span></span></a>
+          </sc-if>
+          <sc-if value="{{ e.showNote }}" hint-placeholder-val="{{ false }}">
+            <span data-role="cv-link-note" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; line-height:1; color:{{ e.descColor }}"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="1.6"/><path d="M5.3 7V5a2.7 2.7 0 0 1 5.4 0v2"/></svg>{{ e.linkNote }}</span>
           </sc-if>
           </div>
         </div>
@@ -797,8 +800,8 @@ const DATA = [
     themeColor: "#4A2060", idKey: 7, year: "2024", short: "Nespresso", company: "Nespresso", title: "Product Owner, Digital Experience & Design System",
     imageCount: 0, abstractComp: true, bg: "#4A2060", textColor: "#FFFFFF", descColor: "#FFFFFF", navLinkColor: "#F4C5CD", navBg: "#F4C5CD", navTextColor: "#4A2060",
     meta: "2024–2026",
-    desc: "Product Owner for the team rebuilding Nespresso's digital experience as one modular platform across 42+ markets, from the design system to the pages built on it. Rolling out market by market into 2027, so visuals are limited.",
-    link: "https://nespresso.paultinker.uk/", linkLabel: "Discover more", slot: "design system components"
+    desc: "Product Owner for the team rebuilding Nespresso's digital experience as one modular platform across 42+ markets, from the design system to the pages built on it. Rolling out market by market into 2027.",
+    link: "https://nespresso.paultinker.uk/", linkLabel: "Discover more", linkNote: "Password protected", slot: "design system components"
   },
   {
     themeColor: "#077a60", idKey: 3, year: "2016", short: "The Guardian", company: "The Guardian", title: "Designer & Art Director", imageCount: 3, bg: "#077a60", textColor: "#FFFFFF", descColor: "#FFFFFF", navLinkColor: "#FFFFFF", navBg: "#F7D0D5", navTextColor: "#16332B", float: true, blobs: false, blobColor: "oklch(0.74 0.11 155)", blobScale: 1.8, blobRightScale: 2.6,
@@ -1634,6 +1637,8 @@ class Component extends DCLogic {
         desc: d.desc,
         link: d.link,
         linkLabel: d.linkLabel,
+        linkNote: d.linkNote,
+        showNote: !!(d.link && d.linkNote),
         showLink: !!d.link,
         active: on ? "true" : undefined,
         navAriaLabel: d.company,
