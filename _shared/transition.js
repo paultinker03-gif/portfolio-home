@@ -35,6 +35,7 @@
       surface: '#ffffff', homeColor: '#4A2060', homeHash: 'nespresso',
       lockedSurface: '#4A2060',        // live site: the page opens on the purple password screen, so the panel is purple too (Paul 2026-10-29)
       scene: 'nespresso.html?v=5', pointer: 'bt',
+      early: true,   // load the scene as the title slides in, like Vodafone (Paul: the hero came in late, 2026-10-29)
       assets: ['support.js', 'boot.js', 'vendor/react.production.min.js', 'vendor/react-dom.production.min.js', 'assets/bt-2.webp', 'assets/bt-1.webp', 'assets/bt-3.webp'],
       stage: '#4A2060',
     },
