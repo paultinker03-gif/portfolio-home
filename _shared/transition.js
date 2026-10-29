@@ -292,7 +292,11 @@
         ticking = true;
         requestAnimationFrame(() => {
           ticking = false;
-          const y = scrollY, dy = y - lastY;
+          // tablets and phones bounce past the ends of the page; read the scroll as if they didn't, and keep
+          // the card at the very bottom, so the bounce doesn't flick it away (Paul saw it on a tablet, 2026-10-29)
+          const max = document.documentElement.scrollHeight - innerHeight;
+          const y = Math.max(0, Math.min(scrollY, max)), dy = y - lastY;
+          if (near && y >= max - 4) { lastY = y; set(true); return; }
           if (Math.abs(dy) < 4) return;
           lastY = y;
           set(near && dy > 0);
