@@ -33,6 +33,7 @@
     },
     nespresso: {
       surface: '#ffffff', homeColor: '#4A2060', homeHash: 'nespresso',
+      lockedSurface: '#4A2060',        // live site: the page opens on the purple password screen, so the panel is purple too (Paul 2026-10-29)
       scene: 'nespresso.html?v=5', pointer: 'bt',
       assets: ['support.js', 'boot.js', 'vendor/react.production.min.js', 'vendor/react-dom.production.min.js', 'assets/bt-2.webp', 'assets/bt-1.webp', 'assets/bt-3.webp'],
       stage: '#4A2060',
@@ -72,6 +73,8 @@
   const port = location.port ? ':' + location.port : '';
   const homeOrigin = LOCAL ? `${location.protocol}//localhost${port}` : 'https://paultinker.uk';
   const caseOrigin = (slug) => LOCAL ? `${location.protocol}//${slug}.localhost${port}` : `https://${slug}.paultinker.uk`;
+  // the colour of the panel that slides up before a case study opens; locally the Nespresso page is not locked
+  const panelColour = (slug) => (!LOCAL && CASES[slug].lockedSurface) || CASES[slug].surface;
   const caseOf = (host) => {
     const m = /^([a-z]+)\.(paultinker\.uk|localhost)$/.exec(host);
     return m && CASES[m[1]] ? m[1] : null;
@@ -207,7 +210,7 @@
       e.preventDefault();
       const url = localise(l.url);
       url.searchParams.set('via', 'home');
-      wipeTo(url.href, CASES[l.slug].surface);
+      wipeTo(url.href, panelColour(l.slug));
     }, true);
     return;
   }
@@ -305,7 +308,7 @@
     if (next) {   // on to the next case study: the same hand-off as from home
       e.preventDefault();
       l.url.searchParams.set('via', 'home');
-      wipeTo(l.url.href, CASES[next].surface);
+      wipeTo(l.url.href, panelColour(next));
       return;
     }
     if (l.url.origin !== homeOrigin) return;
