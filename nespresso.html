@@ -57,7 +57,7 @@ class Component extends DCLogic {
     this.fit(); this.bind();
     // Embedded in paultinker.uk: the host holds the WebGL boot until the intro has been left (or
     // Nespresso is opened), so compiling this scene never freezes the intro bubbles.
-    let host = null; try { host = window.parent !== window ? window.parent : null; } catch (e) {}
+    let host = null; try { host = window.parent !== window ? window.parent : null; if (host) void host.__ptHoldNesp; } catch (e) { host = null; }  // a case study on another subdomain can't be read: treat as standalone
     const go = () => { if (this._booted) return; this._booted = true; this.initGL(); this.watchdog(); };
     this._host = host;
     if (host && host.__ptHoldNesp && !host.__ptNespGo) { this._held = true; window.__ptBoot = go; }

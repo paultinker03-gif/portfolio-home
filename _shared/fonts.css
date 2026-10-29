@@ -1,0 +1,68 @@
+/* One type system for home, the case studies and the AI blog (Paul, 2026-10-27):
+   Lato 700 for every heading, Inter 400 for body text and links. Same weights everywhere.
+   The faces get their own names because some case-study stylesheets reuse 'Lato' as an alias
+   for their brand font. !important beats the inline styles on home and each site's own CSS.
+   Left alone: code, SVG text and the AI blog's brand-font demos (.font-*). */
+@font-face { font-family: 'PT Lato'; src: url('/_shared/fonts/lato-400.woff2') format('woff2'); font-weight: 100 450; font-style: normal; font-display: swap; }
+@font-face { font-family: 'PT Lato'; src: url('/_shared/fonts/lato-700.woff2') format('woff2'); font-weight: 451 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'PT Inter'; src: url('/_shared/fonts/inter-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'PT Inter'; src: url('/_shared/fonts/inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'PT Inter'; src: url('/_shared/fonts/inter-400-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+
+@font-face { font-family: 'PT DM Serif'; src: url('/_shared/fonts/dm-serif-text.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'PT DM Serif'; src: url('/_shared/fonts/dm-serif-text-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+
+:root { --pt-head: 'PT Lato', 'Helvetica Neue', Arial, sans-serif; --pt-serif: 'PT DM Serif', Georgia, serif; --pt-body: 'PT Inter', 'Helvetica Neue', Arial, sans-serif; }
+
+html body,
+html body *:not(code, pre, kbd, samp, svg, svg *, [class*="font-"], [class*="font-"] *) {
+  font-family: var(--pt-body) !important; font-weight: 400 !important; font-synthesis: none;
+}
+
+html body :is(
+  h1, h2, h3, h4, h5, h6, [role="heading"], [data-role="cv-home"],
+  .site-title, .top .brand span, .role-label, .foot-title, .board-title, .board h4,
+  .pull, .pull p, .stat b, .numbers b, .rank li,
+  .slide-caption strong, .flow li b, .timeline b, .principles b, .next-list b, .compat-mid span,
+  .card h3, .entry h2, .entry h3, .group h2,
+  .pt-next-row, .pt-next-row *
+):not([class*="font-"] *),
+html body :is(
+  h1, h2, h3, h4, h5, h6, [role="heading"], [data-role="cv-home"],
+  .site-title, .top .brand span, .role-label, .foot-title, .board-title, .board h4,
+  .pull, .pull p, .stat b, .numbers b, .rank li,
+  .slide-caption strong, .flow li b, .timeline b, .principles b, .next-list b, .compat-mid span,
+  .card h3, .entry h2, .entry h3, .group h2,
+  .pt-next-row
+) *:not([class*="font-"] *) {
+  font-family: var(--pt-head) !important; font-weight: 700 !important;
+}
+
+/* counters and other generated text follow their element, except the step numbers */
+html body *::before, html body *::after { font-family: inherit !important; font-weight: inherit !important; }
+html body .loop li::before { font-family: var(--pt-head) !important; font-weight: 700 !important; }
+
+/* DM Serif Text (Paul): the home page's headings (the wordmark and each section's name), bold as
+   they always were there, and the "Paul Tinker" wordmark in the top bar of the case studies and the
+   AI blog, regular as it was. (.pt-x.pt-x.pt-x.pt-x never matches; it only lifts these rules above
+   the Lato rule's specificity.) */
+html body :is([data-role="cv-home"], [role="heading"], .pt-x.pt-x.pt-x.pt-x),
+html body :is([data-role="cv-home"], [role="heading"], .pt-x.pt-x.pt-x.pt-x) * {
+  font-family: var(--pt-serif) !important; font-weight: 700 !important; font-synthesis: weight;
+}
+html body :is(.top .brand span, .pt-x.pt-x.pt-x.pt-x) { font-family: var(--pt-serif) !important; font-weight: 400 !important; }
+
+/* the small uppercase labels above titles ("Case study · Smart Pension", dates): Inter semibold (Paul) */
+html body :is(.eyebrow, .board-eyebrow, .kicker, .pt-x.pt-x.pt-x.pt-x) { font-weight: 600 !important; }
+
+/* AI blog: every heading in DM Serif Text, regular, as the blog had it (Paul). The brand-font demos keep theirs. */
+html[data-site="ai"] body :is(h1, h2, h3, h4, h5, h6, .site-title, .group h2, .card h3, .entry h2, .entry h3, .pull, .pull p, .slide-caption strong, .pt-x.pt-x.pt-x.pt-x):not([class*="font-"] *),
+html[data-site="ai"] body :is(h1, h2, h3, h4, h5, h6, .site-title, .pull, .slide-caption strong, .pt-x.pt-x.pt-x.pt-x) *:not([class*="font-"] *) {
+  font-family: var(--pt-serif) !important; font-weight: 400 !important;
+}
+
+/* AI blog: the line under the title in DM Serif Text italic, like the headings (Paul) */
+html[data-site="ai"] body :is(.site-sub, .pt-x.pt-x.pt-x.pt-x) { font-family: var(--pt-serif) !important; font-weight: 400 !important; font-style: italic; }
+
+/* case-study fact labels (Role, When, Products, Team): small caps labels, Inter 600 (Paul, 2026-10-28; was italic) */
+html body :is(.meta dt, .pt-x.pt-x.pt-x.pt-x) { font-style: normal; text-transform: uppercase; font-size: 13px; letter-spacing: .08em; line-height: 1.4; font-weight: 600 !important; }

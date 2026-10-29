@@ -340,6 +340,9 @@ class SmartScene extends HTMLElement {
     // Zurich (dark, RTL) depending on which half of the screen the cursor is on.
     const MOBILE_Q = '(max-width: 700px), (max-height: 500px) and (orientation: landscape)';
     const mq = (() => {
+      // a case study's hero (?duo=1) always shows the two phones, whatever size the frame is: the
+      // frame is scaled with the page, and the phone layout would kick in on short frames
+      if (/[?&]duo=1/.test(location.search)) return { matches: false, addEventListener() {}, addListener() {} };
       try { if (parent !== window && parent.matchMedia) return parent.matchMedia(MOBILE_Q); } catch (e) {}
       return window.matchMedia(MOBILE_Q);
     })();
@@ -556,6 +559,8 @@ class SmartScene extends HTMLElement {
       const halfW = Math.tan(camera.fov * Math.PI / 360) * (camera.position.z - 0.35) * camera.aspect;
       centreX = ndc * halfW - DUO_CX;
       if (!centreKnown) { centreKnown = true; centreSnap = true; } // first reading: jump, later: glide
+      // back from a case study, home fades in over the scene: keep it pinned so nothing slides into place
+      try { if (fe && fe.ownerDocument.documentElement.classList.contains('pt-return')) centreSnap = true; } catch (e) {}
     };
     new ResizeObserver(() => { resize(); measureCentre(); }).observe(this);
     let _lw = 0, _lh = 0;
@@ -589,7 +594,9 @@ class SmartScene extends HTMLElement {
         poseDuo(ph);
         if (k >= 1) ph.t0 = -1;
       });
-      if (++centreTick % 20 === 0) measureCentre();
+      let returning = false;
+      try { const fe = window.frameElement; returning = !!fe && fe.ownerDocument.documentElement.classList.contains('pt-return'); } catch (e) {}
+      if (returning || ++centreTick % 20 === 0) measureCentre();
       centreCur += (centreX - centreCur) * (centreSnap ? 1 : 0.12);
       centreSnap = false;
       cur.x += (target.x - cur.x) * 0.16;
