@@ -1503,7 +1503,7 @@ class Component extends DCLogic {
   // text and background fade. A trackpad keeps sending wheel events for a second or so after a flick
   // (momentum), so a gesture only counts once those have died down or a clearly new flick starts.
   _initScroll() {
-    this._wheel = { acc: 0, last: 0, lockUntil: 0, locked: false, hist: [], dir: 0 };
+    this._wheel = { acc: 0, last: 0, lastAbs: 0, lockUntil: 0, locked: false, hist: [], dir: 0 };
     this._onWheel = (ev) => {
       if (!this._scrollMode || ev.ctrlKey) return;   // ctrl + wheel is pinch-zoom
       // time the event happened, not when it reached us: while the next section's 3D scene loads, events queue
@@ -1519,7 +1519,13 @@ class Component extends DCLogic {
       // the fingers lift, and their sizes jitter, so a step locks the wheel until the gesture goes quiet, or
       // (once the slide is mostly done) until a clear re-acceleration: a new flick, or a swipe the other way.
       const abs = Math.abs(dy), dir = Math.sign(dy);
-      const quiet = now - w.last > 200;
+      const gap = now - w.last;
+      let quiet = gap > 200;
+      // a pause in the middle of a flick's momentum is the page being busy (the next section's 3D scene
+      // starting up): the browser holds the events back and merges them into one bigger one. Momentum that
+      // was still going strong before the pause is the same swipe carrying on, not a new one. (2026: this
+      // read as a new swipe and skipped sections)
+      if (quiet && w.locked && gap < 800 && dir === w.dir && w.lastAbs > 3) quiet = false;
       if (quiet) w.hist = [];
       w.hist.push(abs); if (w.hist.length > 12) w.hist.shift();
       let newFlick = false;
@@ -1530,7 +1536,7 @@ class Component extends DCLogic {
       }
       if (w.locked && now > w.lockUntil && (quiet || newFlick || (dir && dir !== w.dir && abs > 20))) { w.locked = false; w.acc = 0; }
       if (quiet && !w.locked) w.acc = 0;
-      w.last = now;
+      w.last = now; w.lastAbs = abs;
       if (w.locked) return;
       w.acc += dy;
       if (Math.abs(w.acc) < 40) return;
@@ -1544,8 +1550,8 @@ class Component extends DCLogic {
     this._hookFrame = (f) => {
       try {
         const w = f.contentWindow, d = w && w.document;
-        if (!d || d.__ptHooked) return;   // once per loaded page (the frame's first blank page is replaced)
-        d.__ptHooked = true;
+        if (!d || w.__ptHooked) return;   // once per window (a frame's first blank page can hand its window, and
+        w.__ptHooked = true;              // our listener, on to the real page: hooking that again doubled every event)
         w.addEventListener("wheel", this._onWheel, { passive: true });
         w.addEventListener("keydown", (ev) => this._onKey(ev));
         w.document.querySelectorAll("iframe").forEach((g) => { this._hookFrame(g); g.addEventListener("load", () => this._hookFrame(g)); });
@@ -1553,6 +1559,7 @@ class Component extends DCLogic {
     };
     this._hookFrames = () => document.querySelectorAll("iframe").forEach((f) => this._hookFrame(f));
     document.addEventListener("load", (ev) => { if (ev.target && ev.target.tagName === "IFRAME") this._hookFrame(ev.target); }, true);
+    this._hookFrames(); [500, 2000, 5000].forEach((t) => setTimeout(this._hookFrames, t));   // frames that finished loading before this ran
     this._onModeCheck = () => { this._measureHome(); this._applyMode(); };
     window.addEventListener("resize", this._onModeCheck);
     this._applyMode();
